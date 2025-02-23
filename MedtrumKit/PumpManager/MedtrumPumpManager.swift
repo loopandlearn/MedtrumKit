@@ -64,8 +64,7 @@ public class MedtrumPumpManager: DeviceManager {
     }
 
     public var minimumBasalScheduleEntryDuration: TimeInterval {
-        // One per hour
-        TimeInterval(60 * 60)
+        TimeInterval(minutes: 30)
     }
 
     public var debugDescription: String
