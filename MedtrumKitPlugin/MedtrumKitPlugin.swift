@@ -1,4 +1,5 @@
 import LoopKitUI
+import MedtrumKit
 import os.log
 
 class MedtrumKitPlugin: NSObject, PumpManagerUIPlugin {

@@ -1,13 +1,6 @@
-//
-//  LocalizedString.swift
-//  MedtrumKit
-//
-//  Created by Bastiaan Verhaar on 20/02/2025.
-//
-
 import Foundation
 
-private class FrameworkBundle {
+private enum FrameworkBundle {
     static let main = Bundle(for: MedtrumKitHUDProvider.self)
 }
 

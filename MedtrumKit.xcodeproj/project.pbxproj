@@ -16,6 +16,8 @@
 		3E767D522D67BC2E004B1971 /* MedtrumKitPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767CE22D67ADFA004B1971 /* MedtrumKitPumpManager+UI.swift */; };
 		3E767D532D67BC33004B1971 /* MedtrumHUDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767CFE2D67B1A9004B1971 /* MedtrumHUDProvider.swift */; };
 		3E767D562D67BCD6004B1971 /* MedtrumKitUICoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767D552D67BCC9004B1971 /* MedtrumKitUICoordinator.swift */; };
+		3E98B84B2D6BB12C00DD5123 /* MedtrumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D3A8D02C148CC4002EE003 /* MedtrumKit.framework */; platformFilter = ios; };
+		3E98B84C2D6BB12C00DD5123 /* MedtrumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B7D3A8D02C148CC4002EE003 /* MedtrumKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B7189AE72C15A52800703DE2 /* MedtrumPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7189AE52C15A52800703DE2 /* MedtrumPumpManager.swift */; };
 		B7189AEA2C15A8CE00703DE2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7189AE92C15A8CE00703DE2 /* LoopKit.framework */; };
 		B7D3A8D52C148CC4002EE003 /* MedtrumKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = B7D3A8D42C148CC4002EE003 /* MedtrumKit.docc */; };
@@ -26,6 +28,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3E98B84D2D6BB12C00DD5123 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7D3A8C72C148CC4002EE003 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B7D3A8CF2C148CC4002EE003;
+			remoteInfo = MedtrumKit;
+		};
 		B7D3A8DC2C148CC4002EE003 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B7D3A8C72C148CC4002EE003 /* Project object */;
@@ -34,6 +43,20 @@
 			remoteInfo = MedtrumKit;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3E98B84F2D6BB12C00DD5123 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3E98B84C2D6BB12C00DD5123 /* MedtrumKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		3E767CE22D67ADFA004B1971 /* MedtrumKitPumpManager+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MedtrumKitPumpManager+UI.swift"; sourceTree = "<group>"; };
@@ -64,7 +87,7 @@
 		3E767CFE2D67B1A9004B1971 /* MedtrumHUDProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedtrumHUDProvider.swift; sourceTree = "<group>"; };
 		3E767D052D67B4A0004B1971 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3E767D072D67B63B004B1971 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		3E767D432D67B790004B1971 /* MedtrumKitPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MedtrumKitPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E767D432D67B790004B1971 /* MedtrumKitPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MedtrumKitPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E767D4C2D67BA71004B1971 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E767D502D67BBF9004B1971 /* OSLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLog.swift; sourceTree = "<group>"; };
 		3E767D552D67BCC9004B1971 /* MedtrumKitUICoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedtrumKitUICoordinator.swift; sourceTree = "<group>"; };
@@ -83,6 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E98B84B2D6BB12C00DD5123 /* MedtrumKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,7 +193,7 @@
 			children = (
 				B7D3A8D02C148CC4002EE003 /* MedtrumKit.framework */,
 				B7D3A8DA2C148CC4002EE003 /* MedtrumKitTests.xctest */,
-				3E767D432D67B790004B1971 /* MedtrumKitPlugin.framework */,
+				3E767D432D67B790004B1971 /* MedtrumKitPlugin.loopplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -240,16 +264,18 @@
 				3E767D3F2D67B790004B1971 /* Sources */,
 				3E767D402D67B790004B1971 /* Frameworks */,
 				3E767D412D67B790004B1971 /* Resources */,
+				3E98B84F2D6BB12C00DD5123 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3E98B84E2D6BB12C00DD5123 /* PBXTargetDependency */,
 			);
 			name = MedtrumKitPlugin;
 			packageProductDependencies = (
 			);
 			productName = MedtrumKitPlugin;
-			productReference = 3E767D432D67B790004B1971 /* MedtrumKitPlugin.framework */;
+			productReference = 3E767D432D67B790004B1971 /* MedtrumKitPlugin.loopplugin */;
 			productType = "com.apple.product-type.framework";
 		};
 		B7D3A8CF2C148CC4002EE003 /* MedtrumKit */ = {
@@ -412,6 +438,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3E98B84E2D6BB12C00DD5123 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = B7D3A8CF2C148CC4002EE003 /* MedtrumKit */;
+			targetProxy = 3E98B84D2D6BB12C00DD5123 /* PBXContainerItemProxy */;
+		};
 		B7D3A8DD2C148CC4002EE003 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B7D3A8CF2C148CC4002EE003 /* MedtrumKit */;
@@ -455,7 +487,7 @@
 		3E767D492D67B790004B1971 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -479,17 +511,22 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.nightscout.MedtrumKitPlugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Debug;
 		};
 		3E767D4A2D67B790004B1971 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -513,10 +550,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.nightscout.MedtrumKitPlugin;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = loopplugin;
 			};
 			name = Release;
 		};
