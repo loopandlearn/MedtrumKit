@@ -17,13 +17,12 @@ class PeripheralManager : NSObject {
     
     public static let SERVICE_UUID = CBUUID(string: "669A9001-0008-968F-E311-6050405558B3")
     private static let READ_UUID = CBUUID(string: "669a9120-0008-968f-e311-6050405558b3")
-    private var readCharacteristic: CBCharacteristic!
+    private var readCharacteristic: CBCharacteristic?
     private static let WRITE_UUID = CBUUID(string: "669a9101-0008-968f-e311-6050405558b3")
-    private var writeCharacteristic: CBCharacteristic!
+    private var writeCharacteristic: CBCharacteristic?
     
     private var writeSequence: UInt8 = 0
     private var currentPacket: (any MedtrumBasePacketProtocol)?
-    private var synchronizePacket: SynchronizePacket?
     
     private var writeQueue: Dictionary<UInt8, CheckedContinuation<MedtrumWriteResult<Any>, Never>> = [:]
     private var writeTimeoutTask: Task<(), Never>?
@@ -45,6 +44,12 @@ class PeripheralManager : NSObject {
             // Wait for the other write to complete...
             self.writeSemaphore.wait()
             
+            guard let writeCharacteristic = self.writeCharacteristic else {
+                log.error("No write characteristic found... Device might be disconnected...")
+                continuation.resume(returning: .failure(error: .noWriteCharacteristic))
+                return
+            }
+            
             writeQueue[packet.commandType] = continuation
             currentPacket = packet
             
@@ -52,8 +57,8 @@ class PeripheralManager : NSObject {
             self.writeSequence = UInt8(self.writeSequence + 1)
             
             for package in packages {
-                self.log.info("Writing data: \(package.hexEncodedString())")
-                self.connectedDevice.writeValue(package, for: self.writeCharacteristic, type: .withResponse)
+                self.log.debug("Writing data: \(package.hexEncodedString())")
+                self.connectedDevice.writeValue(package, for: writeCharacteristic, type: .withResponse)
             }
             
             self.writeTimeoutTask = Task {
@@ -90,8 +95,8 @@ extension PeripheralManager {
         
         switch authData {
         case .failure(let error):
-            log.error("Failed to complete authorization flow: \(error.errorDescription ?? "")")
-            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.errorDescription ?? "")))
+            log.error("Failed to complete authorization flow: \(error.localizedDescription)")
+            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.localizedDescription)))
             break
             
         case .success(let data):
@@ -114,8 +119,8 @@ extension PeripheralManager {
         
         switch timeData {
         case .failure(let error):
-            log.error("Failed to get time: \(error.errorDescription ?? "")")
-            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.errorDescription ?? "")))
+            log.error("Failed to get time: \(error.localizedDescription)")
+            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.localizedDescription)))
             break
             
         case .success(let data):
@@ -132,6 +137,7 @@ extension PeripheralManager {
                 
                 await synchronize()
             } else {
+                self.log.info("Time drift detected, resetting time")
                 await setTime()
             }
         }
@@ -143,8 +149,8 @@ extension PeripheralManager {
         
         switch timeData {
         case .failure(let error):
-            log.error("Failed to set time: \(error.errorDescription ?? "")")
-            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.errorDescription ?? "")))
+            log.error("Failed to set time: \(error.localizedDescription)")
+            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.localizedDescription)))
             break
             
         case .success:
@@ -159,8 +165,8 @@ extension PeripheralManager {
         
         switch timeZoneData {
         case .failure(let error):
-            log.error("Failed to set time: \(error.errorDescription ?? "")")
-            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.errorDescription ?? "")))
+            log.error("Failed to set time: \(error.localizedDescription)")
+            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.localizedDescription)))
             break
             
         case .success:
@@ -179,8 +185,8 @@ extension PeripheralManager {
         
         switch syncData {
         case .failure(let error):
-            log.error("Failed to synchronize: \(error.errorDescription ?? "")")
-            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.errorDescription ?? "")))
+            log.error("Failed to synchronize: \(error.localizedDescription)")
+            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.localizedDescription)))
             break
             
         case .success(let data):
@@ -201,8 +207,8 @@ extension PeripheralManager {
         
         switch subscribeData {
         case .failure(let error):
-            log.error("Failed to subscribe: \(error.errorDescription ?? "")")
-            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.errorDescription ?? "")))
+            log.error("Failed to subscribe: \(error.localizedDescription)")
+            completion?(.failure(error: .failedToCompleteAuthorizationFlow(localizedError: error.localizedDescription)))
             break
             
         case .success:
@@ -243,6 +249,14 @@ extension PeripheralManager {
         
         if let battery = syncResponse.battery {
             pumpManager.state.battery = battery.voltageB
+        }
+        
+        if let primeProgress = syncResponse.primeProgress {
+            pumpManager.state.primeProgress = primeProgress
+        }
+        
+        if let bolus = syncResponse.bolus {
+            pumpManager.updateBolusProgress(delivered: bolus.delivered, completed: bolus.completed)
         }
         
         pumpManager.state.lastSync = Date.now
@@ -300,7 +314,7 @@ extension PeripheralManager : CBPeripheralDelegate {
         }
         
         Task {
-            self.log.info("Notify enabled and ready to start auth flow!")
+            self.log.debug("Notify enabled and ready to start auth flow!")
             await doAuthorize()
         }
     }
@@ -323,27 +337,11 @@ extension PeripheralManager : CBPeripheralDelegate {
                 // Ignore all ping messages from patch pomp
                 return
             }
+
+            self.log.debug("READ -> Got data: \(data.hexEncodedString())")
             
-            if self.synchronizePacket == nil {
-                self.synchronizePacket = SynchronizePacket()
-            }
-            guard var packet = self.synchronizePacket else {
-                return
-            }
-            
-            self.log.info("READ -> Got data: \(data.hexEncodedString())")
+            var packet = NotificationPacket()
             packet.decode(data)
-            
-            guard packet.isComplete else {
-                self.log.warning("Data no complete yet...")
-                return
-            }
-            
-            guard !packet.failed else {
-                self.log.error("Failed to process update...")
-                self.synchronizePacket = nil
-                return
-            }
 
             self.parseStateUpdate(packet.parseResponse())
             return
@@ -356,7 +354,7 @@ extension PeripheralManager : CBPeripheralDelegate {
             return
         }
         
-        self.log.info("Got data: \(data.hexEncodedString())")
+        self.log.debug("Got data: \(data.hexEncodedString())")
         packet.decode(data)
         self.currentPacket = packet
 
@@ -373,8 +371,18 @@ extension PeripheralManager : CBPeripheralDelegate {
             return
         }
         
-        if packet.failed {
-            writeCallback.resume(returning: .failure(error: .invalidResponse))
+        if packet.responseCode == 16384 {
+            // Need to skip to packet
+            return
+        }
+        
+        if packet.responseCode != 0 {
+            // Examples for invalid codes:
+            // 7 -> Invalid authorization: propably wrong session token used
+            // 8 -> Invalid state: The patch is not in state 32 (active), which is required for that command
+            writeCallback.resume(returning: .failure(error: .invalidResponse(code: packet.responseCode)))
+        } else if packet.failed {
+            writeCallback.resume(returning: .failure(error: .invalidData))
         } else {
             writeCallback.resume(returning: .success(data: packet.parseResponse()))
         }

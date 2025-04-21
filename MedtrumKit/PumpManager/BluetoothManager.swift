@@ -21,6 +21,14 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     var scanCompletion: ((MedtrumScanResult) -> Void)?
     var connectCompletion: ((MedtrumConnectResult) -> Void)?
     
+    public var isConnected: Bool {
+        if let peripheral = peripheral, peripheral.state == .connected {
+            return true
+        }
+        
+        return false
+    }
+    
     override init() {
         super.init()
         
@@ -35,15 +43,15 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
             return
         }
 
-        guard !manager.isScanning else {
-            completion(.failure(error: .alreadyScanning))
-            return
+        if !manager.isScanning  {
+            manager.stopScan()
         }
 
         scanCompletion = completion
         manager.scanForPeripherals(withServices: [])
         
         log.info("Started scanning")
+        // TODO: Add scan timeout - 15s?
     }
     
     func connect(peripheral: CBPeripheral, _ completion: @escaping (MedtrumConnectResult) -> Void) {
@@ -60,10 +68,13 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
         self.manager.connect(peripheral)
     }
     
-    func ensureConnected(_ completionAsync: @escaping (MedtrumConnectResult) async -> Void) {
+    func ensureConnected(autoDisconnect: Bool = true, _ completionAsync: @escaping (MedtrumConnectResult) async -> Void) {
         let completion = { (_ result: MedtrumConnectResult) -> Void in
             Task {
                 await completionAsync(result)
+                if autoDisconnect {
+                    self.disconnect()
+                }
             }
         }
         
@@ -93,7 +104,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
         self.startScan { result in
             switch result {
             case .failure(let error):
-                self.log.error("Error during scanning: \(error.errorDescription ?? "")")
+                self.log.error("Error during scanning: \(error.localizedDescription)")
                 self.manager.stopScan()
                 completion(.failure(error: .failedToFindDevice))
                 break
@@ -116,6 +127,12 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
         }
         
         return await peripheralManager.writePacket(packet)
+    }
+    
+    func disconnect() {
+        if let peripheral = self.peripheral, peripheral.state == .connected {
+            self.manager.cancelPeripheralConnection(peripheral)
+        }
     }
 }
 
@@ -193,6 +210,10 @@ extension BluetoothManager {
 
     func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         log.info("Device disconnected, name: \(peripheral.name ?? "<NO_NAME>")")
+        
+        if self.peripheralManager != nil {
+            self.peripheralManager = nil
+        }
     }
 
     func centralManager(_: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {

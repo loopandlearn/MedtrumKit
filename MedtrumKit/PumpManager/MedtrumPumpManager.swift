@@ -4,15 +4,17 @@ import LoopKit
 
 public class MedtrumPumpManager: DeviceManager {
     public static let pluginIdentifier = "Medtrum"
-    public let localizedTitle = LocalizedString("Medtrum", comment: "Generic title of the Medtrum pump manager")
+    public var localizedTitle: String {
+        LocalizedString("Medtrum", comment: "Generic title of the Medtrum pump manager") + " " + state.pumpName
+    }
     public let managerIdentifier: String = "MedtrumKit"
-
+    
     private let log = MedtrumLogger(category: "MedtrumPumpManager")
     
     public let pumpDelegate = WeakSynchronizedDelegate<PumpManagerDelegate>()
     private let statusObservers = WeakSynchronizedSet<PumpManagerStatusObserver>()
     
-    var state: MedtrumPumpState
+    public var state: MedtrumPumpState
     var oldState: MedtrumPumpState
     public var rawState: PumpManager.RawStateValue {
         state.rawValue
@@ -22,7 +24,7 @@ public class MedtrumPumpManager: DeviceManager {
     private var doseEntry: UnfinalizedDose?
     
     let bluetooth: BluetoothManager
-
+    
     init(state: MedtrumPumpState) {
         self.state = state
         self.oldState = MedtrumPumpState(rawValue: state.rawValue)
@@ -34,31 +36,31 @@ public class MedtrumPumpManager: DeviceManager {
     public required convenience init?(rawState: RawStateValue) {
         self.init(state: MedtrumPumpState(rawValue: rawState))
     }
-
+    
     public var isOnboarded: Bool {
         self.state.isOnboarded
     }
-
+    
     public static var onboardingMaximumBasalScheduleEntryCount: Int {
         48
     }
-
+    
     public static var onboardingSupportedBasalRates: [Double] {
-        // 0.05 units for rates between 0.00-25U/hr
+        // During onboard, we assume 300u -> 0.00-30U/hr
         // 0 U/hr is a supported scheduled basal rate
-        (1 ... 500).map { Double($0) / 20 }
+        (0 ... 600).map { Double($0) / 20 }
     }
-
+    
     public static var onboardingSupportedBolusVolumes: [Double] {
         // 0.05 units for rates between 0.05-30U
         // 0 is not a supported bolus volume
         (1 ... 600).map { Double($0) / 20 }
     }
-
+    
     public static var onboardingSupportedMaximumBolusVolumes: [Double] {
         MedtrumPumpManager.onboardingSupportedBolusVolumes
     }
-
+    
     public var delegateQueue: DispatchQueue! {
         get {
             pumpDelegate.queue
@@ -67,43 +69,50 @@ public class MedtrumPumpManager: DeviceManager {
             pumpDelegate.queue = newValue
         }
     }
-
+    
     public var supportedBasalRates: [Double] {
-        MedtrumPumpManager.onboardingSupportedBasalRates
+        guard !state.pumpSN.isEmpty else {
+            return MedtrumPumpManager.onboardingSupportedBasalRates
+        }
+        
+        // 300U -> 0.05-30U
+        // 200U -> 0.05-25U
+        return state.pumpName.contains("300U") ? MedtrumPumpManager.onboardingSupportedBasalRates : (0 ... 500).map { Double($0) / 20 }
+        
     }
-
+    
     public var supportedBolusVolumes: [Double] {
         MedtrumPumpManager.onboardingSupportedBolusVolumes
     }
-
+    
     public var supportedMaximumBolusVolumes: [Double] {
         MedtrumPumpManager.onboardingSupportedBolusVolumes
     }
-
+    
     public var maximumBasalScheduleEntryCount: Int {
         MedtrumPumpManager.onboardingMaximumBasalScheduleEntryCount
     }
-
+    
     public var minimumBasalScheduleEntryDuration: TimeInterval {
         TimeInterval(minutes: 30)
     }
-
+    
     public var debugDescription: String {
         ""
     }
-
+    
     public func acknowledgeAlert(alertIdentifier _: LoopKit.Alert.AlertIdentifier, completion: @escaping ((any Error)?) -> Void) {
         completion(nil)
     }
-
+    
     public func getSoundBaseURL() -> URL? {
         nil
     }
-
+    
     public func getSounds() -> [LoopKit.Alert.Sound] {
         []
     }
-
+    
     public var pumpManagerDelegate: LoopKit.PumpManagerDelegate? {
         get {
             pumpDelegate.delegate
@@ -112,7 +121,7 @@ public class MedtrumPumpManager: DeviceManager {
             pumpDelegate.delegate = newValue
         }
     }
-
+    
     private func device(_ state: MedtrumPumpState) -> HKDevice {
         HKDevice(
             name: state.pumpName,
@@ -127,18 +136,12 @@ public class MedtrumPumpManager: DeviceManager {
     }
     
     private let basalIntervals: [TimeInterval] = Array(0 ..< 24).map({ TimeInterval(60 * 60 * $0) })
-    private var currentBaseBasalRate: Double {
-        guard !state.basalSchedule.entries.isEmpty else {
-            // Prevent crash if basalSchedule isnt set
-            return 0
-        }
-
+    public var currentBaseBasalRate: Double {
         let now = Date()
         let startOfDay = Calendar.current.startOfDay(for: now)
         let nowTimeInterval = now.timeIntervalSince(startOfDay)
-
-        let index = (basalIntervals.firstIndex(where: { $0 > nowTimeInterval }) ?? 24) - 1
-        return state.basalSchedule.entries.indices.contains(index) ? state.basalSchedule.entries[index].rate : 0
+        
+        return state.basalSchedule.entries.last(where: { $0.startTime < nowTimeInterval })?.rate ?? 0
     }
 }
 
@@ -197,7 +200,7 @@ public extension MedtrumPumpManager {
             if let dose = doseEntry?.toDoseEntry() {
                 return .inProgress(dose)
             }
-
+            
             return .noBolus
         }
     }
@@ -209,11 +212,24 @@ public extension MedtrumPumpManager {
             return
         }
         
+        syncPumpData(completion: completion)
+    }
+    
+    func syncPumpData(completion: ((Date?) -> Void)?) {
+#if targetEnvironment(simulator)
+        pumpDelegate.notify { delegate in
+            delegate?.pumpManager(self, didReadReservoirValue: self.state.reservoir, at: Date.now) { _ in }
+            
+            self.state.lastSync = Date.now
+            self.notifyStateDidChange()
+        }
+#endif
+        
         self.log.info("Sync pump data")
         
         self.bluetooth.ensureConnected { connectionResult in
             if case .failure(let error) = connectionResult {
-                self.log.error("Failed to connect: \(error.errorDescription ?? "")")
+                self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion?(nil)
                 return
             }
@@ -232,6 +248,12 @@ public extension MedtrumPumpManager {
                     self.log.error("Invalid response data...")
                     completion?(nil)
                     return
+                }
+                
+                do {
+                    self.log.info("Manual sync: \(String(data: try JSONEncoder().encode(syncResponse), encoding: .utf8) ?? "")")
+                } catch {
+                    self.log.warning("State update: Failed to encode JSON")
                 }
                 
                 self.state.pumpState = syncResponse.state
@@ -296,9 +318,9 @@ public extension MedtrumPumpManager {
             return
         }
         
-        self.bluetooth.ensureConnected { connectionResult in
+        self.bluetooth.ensureConnected(autoDisconnect: false) { connectionResult in
             if case .failure(let error) = connectionResult {
-                self.log.error("Failed to connect: \(error.errorDescription ?? "")")
+                self.log.error("Failed to connect: \(error.localizedDescription)")
                 self.resetBolusState()
                 
                 completion(.communication(error))
@@ -347,7 +369,7 @@ public extension MedtrumPumpManager {
         
         self.bluetooth.ensureConnected { connectionResult in
             if case .failure(let error) = connectionResult {
-                self.log.error("Failed to connect: \(error.errorDescription ?? "")")
+                self.log.error("Failed to connect: \(error.localizedDescription)")
                 self.state.bolusState = oldBolusState
                 self.notifyStateDidChange()
                 
@@ -359,7 +381,7 @@ public extension MedtrumPumpManager {
             let result = await self.bluetooth.write(packet)
             
             if case .failure(let error) = result {
-                self.log.error("Failed to cancel bolus: \(error.errorDescription ?? "")")
+                self.log.error("Failed to cancel bolus: \(error.localizedDescription)")
                 self.state.bolusState = oldBolusState
                 self.notifyStateDidChange()
                 
@@ -379,7 +401,7 @@ public extension MedtrumPumpManager {
             let dose = doseEntry.toDoseEntry()
             self.doseEntry = nil
             self.doseReporter = nil
-
+            
             guard let dose = dose else {
                 completion(.success(nil))
                 return
@@ -393,7 +415,7 @@ public extension MedtrumPumpManager {
                     completion: { _ in }
                 )
             }
-
+            
             self.notifyStateDidChange()
             completion(.success(nil))
         }
@@ -404,7 +426,7 @@ public extension MedtrumPumpManager {
         
         self.bluetooth.ensureConnected { connectionResult in
             if case .failure(let error) = connectionResult {
-                self.log.error("Failed to connect: \(error.errorDescription ?? "")")
+                self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(.communication(error))
                 return
             }
@@ -415,7 +437,7 @@ public extension MedtrumPumpManager {
                 let cancelResult = await self.bluetooth.write(cancelPacket)
                 
                 if case .failure(let error) = cancelResult {
-                    self.log.error("Failed to cancel temp basal: \(error.errorDescription ?? "")")
+                    self.log.error("Failed to cancel temp basal: \(error.localizedDescription)")
                     completion(.communication(error))
                     return
                 }
@@ -451,7 +473,7 @@ public extension MedtrumPumpManager {
             let tempBasalResult = await self.bluetooth.write(packet)
             
             if case .failure(let error) = tempBasalResult {
-                self.log.error("Failed to set temp basal: \(error.errorDescription ?? "")")
+                self.log.error("Failed to set temp basal: \(error.localizedDescription)")
                 completion(.communication(error))
                 return
             }
@@ -487,7 +509,7 @@ public extension MedtrumPumpManager {
         
         self.bluetooth.ensureConnected { connectionResult in
             if case .failure(let error) = connectionResult {
-                self.log.error("Failed to connect: \(error.errorDescription ?? "")")
+                self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(error)
                 return
             }
@@ -497,7 +519,7 @@ public extension MedtrumPumpManager {
             let result = await self.bluetooth.write(packet)
             
             if case .failure(let error) = result {
-                self.log.error("Failed to suspend delivery: \(error.errorDescription ?? "")")
+                self.log.error("Failed to suspend delivery: \(error.localizedDescription)")
                 completion(error)
                 return
             }
@@ -527,7 +549,7 @@ public extension MedtrumPumpManager {
         
         self.bluetooth.ensureConnected { connectionResult in
             if case .failure(let error) = connectionResult {
-                self.log.error("Failed to connect: \(error.errorDescription ?? "")")
+                self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(error)
                 return
             }
@@ -536,7 +558,7 @@ public extension MedtrumPumpManager {
             let response = await self.bluetooth.write(packet)
             
             if case .failure(let error) = response {
-                self.log.error("Failed to resume delivery: \(error.errorDescription ?? "")")
+                self.log.error("Failed to resume delivery: \(error.localizedDescription)")
                 completion(error)
                 return
             }
@@ -587,7 +609,7 @@ public extension MedtrumPumpManager {
             let result = await self.bluetooth.write(packet)
             
             if case .failure(let error) = result {
-                self.log.error("Failed to sync basal schedule: \(error.errorDescription ?? "")")
+                self.log.error("Failed to sync basal schedule: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }
@@ -610,7 +632,7 @@ public extension MedtrumPumpManager {
             } else {
                 self.log.warning("No insulinType available...")
             }
-
+            
             completion(.success(basalSchedule))
         }
     }
@@ -630,18 +652,11 @@ public extension MedtrumPumpManager {
                     unit: .internationalUnit(),
                     doubleValue: 30
                 ))
-            )
+        )
         )
     }
     
-    func primePatchPump(_ completion: @escaping (MedtrumPrimePatchResult) -> Void) {
-        self.log.info("Start priming patch pump")
-        guard self.state.patchId.isEmpty else {
-            self.log.error("Old patch pump needs to be deactivated first...")
-            completion(.failure(error: .needToDeactivateFirst))
-            return
-        }
-        
+    func primePatch(_ completion: @escaping (MedtrumPrimePatchResult) -> Void) {
         if self.state.pumpSN.isEmpty {
             // Need to scan for pump base first
             self.log.warning("No pump base known yet...")
@@ -649,11 +664,15 @@ public extension MedtrumPumpManager {
             return
         }
         
-        //2466528379 -> 7b3c0493
-        self.state.sessionToken = Data([0x7b, 0x3c, 0x04, 0x93]) //Crypto.genSessionToken()
-        self.notifyStateDidChange()
+        self.log.info("Start priming patch pump")
         
-        self.bluetooth.ensureConnected { connectionResult in
+        if self.state.patchId.isEmpty {
+            self.log.info("NOTE: Update session token...")
+            self.state.sessionToken = Crypto.genSessionToken()
+            self.notifyStateDidChange()
+        }
+        
+        self.bluetooth.ensureConnected(autoDisconnect: false) { connectionResult in
             if case .failure(let error) = connectionResult {
                 self.log.error("Failed to connect to pump: \(error)")
                 completion(.failure(error: .connectionFailure))
@@ -664,7 +683,7 @@ public extension MedtrumPumpManager {
             let primeResult = await self.bluetooth.write(packet)
             if case .failure(let error) = primeResult {
                 self.log.error("Failed to start priming pump: \(error)")
-                completion(.failure(error: .unknownError(reason: error.errorDescription ?? "")))
+                completion(.failure(error: .unknownError(reason: error.localizedDescription)))
                 return
             }
             
@@ -673,7 +692,7 @@ public extension MedtrumPumpManager {
         }
     }
     
-    func activatePatchPump(_ completion: @escaping (MedtrumActivatePatchResult) -> Void) {
+    func activatePatch(_ completion: @escaping (MedtrumActivatePatchResult) -> Void) {
         self.log.info("Activate patch pump...")
         self.bluetooth.ensureConnected { connectionResult in
             if case .failure(let error) = connectionResult {
@@ -683,36 +702,104 @@ public extension MedtrumPumpManager {
             }
             
             let packet = ActivatePacket(
-                expirationTimer: 1,
-                alarmSetting: .BeepOnly,
-                hourlyMaxInsulin: 40,
-                dailyMaxInsulin: 180,
+                expirationTimer: self.state.expirationTimer,
+                alarmSetting: self.state.alarmSetting,
+                hourlyMaxInsulin: self.state.maxHourlyInsulin,
+                dailyMaxInsulin: self.state.maxDailyInsulin,
                 currentTDD: 0,
                 basalProfile: self.state.basalSchedule.toData()
             )
             let result = await self.bluetooth.write(packet)
-            if case .failure(let error) = result {
+            switch result {
+            case .failure(let error):
                 self.log.error("Failed to activate pump: \(error)")
-                completion(.failure(error: .unknownError(reason: error.errorDescription ?? "")))
+                completion(.failure(error: .unknownError(reason: error.localizedDescription)))
                 return
-            }
-            
-            if case .success(let data) = result, let data = data as? ActivatePacketResponse {
+                
+            case .success(let data):
+                guard let data = data as? ActivatePacketResponse else {
+                    self.log.error("Failed to parse response...")
+                    completion(.failure(error: .unknownError(reason: "Failed to parse response...")))
+                    return
+                }
+                
+                if self.state.expirationTimer == 1 {
+                    NotificationManager.activatePatchExpiredNotification(after: self.state.notificationAfterActivation)
+                }
+                
                 self.state.patchId = data.patchId
+                self.state.patchActivatedAt = Date.now
+                self.state.patchExpiresAt = Date.now.addingTimeInterval(.days(3)).addingTimeInterval(.hours(8))
+                self.notifyStateDidChange()
+                
+                self.pumpDelegate.notify { (delegate) in
+                    delegate?.pumpManagerPumpWasReplaced(self)
+                }
+                
                 self.log.info("Patch activated!")
                 completion(.success)
                 return
             }
+        }
+    }
+    
+    func deactivatePatch(_ completion: @escaping (MedtrumDeactivatePatchResult) -> Void) {
+        self.log.info("Deactivate patch pump...")
+        self.bluetooth.ensureConnected { connectionResult in
+            if case .failure(let error) = connectionResult {
+                self.log.error("Failed to connect to pump: \(error)")
+                completion(.failure(error: .connectionFailure))
+                return
+            }
             
-            self.log.error("Failed to parse response...")
-            completion(.failure(error: .unknownError(reason: "Failed to parse response...")))
+            let package = StopPatchPacket()
+            let result = await self.bluetooth.write(package)
+            if case .failure(let error) = result {
+                self.log.error("Failed to deactivate pump: \(error)")
+                completion(.failure(error: .unknownError(reason: error.localizedDescription)))
+                return
+            }
+            
+            self.state.patchId = Data()
+            self.state.sessionToken = Data()
+            self.notifyStateDidChange()
+            
+            self.log.info("Patch deactivated")
+            completion(.success)
+        }
+    }
+    
+    func updatePatchSettings(completion: @escaping (MedtrumUpdatePatchResult) -> Void) {
+        self.log.info("Update patch settings...")
+        self.bluetooth.ensureConnected { connectionResult in
+            if case .failure(let error) = connectionResult {
+                self.log.error("Failed to connect to pump: \(error)")
+                completion(.failure(error: .connectionFailure))
+                return
+            }
+            
+            let package = SetPatchPacket(
+                alarmSettings: self.state.alarmSetting,
+                hourlyMaxInsulin: self.state.maxHourlyInsulin,
+                dailyMaxInsulin: self.state.maxDailyInsulin,
+                expirationTimer: self.state.expirationTimer
+            )
+            let result = await self.bluetooth.write(package)
+            if case .failure(let error) = result {
+                self.log.error("Failed to update settings: \(error)")
+                completion(.failure(error: .unknownError(reason: error.localizedDescription)))
+                return
+            }
+            
+            self.log.info("Patch settings updated!")
+            completion(.success)
         }
     }
     
     func addStatusObserver(_ observer: PumpManagerStatusObserver, queue: DispatchQueue) {
         statusObservers.insert(observer, queue: queue)
     }
-
+    
     func removeStatusObserver(_ observer: PumpManagerStatusObserver) {
         statusObservers.removeElement(observer)
     }
@@ -721,17 +808,47 @@ public extension MedtrumPumpManager {
         DispatchQueue.main.async {
             let status = self.status(self.state)
             let oldStatus = self.status(self.oldState)
-
+            
             self.pumpDelegate.notify { delegate in
                 delegate?.pumpManagerDidUpdateState(self)
                 delegate?.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
             }
-
+            
             self.statusObservers.forEach { observer in
                 observer.pumpManager(self, didUpdate: status, oldStatus: oldStatus)
             }
-
+            
             self.oldState = MedtrumPumpState(rawValue: self.state.rawValue)
+        }
+    }
+    
+    func updateBolusProgress(delivered: Double, completed: Bool) {
+        guard let doseReporter = doseReporter else {
+            return
+        }
+        
+        doseReporter.notify(deliveredUnits: delivered)
+        
+        if completed {
+            self.state.bolusState = .noBolus
+            self.notifyStateDidChange()
+            
+            let dose = self.doseEntry?.toDoseEntry()
+            self.doseEntry = nil
+            self.doseReporter = nil
+            
+            guard let dose = dose else {
+                return
+            }
+            
+            self.pumpDelegate.notify { delegate in
+                delegate?.pumpManager(
+                    self,
+                    hasNewPumpEvents: [NewPumpEvent.bolus(dose: dose, units: dose.deliveredUnits ?? 0, date: dose.startDate)],
+                    lastReconciliation: Date.now,
+                    completion: { _ in }
+                )
+            }
         }
     }
 }
