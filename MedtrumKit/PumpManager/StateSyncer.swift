@@ -45,6 +45,10 @@ func syncState(
         }
     }
 
+    if let prime = syncResponse.primeProgress {
+        state.primeProgress = prime
+    }
+
     if let battery = syncResponse.battery {
         state.battery = battery.voltageB
     }
