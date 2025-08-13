@@ -8,7 +8,7 @@ public class MedtrumPumpManager: DeviceManager {
         LocalizedString("Medtrum", comment: "Generic title of the Medtrum pump manager") + " " + state.pumpName
     }
 
-    public let managerIdentifier: String = "MedtrumKit"
+    public let managerIdentifier: String = "Medtrum"
 
     private let log = MedtrumLogger(category: "MedtrumPumpManager")
 
