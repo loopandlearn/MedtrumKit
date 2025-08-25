@@ -8,7 +8,7 @@ public class MedtrumPumpManager: DeviceManager {
         LocalizedString("Medtrum", comment: "Generic title of the Medtrum pump manager") + " " + state.pumpName
     }
 
-    public let managerIdentifier: String = "MedtrumKit"
+    public let managerIdentifier: String = "Medtrum"
 
     private let log = MedtrumLogger(category: "MedtrumPumpManager")
 
@@ -216,17 +216,21 @@ public extension MedtrumPumpManager {
     }
 
     func syncPumpData(completion: ((Date?) -> Void)?) {
+        log.info("Sync pump data")
+        
         #if targetEnvironment(simulator)
             pumpDelegate.notify { delegate in
+                self.state.reservoir = Double(Int.random(in: 10..<200))
+                
                 delegate?.pumpManager(self, didReadReservoirValue: self.state.reservoir, at: Date.now) { _ in }
 
                 self.state.lastSync = Date.now
                 self.notifyStateDidChange()
+                
+                completion?(nil)
             }
             return
         #endif
-
-        log.info("Sync pump data")
 
         bluetooth.ensureConnected { error in
             if let error = error {
