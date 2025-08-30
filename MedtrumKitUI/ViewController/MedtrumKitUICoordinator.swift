@@ -24,6 +24,9 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
     private var allowDebugFeatures: Bool
     private let logger = MedtrumLogger(category: "MedtrumKitUICoordinator")
 
+    var pumpManagerOnboardingDelegate: (any LoopKitUI.PumpManagerOnboardingDelegate)?
+    var completionDelegate: (any LoopKitUI.CompletionDelegate)?
+
     var screenStack = [MedtrumUIScreen]()
     var currentScreen: MedtrumUIScreen {
         screenStack.last!
@@ -154,9 +157,9 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
                 { self.navigateTo(.pumpBaseSettingsScreen) },
                 { self.resetNavigationTo(.settingsScreen) }
             )
-            return hostingController(rootView: PatchPrimingView(viewModel: viewModel)
-                .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-                .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
+            return hostingController(
+                rootView: PatchPrimingView(viewModel: viewModel)
+                    .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
             )
 
         case .patchActivationScreen:
@@ -165,9 +168,9 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
                 { self.resetNavigationTo(.settingsScreen) },
                 { self.navigateTo(.patchPrimingScreen) }
             )
-            return hostingController(rootView: PatchActivationView(viewModel: viewModel)
-                .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
-                .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
+            return hostingController(
+                rootView: PatchActivationView(viewModel: viewModel)
+                    .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
             )
 
         case .settingsScreen:
@@ -201,9 +204,9 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
         return DismissibleHostingController(content: rootView, colorPalette: colorPalette)
     }
 
-    var pumpManagerOnboardingDelegate: (any LoopKitUI.PumpManagerOnboardingDelegate)?
-
-    var completionDelegate: (any LoopKitUI.CompletionDelegate)?
+    override func viewDidDisappear(_: Bool) {
+        UIApplication.shared.isIdleTimerDisabled = false
+    }
 }
 
 extension MedtrumKitUICoordinator {

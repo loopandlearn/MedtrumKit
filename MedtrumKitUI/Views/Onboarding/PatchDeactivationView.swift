@@ -3,7 +3,7 @@ import SwiftUI
 
 struct PatchDeactivationView: View {
     @ObservedObject var viewModel: DeactivatePatchViewModel
-    
+
     @State var showingConfirmationPrompt = false
 
     var body: some View {
@@ -28,7 +28,7 @@ struct PatchDeactivationView: View {
             .buttonStyle(ActionButtonStyle(.secondary))
             .disabled(viewModel.isDeactivating)
             .padding([.bottom, .horizontal])
-            
+
             Button(action: { viewModel.deactivate() }) {
                 if viewModel.isDeactivating {
                     ActivityIndicator(isAnimating: .constant(true), style: .medium)
@@ -41,7 +41,8 @@ struct PatchDeactivationView: View {
             .padding([.bottom, .horizontal])
         }
         .alert(LocalizedString("Are you sure?", comment: "title force remove"), isPresented: $showingConfirmationPrompt) {
-            Button(LocalizedString("Confirm", comment: "confirm force remove"), role: .destructive) { viewModel.forceDeactivate() }
+            Button(LocalizedString("Confirm", comment: "confirm force remove"), role: .destructive) { viewModel.forceDeactivate()
+            }
         } message: {
             Text(LocalizedString("It is recommended to deactivate first", comment: "body force remove"))
         }

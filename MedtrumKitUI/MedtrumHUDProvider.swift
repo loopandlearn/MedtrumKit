@@ -76,7 +76,7 @@ internal class MedtrumKitHUDProvider: NSObject, HUDProvider {
 
         return reservoirView
     }
-    
+
     private func hudDidAppear() {
         updateReservoirView()
         pumpManager.ensureCurrentPumpData { _ in
