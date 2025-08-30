@@ -160,12 +160,12 @@ public extension MedtrumPumpManager {
     }
 
     private func status(_ state: MedtrumPumpState) -> PumpManagerStatus {
-        return PumpManagerStatus(
+        PumpManagerStatus(
             timeZone: TimeZone.current,
             device: device(state),
             pumpBatteryChargeRemaining: nil, // Patch pumps do not need to report back battery status
             basalDeliveryState: state.basalDeliveryState,
-            bolusState: self.bolusState(state.bolusState),
+            bolusState: bolusState(state.bolusState),
             insulinType: state.insulinType
         )
     }
@@ -203,16 +203,16 @@ public extension MedtrumPumpManager {
 
     func syncPumpData(completion: ((Date?) -> Void)?) {
         log.info("Sync pump data")
-        
+
         #if targetEnvironment(simulator)
             pumpDelegate.notify { delegate in
-                self.state.reservoir = Double(Int.random(in: 10..<200))
-                
+                self.state.reservoir = Double(Int.random(in: 10 ..< 200))
+
                 delegate?.pumpManager(self, didReadReservoirValue: self.state.reservoir, at: Date.now) { _ in }
 
                 self.state.lastSync = Date.now
                 self.notifyStateDidChange()
-                
+
                 completion?(nil)
             }
             return
@@ -732,11 +732,12 @@ public extension MedtrumPumpManager {
                 self.notifyStateDidChange()
 
                 self.pumpDelegate.notify { delegate in
-                    delegate?.pumpManager(self,
-                                          hasNewPumpEvents: [NewPumpEvent.replacedPump()],
-                                          lastReconciliation: Date.now,
-                                          replacePendingEvents: true,
-                                          completion: { _ in }
+                    delegate?.pumpManager(
+                        self,
+                        hasNewPumpEvents: [NewPumpEvent.replacedPump()],
+                        lastReconciliation: Date.now,
+                        replacePendingEvents: true,
+                        completion: { _ in }
                     )
                     delegate?.pumpManagerPumpWasReplaced(self)
                 }
@@ -855,7 +856,7 @@ public extension MedtrumPumpManager {
             let dose = doseEntry.toDoseEntry()
             self.doseEntry = nil
             doseReporter = nil
-            
+
             notifyStateDidChange()
 
             pumpDelegate.notify { delegate in

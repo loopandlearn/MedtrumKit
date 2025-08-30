@@ -52,7 +52,7 @@ public extension NewPumpEvent {
             title: LocalizedString("Suspend", comment: "Pump Event title for UnfinalizedDose with doseType of .suspend")
         )
     }
-    
+
     static func replacedPump(date: Date = Date.now) -> NewPumpEvent {
         let dateFormatter = ISO8601DateFormatter()
         return NewPumpEvent(
