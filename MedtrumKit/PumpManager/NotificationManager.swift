@@ -38,7 +38,7 @@ class NotificationManager {
     public static func patchDailyMaxNotification() {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
-            content.title = LocalizedString("Insulin has been suspended!", comment: "Title daily max notification")
+            content.title = LocalizedString("Insulin has been suspended!", comment: "Title insulin suspended notification")
             content.body = LocalizedString("Your patch has reached its daily maximum!", comment: "Body daily max notification")
 
             addRequest(identifier: .patchDailyMaxNotification, content: content, triggerAfter: nil, deleteOld: true)
@@ -48,7 +48,7 @@ class NotificationManager {
     public static func patchHourlyMaxNotification() {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
-            content.title = LocalizedString("Insulin has been suspended!", comment: "Title hourly max notification")
+            content.title = LocalizedString("Insulin has been suspended!", comment: "Title insulin suspended notification")
             content.body = LocalizedString("Your patch has reached its hourly maximum!", comment: "Body hourly max notification")
 
             addRequest(identifier: .patchHourlyMaxNotification, content: content, triggerAfter: nil, deleteOld: true)
@@ -58,7 +58,7 @@ class NotificationManager {
     public static func occlusionNotification() {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
-            content.title = LocalizedString("Replace your patch now!", comment: "Title occlussion notification")
+            content.title = LocalizedString("Replace your patch now!", comment: "Title replace patch notification")
             content.body = LocalizedString("Your patch has detected an occlussion!", comment: "Body occlussion notification")
 
             addRequest(identifier: .occlusionNotification, content: content, triggerAfter: nil, deleteOld: true)
@@ -68,7 +68,7 @@ class NotificationManager {
     public static func patchFaultNotification() {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
-            content.title = LocalizedString("Replace your patch now!", comment: "Title fault notification")
+            content.title = LocalizedString("Replace your patch now!", comment: "Title replace patch notification")
             content.body = LocalizedString("Your patch is in Fault state!", comment: "Body fault notification")
 
             addRequest(identifier: .patchFaultNotification, content: content, triggerAfter: nil, deleteOld: true)
@@ -78,7 +78,7 @@ class NotificationManager {
     public static func reservoirEmptyNotification() {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
-            content.title = LocalizedString("Replace your patch now!", comment: "Title reservoir empty notification")
+            content.title = LocalizedString("Replace your patch now!", comment: "Title replace patch notification")
             content.body = LocalizedString("Your patch is out of insulin!", comment: "Body reservoir empty notification")
 
             addRequest(identifier: .reservoirEmptyNotification, content: content, triggerAfter: nil, deleteOld: true)
