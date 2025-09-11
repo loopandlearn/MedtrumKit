@@ -136,18 +136,8 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
 
         case .pumpBaseSettingsScreen:
             let nextStep = { self.navigateTo(.patchPrimingScreen) }
-            let pumpRemoval = {
-                guard let completionDelegate = self.completionDelegate, let pumpManager = self.pumpManager else {
-                    return
-                }
-                pumpManager.notifyDelegateOfDeactivation {
-                    DispatchQueue.main.async {
-                        completionDelegate.completionNotifyingDidComplete(self)
-                    }
-                }
-            }
-
             let viewModel = PumpBaseSettingsViewModel(pumpManager, nextStep, pumpRemoval)
+            
             return hostingController(rootView: PumpBaseSettingsView(viewModel: viewModel))
 
         case .patchPrimingScreen:
@@ -180,15 +170,6 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
             let toActivation: (Bool) -> Void = { alreadyPrimed in
                 self.navigateTo(alreadyPrimed ? .patchActivationScreen : .patchPrimingScreen)
             }
-            let pumpRemoval = {
-                guard let completionDelegate = self.completionDelegate, let pumpManager = self.pumpManager else {
-                    return
-                }
-
-                pumpManager.notifyDelegateOfDeactivation {
-                    completionDelegate.completionNotifyingDidComplete(self)
-                }
-            }
 
             let viewModel = MedtrumKitSettingsViewModel(pumpManager, toDeactivation, toActivation, pumpRemoval)
             return hostingController(rootView: MedtrumKitSettings(
@@ -206,6 +187,17 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
 
     override func viewDidDisappear(_: Bool) {
         UIApplication.shared.isIdleTimerDisabled = false
+    }
+
+    private func pumpRemoval() {
+        NotificationManager.clearPendingNotifications()
+        guard let completionDelegate = self.completionDelegate, let pumpManager = self.pumpManager else {
+            return
+        }
+
+        pumpManager.notifyDelegateOfDeactivation {
+            completionDelegate.completionNotifyingDidComplete(self)
+        }
     }
 }
 

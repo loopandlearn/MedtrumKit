@@ -125,7 +125,6 @@
 		3EFBC4F42DFB527400E0E295 /* DeleteDriverActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFBC4F32DFB526900E0E295 /* DeleteDriverActionSheet.swift */; };
 		B7189AE72C15A52800703DE2 /* MedtrumPumpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7189AE52C15A52800703DE2 /* MedtrumPumpManager.swift */; };
 		B7189AEA2C15A8CE00703DE2 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7189AE92C15A8CE00703DE2 /* LoopKit.framework */; };
-		B7D3A8D52C148CC4002EE003 /* MedtrumKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = B7D3A8D42C148CC4002EE003 /* MedtrumKit.docc */; };
 		B7D3A8DB2C148CC4002EE003 /* MedtrumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D3A8D02C148CC4002EE003 /* MedtrumKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -301,7 +300,6 @@
 		B7189AE52C15A52800703DE2 /* MedtrumPumpManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedtrumPumpManager.swift; sourceTree = "<group>"; };
 		B7189AE92C15A8CE00703DE2 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7D3A8D02C148CC4002EE003 /* MedtrumKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MedtrumKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7D3A8D42C148CC4002EE003 /* MedtrumKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = MedtrumKit.docc; sourceTree = "<group>"; };
 		B7D3A8DA2C148CC4002EE003 /* MedtrumKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MedtrumKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7D3A8ED2C14F0EF002EE003 /* MedtrumKitPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MedtrumKitPlugin.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -614,7 +612,6 @@
 				B7189AE62C15A52800703DE2 /* PumpManager */,
 				3E767D052D67B4A0004B1971 /* Info.plist */,
 				3EE340B52E4D1E740040E346 /* MedtrumKit.h */,
-				B7D3A8D42C148CC4002EE003 /* MedtrumKit.docc */,
 			);
 			path = MedtrumKit;
 			sourceTree = "<group>";
@@ -885,7 +882,6 @@
 				3E50601A2D70F2F500376609 /* GetDeviceTypePacket.swift in Sources */,
 				3E15A4782DA2B6E6007F7D3C /* MedtrumReservoirView.swift in Sources */,
 				3E9A5C962DA1460700A4102D /* PumpBaseSettingsView.swift in Sources */,
-				B7D3A8D52C148CC4002EE003 /* MedtrumKit.docc in Sources */,
 				3E9D8B0C2D88A3FA00008AF2 /* MedtrumDoseProgressReporter.swift in Sources */,
 				3E15A47C2DA2B718007F7D3C /* IdentifiableClass.swift in Sources */,
 				3E24AEC82DA17B4900C7733C /* PatchActivationViewModel.swift in Sources */,
