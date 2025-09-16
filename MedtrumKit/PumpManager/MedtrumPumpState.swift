@@ -83,9 +83,9 @@ public class MedtrumPumpState: RawRepresentable {
         }
 
         if let alarmSettingRaw = rawValue["alarmSetting"] as? AlarmSettings.RawValue {
-            alarmSetting = AlarmSettings(rawValue: alarmSettingRaw) ?? .None
+            alarmSetting = AlarmSettings(rawValue: alarmSettingRaw) ?? .BeepOnly
         } else {
-            alarmSetting = .None
+            alarmSetting = .BeepOnly
         }
     }
 
