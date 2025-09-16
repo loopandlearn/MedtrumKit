@@ -137,7 +137,7 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
         case .pumpBaseSettingsScreen:
             let nextStep = { self.navigateTo(.patchPrimingScreen) }
             let viewModel = PumpBaseSettingsViewModel(pumpManager, nextStep, pumpRemoval)
-            
+
             return hostingController(rootView: PumpBaseSettingsView(viewModel: viewModel))
 
         case .patchPrimingScreen:

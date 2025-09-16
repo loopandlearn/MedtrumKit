@@ -24,10 +24,10 @@ class NotificationManager {
             addRequest(identifier: .patchExpiredNotification, content: content, triggerAfter: after, deleteOld: true)
         }
     }
-    
+
     public static func clearPendingNotifications() {
         let center = UNUserNotificationCenter.current()
-        
+
         // Can be extended with more scheduled notifications
         for identifier in [Identifiers.patchExpiredNotification] {
             center.removeDeliveredNotifications(withIdentifiers: [identifier.rawValue])
