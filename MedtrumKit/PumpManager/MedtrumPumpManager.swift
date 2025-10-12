@@ -885,4 +885,22 @@ public extension MedtrumPumpManager {
             }
         }
     }
+    
+    internal func checkBolusDone() {
+        guard let doseEntry = self.doseEntry else {
+            // Disconnect was done after bolus was complete!
+            return
+        }
+
+        log.warning("Bolus was not completed... \(doseEntry.deliveredUnits)U of the \(doseEntry.value)U")
+
+        // There was a bolus going on, unsure if the bolus is completed...
+        state.bolusState = .noBolus
+        self.doseEntry = nil
+        notifyStateDidChange()
+
+        pumpDelegate.notify { delegate in
+            delegate?.pumpManager(self, didError: .uncertainDelivery)
+        }
+    }
 }
