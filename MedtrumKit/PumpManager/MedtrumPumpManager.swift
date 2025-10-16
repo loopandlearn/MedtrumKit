@@ -207,6 +207,9 @@ public extension MedtrumPumpManager {
         #if targetEnvironment(simulator)
             pumpDelegate.notify { delegate in
                 self.state.reservoir = Double(Int.random(in: 10 ..< 200))
+                if self.state.initialReservoir == nil {
+                    self.state.initialReservoir = self.state.reservoir
+                }
 
                 delegate?.pumpManager(self, didReadReservoirValue: self.state.reservoir, at: Date.now) { _ in }
 
@@ -727,6 +730,7 @@ public extension MedtrumPumpManager {
 
                 self.state.patchId = data.patchId
                 self.state.patchActivatedAt = Date.now
+                self.state.initialReservoir = nil
                 self.state.patchExpiresAt = Date.now.addingTimeInterval(.days(3)).addingTimeInterval(.hours(8))
                 self.notifyStateDidChange()
 
@@ -779,8 +783,8 @@ public extension MedtrumPumpManager {
                 battery: self.state.battery,
                 activatedAt: self.state.patchActivatedAt,
                 deactivatedAt: Date.now,
-                reservoirLevel: self.state.reservoir,
-                maxInsulin: self.state.pumpName.contains("300U") ? 300 : 200
+                initialReservoirLevel: self.state.initialReservoir,
+                reservoirLevel: self.state.reservoir
             )
 
             self.state.patchId = Data()
