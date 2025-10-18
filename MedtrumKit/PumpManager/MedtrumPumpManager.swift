@@ -257,7 +257,6 @@ public extension MedtrumPumpManager {
                         delegate: delegate,
                         pumpManager: self
                     )
-                    self.notifyStateDidChange()
                 }
 
                 completion?(Date.now)
@@ -883,7 +882,7 @@ public extension MedtrumPumpManager {
             pumpDelegate.notify { delegate in
                 delegate?.pumpManager(
                     self,
-                    hasNewPumpEvents: [NewPumpEvent.bolus(dose: dose, units: dose.deliveredUnits ?? 0, date: dose.startDate)],
+                    hasNewPumpEvents: [NewPumpEvent.bolus(dose: dose, units: doseEntry.deliveredUnits, date: dose.startDate)],
                     lastReconciliation: Date.now,
                     replacePendingEvents: true,
                     completion: { _ in }
@@ -901,12 +900,31 @@ public extension MedtrumPumpManager {
         log.warning("Bolus was not completed... \(doseEntry.deliveredUnits)U of the \(doseEntry.value)U")
 
         // There was a bolus going on, unsure if the bolus is completed...
+        let dose = doseEntry.toDoseEntry()
         state.bolusState = .noBolus
         self.doseEntry = nil
         notifyStateDidChange()
 
         pumpDelegate.notify { delegate in
-            delegate?.pumpManager(self, didError: .uncertainDelivery)
+            guard let delegate = delegate else {
+                self.log.warning("No pump delegate, not notifying...")
+                return
+            }
+            
+            delegate.pumpManager(self, didError: .uncertainDelivery)
+            delegate.pumpManager(
+                self,
+                hasNewPumpEvents: [
+                    NewPumpEvent.bolus(
+                        dose: dose,
+                        units: dose.programmedUnits,
+                        date: dose.startDate
+                    )
+                ],
+                lastReconciliation: Date(),
+                replacePendingEvents: true,
+                completion: { _ in }
+            )
         }
     }
 }
