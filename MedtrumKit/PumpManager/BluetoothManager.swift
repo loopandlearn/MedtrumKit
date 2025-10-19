@@ -268,7 +268,7 @@ extension BluetoothManager {
         if peripheralManager != nil {
             peripheralManager = nil
         }
-        
+
         ensureConnected { error in
             if let error = error {
                 self.logger.error("Failed to auto reconnect - \(error)")

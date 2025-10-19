@@ -910,7 +910,7 @@ public extension MedtrumPumpManager {
                 self.log.warning("No pump delegate, not notifying...")
                 return
             }
-            
+
             delegate.pumpManager(self, didError: .uncertainDelivery)
             delegate.pumpManager(
                 self,
