@@ -66,7 +66,13 @@ enum StateSyncer {
             state.patchId = UInt64(storage.patchId).toData(length: 4)
         }
 
+        if let bolusProgress = syncResponse.bolus {
+            pumpManager.updateBolusProgress(delivered: bolusProgress.delivered, completed: bolusProgress.completed)
+        }
+
         state.lastSync = Date.now
+
+        pumpManager.notifyStateDidChange()
     }
 
     private static func updatePumpState(
