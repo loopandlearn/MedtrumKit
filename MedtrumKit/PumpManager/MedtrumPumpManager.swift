@@ -177,7 +177,7 @@ public extension MedtrumPumpManager {
         case .canceling:
             return .canceling
         case .inProgress:
-            if let dose = doseEntry?.toDoseEntry() {
+            if let dose = doseEntry?.toDoseEntry(isMutable: true) {
                 return .inProgress(dose)
             }
 
