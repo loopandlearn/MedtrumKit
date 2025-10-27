@@ -49,7 +49,6 @@
 		3E6B082D2DF2224900A484C6 /* BasalScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6B082C2DF2224500A484C6 /* BasalScheduleTests.swift */; };
 		3E767D022D67B315004B1971 /* LocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767CFD2D67B192004B1971 /* LocalizedString.swift */; };
 		3E767D032D67B319004B1971 /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767CE42D67AF35004B1971 /* OSLog.swift */; };
-		3E767D042D67B3FC004B1971 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		3E767D4D2D67BA71004B1971 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E767D4C2D67BA71004B1971 /* LoopKitUI.framework */; };
 		3E767D522D67BC2E004B1971 /* MedtrumKitPumpManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767CE22D67ADFA004B1971 /* MedtrumKitPumpManager+UI.swift */; };
 		3E767D532D67BC33004B1971 /* MedtrumHUDProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E767CFE2D67B1A9004B1971 /* MedtrumHUDProvider.swift */; };
@@ -784,7 +783,6 @@
 			files = (
 				3E26BE0D2D906A0D00E595B0 /* MedtrumUI.xcassets in Resources */,
 				B6E920502EAFBB390076D719 /* Localizable.xcstrings in Resources */,
-				3E767D042D67B3FC004B1971 /* (null) in Resources */,
 				3E15A4802DA2B857007F7D3C /* MedtrumReservoirView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
