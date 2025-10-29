@@ -224,7 +224,6 @@ extension PeripheralManager {
         StateSyncer.sync(
             syncResponse: syncResponse,
             state: pumpManager.state,
-            delegate: nil,
             pumpManager: pumpManager
         )
     }
