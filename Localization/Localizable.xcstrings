@@ -2811,6 +2811,18 @@
         }
       }
     },
+    "Checked at" : {
+      "comment" : "Text for pump time synced at",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checked at"
+          }
+        }
+      }
+    },
     "Configuration" : {
       "comment" : "Configuration section",
       "extractionState" : "manual",
@@ -8193,6 +8205,18 @@
         }
       }
     },
+    "Manually sync Pump time" : {
+      "comment" : "Label for syncing the time on the pump",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manually sync Pump time"
+          }
+        }
+      }
+    },
     "Max daily insulin" : {
       "comment" : "Label for maximum daily insulin delivery",
       "extractionState" : "manual",
@@ -9017,6 +9041,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "否，保持原来的状态"
+          }
+        }
+      }
+    },
+    "No, Keep Pump As Is" : {
+      "comment" : "Button text to cancel pump time sync",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No, Keep Pump As Is"
           }
         }
       }
@@ -10397,6 +10433,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "补丁状态"
+          }
+        }
+      }
+    },
+    "Patch time" : {
+      "comment" : "The title for patch time",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Patch time"
           }
         }
       }
@@ -13575,6 +13623,42 @@
         }
       }
     },
+    "The time on your pump is different from the current time. Do you want to update the time on your pump to the current time?" : {
+      "comment" : "Message for pod sync time action sheet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The time on your pump is different from the current time. Do you want to update the time on your pump to the current time?"
+          }
+        }
+      }
+    },
+    "The time on your pump is different from the current time. Your pump’s time controls your scheduled therapy settings. Scroll down to Pump Time row to review the time difference and configure your pump." : {
+      "comment" : "description for time change detected notice",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The time on your pump is different from the current time. Your pump’s time controls your scheduled therapy settings. Scroll down to Pump Time row to review the time difference and configure your pump."
+          }
+        }
+      }
+    },
+    "Time Change Detected" : {
+      "comment" : "Title for pod sync time action sheet.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time Change Detected"
+          }
+        }
+      }
+    },
     "Toggle heartbeat mode" : {
       "comment" : "Title for toggle heartbeat mode action sheet.",
       "extractionState" : "manual",
@@ -14813,6 +14897,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "是，启用心跳模式"
+          }
+        }
+      }
+    },
+    "Yes, Sync to Current Time" : {
+      "comment" : "Button text to confirm pump time sync",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yes, Sync to Current Time"
           }
         }
       }
