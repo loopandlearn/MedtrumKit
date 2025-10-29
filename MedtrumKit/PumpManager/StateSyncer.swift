@@ -72,43 +72,43 @@ enum StateSyncer {
 
         pumpManager.notifyStateDidChange()
     }
-    
+
     public static func timeSync(pumpManager: MedtrumPumpManager) async {
         let logger = MedtrumLogger(category: "TimeSync")
         let timeData = await pumpManager.bluetooth.write(GetTimePacket())
-        
+
         switch timeData {
-        case .failure(error: let error):
+        case let .failure(error: error):
             logger.warning("Failed to get current Patch time: \(error.errorDescription)")
             return
-        case .success(data: let data):
+        case let .success(data: data):
             guard let timeResponse = data as? GetTimePacketResponse else {
                 logger.error("Failed to get time: invalid response")
                 return
             }
-            
+
             pumpManager.state.pumpTime = timeResponse.time
             pumpManager.state.pumpTimeSyncedAt = Date.now
         }
     }
-    
+
     public static func syncTime(pumpManager: MedtrumPumpManager) async {
         let logger = MedtrumLogger(category: "TimeSync")
-        
+
         let timeData = await pumpManager.bluetooth.write(SetTimePacket(date: Date.now))
         switch timeData {
-        case .failure(error: let error):
+        case let .failure(error: error):
             logger.error("Failed to sync time: \(error.errorDescription)")
             return
         default:
             break
         }
-        
+
         let timeZoneData = await pumpManager.bluetooth.write(
             SetTimeZonePacket(date: Date.now, timeZone: TimeZone.current)
         )
         switch timeZoneData {
-        case .failure(error: let error):
+        case let .failure(error: error):
             logger.error("Failed to sync timezone: \(error.errorDescription)")
             return
         default:

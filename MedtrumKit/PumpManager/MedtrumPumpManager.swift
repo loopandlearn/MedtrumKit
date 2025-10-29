@@ -255,7 +255,7 @@ public extension MedtrumPumpManager {
                     state: self.state,
                     pumpManager: self
                 )
-                
+
                 self.pumpDelegate.notify { delegate in
                     delegate?.pumpManager(
                         self,
@@ -888,13 +888,13 @@ public extension MedtrumPumpManager {
                 guard let delegate = delegate else {
                     return
                 }
-                
+
                 delegate.pumpManager(
                     self,
                     didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
                     at: self.state.lastSync
                 ) { _ in }
-                
+
                 delegate.pumpManager(
                     self,
                     hasNewPumpEvents: [NewPumpEvent.bolus(dose: dose, units: doseEntry.deliveredUnits, date: dose.startDate)],

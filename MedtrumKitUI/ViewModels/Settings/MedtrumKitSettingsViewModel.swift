@@ -21,8 +21,8 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
     @Published var reservoirLevel: Double = 0
     @Published var battery: Double = 0
     @Published var maxReservoirLevel: Double = 1
-    @Published var pumpTime: Date = Date.distantPast
-    @Published var pumpTimeSyncedAt: Date = Date.distantPast
+    @Published var pumpTime = Date.distantPast
+    @Published var pumpTimeSyncedAt = Date.distantPast
     @Published var patchState: PatchState = .none
     @Published var patchStateString: String = PatchState.none.description
     @Published var basalType: BasalState = .active
@@ -291,14 +291,14 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
             return
         }
     }
-    
+
     func syncPumpTime() {
         guard let pumpManager = pumpManager else {
             return
         }
-        
+
         isUpdatingPumpState = true
-        
+
         Task {
             await StateSyncer.syncTime(pumpManager: pumpManager)
             await MainActor.run {

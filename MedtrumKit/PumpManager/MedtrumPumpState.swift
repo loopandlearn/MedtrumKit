@@ -270,10 +270,10 @@ public class MedtrumPumpState: RawRepresentable {
             return "TouchCare Nano 200U"
         }
     }
-    
+
     func shouldShowTimeWarning() -> Bool {
         // Allow a 15 sec diff in time
-        return abs(pumpTimeSyncedAt.timeIntervalSince1970 - pumpTime.timeIntervalSince1970) > 15
+        abs(pumpTimeSyncedAt.timeIntervalSince1970 - pumpTime.timeIntervalSince1970) > 15
     }
 
     public var debugDescription: String {

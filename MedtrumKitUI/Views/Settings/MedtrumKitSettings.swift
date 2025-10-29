@@ -13,7 +13,7 @@ struct MedtrumKitSettings: View {
     @Environment(\.appName) private var appName
 
     var supportedInsulinTypes: [InsulinType]
-    
+
     var syncPumpTime: ActionSheet {
         ActionSheet(
             title: Text(LocalizedString("Time Change Detected", comment: "Title for pod sync time action sheet.")),
@@ -44,7 +44,7 @@ struct MedtrumKitSettings: View {
                     reservoirStatus
                 }
                 .padding(.bottom, 5)
-                
+
                 if viewModel.showPumpTimeSyncWarning {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(LocalizedString("Time Change Detected", comment: "title for time change detected notice"))
@@ -260,7 +260,7 @@ struct MedtrumKitSettings: View {
                     }
                 }
             }
-            
+
             Section(header: SectionHeader(label: LocalizedString(
                 "Patch time",
                 comment: "The title for patch time"
