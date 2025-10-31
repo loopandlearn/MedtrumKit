@@ -5,6 +5,7 @@ enum MedtrumWriteResult<T> {
 
 enum MedtrumWriteError: LocalizedError {
     case timeout
+    case alreadyRunning
     case invalidData
     case invalidResponse(code: UInt16)
     case noManager
@@ -14,6 +15,8 @@ enum MedtrumWriteError: LocalizedError {
         switch self {
         case .timeout:
             return "Timeout hit"
+        case .alreadyRunning:
+            return "A command is already running"
         case .invalidData:
             return "Invalid data received"
         case let .invalidResponse(code):
