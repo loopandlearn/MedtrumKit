@@ -289,14 +289,14 @@ public extension MedtrumPumpManager {
         activationType: LoopKit.BolusActivationType,
         completion: @escaping (LoopKit.PumpManagerError?) -> Void
     ) {
-        let duration = estimatedDuration(toBolus: units)
-        log.info("Enact bolus - \(units)U, \(duration)sec")
-
         guard let insulinType = state.insulinType else {
             log.error("Insulin type is nil...")
             completion(.configuration(.none))
             return
         }
+        
+        let duration = estimatedDuration(toBolus: units)
+        log.info("Enact bolus - \(units)U, \(duration)sec")
 
         bluetooth.ensureConnected { error in
             if let error = error {
@@ -341,9 +341,8 @@ public extension MedtrumPumpManager {
                     self,
                     hasNewPumpEvents: [event],
                     lastReconciliation: self.state.lastSync,
-                    replacePendingEvents: false,
-                    completion: { _ in }
-                )
+                    replacePendingEvents: false
+                ) { _ in }
             }
 
             self.doseEntry = doseEntry

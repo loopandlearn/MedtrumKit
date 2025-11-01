@@ -133,6 +133,11 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
                     // This is amazing, we've done what we must and continue our live :)
                     return
                 }
+                
+                if let peripheral = self.peripheral, peripheral.state == .connected {
+                    // This is amazing, we've done what we must and continue our live :)
+                    return
+                }
 
                 self.logger.error("Failed to connect: Timeout reached...")
 

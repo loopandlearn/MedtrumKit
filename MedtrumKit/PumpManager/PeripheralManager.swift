@@ -57,7 +57,7 @@ class PeripheralManager: NSObject {
             return value
         }
 
-        return .failure(error: .timeout)
+        return .failure(error: .noData)
     }
 
     private func write(_ packet: any MedtrumBasePacketProtocol, for characteristic: CBCharacteristic) {
@@ -83,6 +83,9 @@ class PeripheralManager: NSObject {
                 }
 
                 // By not sending a yield, we trigger a timeout error in writePacket
+                log.warning("Timeout has been reached...")
+                
+                stream.yield(.failure(error: .timeout))
                 stream.finish()
                 self.writeQueue = nil
                 self.writeTimeoutTask = nil
@@ -285,6 +288,9 @@ extension PeripheralManager: CBPeripheralDelegate {
             // Need to skip to packet
             return
         }
+        
+        writeTimeoutTask?.cancel()
+        writeTimeoutTask = nil
 
         if packet.responseCode != 0 {
             // Examples for invalid codes:
