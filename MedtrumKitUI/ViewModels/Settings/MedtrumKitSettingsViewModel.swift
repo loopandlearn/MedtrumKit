@@ -298,11 +298,17 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         }
 
         isUpdatingPumpState = true
-
-        Task {
+        pumpManager.bluetooth.ensureConnected { error in
+            if let error = error {
+                await MainActor.run {
+                    self.isUpdatingPumpState = false
+                }
+                return
+            }
+            
             await StateSyncer.syncTime(pumpManager: pumpManager)
             await MainActor.run {
-                isUpdatingPumpState = false
+                self.isUpdatingPumpState = false
             }
         }
     }

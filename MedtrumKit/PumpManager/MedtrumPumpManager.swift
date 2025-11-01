@@ -186,7 +186,9 @@ public extension MedtrumPumpManager {
     }
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
-        guard Date.now.timeIntervalSince(state.lastSync) > .minutes(4) else {
+        guard Date.now.timeIntervalSince(state.lastSync) > .minutes(4) ||
+                Date.now.timeIntervalSince(state.patchActivatedAt) < .minutes(4)
+        else {
             log.warning("Skipping status update -> data is fresh: \(Date.now.timeIntervalSince(state.lastSync)) sec")
             completion?(state.lastSync)
             return
@@ -704,6 +706,8 @@ public extension MedtrumPumpManager {
                 completion(.success)
                 return
             }
+            
+            await StateSyncer.syncTime(pumpManager: self)
 
             let packet = ActivatePacket(
                 expirationTimer: self.state.expirationTimer,

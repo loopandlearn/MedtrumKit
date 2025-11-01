@@ -89,6 +89,7 @@ enum StateSyncer {
 
             pumpManager.state.pumpTime = timeResponse.time
             pumpManager.state.pumpTimeSyncedAt = Date.now
+            pumpManager.notifyStateDidChange()
         }
     }
 
@@ -112,6 +113,7 @@ enum StateSyncer {
             logger.error("Failed to sync timezone: \(error.errorDescription)")
             return
         default:
+            await StateSyncer.timeSync(pumpManager: pumpManager)
             break
         }
     }
