@@ -161,6 +161,15 @@ struct MedtrumKitSettings: View {
                             .foregroundColor(.secondary)
                     }
                 }
+
+                HStack {
+                    Text(LocalizedString("Status", comment: "Text for status")).foregroundColor(Color.primary)
+                    Spacer()
+                    HStack(spacing: 10) {
+                        connectionStatusText
+                        connectionStatusIcon
+                    }
+                }
             }
 
             Section(header: SectionHeader(label: LocalizedString("Configuration", comment: "Configuration section"))) {
