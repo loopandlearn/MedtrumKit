@@ -294,7 +294,7 @@ public extension MedtrumPumpManager {
             completion(.configuration(.none))
             return
         }
-        
+
         let duration = estimatedDuration(toBolus: units)
         log.info("Enact bolus - \(units)U, \(duration)sec")
 

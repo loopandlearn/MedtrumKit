@@ -84,7 +84,7 @@ class PeripheralManager: NSObject {
 
                 // By not sending a yield, we trigger a timeout error in writePacket
                 log.warning("Timeout has been reached...")
-                
+
                 stream.yield(.failure(error: .timeout))
                 stream.finish()
                 self.writeQueue = nil
@@ -288,7 +288,7 @@ extension PeripheralManager: CBPeripheralDelegate {
             // Need to skip to packet
             return
         }
-        
+
         writeTimeoutTask?.cancel()
         writeTimeoutTask = nil
 
