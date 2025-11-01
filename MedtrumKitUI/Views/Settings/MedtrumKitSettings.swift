@@ -298,9 +298,9 @@ struct MedtrumKitSettings: View {
                 }) {
                     Text(LocalizedString("Manually sync Pump time", comment: "Label for syncing the time on the pump"))
                         .foregroundColor(.accentColor)
-                    
+
                     Spacer()
-                    
+
                     if viewModel.isUpdatingPumpState {
                         ActivityIndicator(isAnimating: .constant(true), style: .medium)
                     }

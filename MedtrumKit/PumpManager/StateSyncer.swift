@@ -114,7 +114,6 @@ enum StateSyncer {
             return
         default:
             await StateSyncer.timeSync(pumpManager: pumpManager)
-            break
         }
     }
 

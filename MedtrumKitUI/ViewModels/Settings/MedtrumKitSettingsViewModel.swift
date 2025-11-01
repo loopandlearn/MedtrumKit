@@ -305,7 +305,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
                 }
                 return
             }
-            
+
             await StateSyncer.syncTime(pumpManager: pumpManager)
             await MainActor.run {
                 self.isUpdatingPumpState = false

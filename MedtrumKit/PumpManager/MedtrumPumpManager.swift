@@ -187,7 +187,7 @@ public extension MedtrumPumpManager {
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
         guard Date.now.timeIntervalSince(state.lastSync) > .minutes(4) ||
-                Date.now.timeIntervalSince(state.patchActivatedAt) < .minutes(4)
+            Date.now.timeIntervalSince(state.patchActivatedAt) < .minutes(4)
         else {
             log.warning("Skipping status update -> data is fresh: \(Date.now.timeIntervalSince(state.lastSync)) sec")
             completion?(state.lastSync)
@@ -652,6 +652,8 @@ public extension MedtrumPumpManager {
     }
 
     func primePatch(_ completion: @escaping (MedtrumPrimePatchResult) -> Void) {
+        log.info("Start priming patch...")
+
         if state.pumpSN.isEmpty {
             // Need to scan for pump base first
             log.warning("No pump base known yet...")
@@ -660,6 +662,8 @@ public extension MedtrumPumpManager {
         }
 
         if state.sessionToken.isEmpty {
+            log.debug("Refreshing session token...")
+
             // Patch has been disabled and thus a new session token is needed
             state.sessionToken = Crypto.genSessionToken()
             notifyStateDidChange()
@@ -706,7 +710,7 @@ public extension MedtrumPumpManager {
                 completion(.success)
                 return
             }
-            
+
             await StateSyncer.syncTime(pumpManager: self)
 
             let packet = ActivatePacket(
