@@ -936,8 +936,7 @@ public extension MedtrumPumpManager {
                 ],
                 lastReconciliation: self.state.lastSync,
                 replacePendingEvents: true,
-                completion: { _ in }
-            )
+            ) { _ in }
         }
     }
 }
