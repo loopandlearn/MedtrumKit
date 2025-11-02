@@ -296,13 +296,15 @@ struct MedtrumKitSettings: View {
                 Button(action: {
                     showingTimeSyncConfirmation = true
                 }) {
-                    Text(LocalizedString("Manually sync Pump time", comment: "Label for syncing the time on the pump"))
-                        .foregroundColor(.accentColor)
+                    HStack {
+                        Text(LocalizedString("Manually sync Pump time", comment: "Label for syncing the time on the pump"))
+                            .foregroundColor(.accentColor)
 
-                    Spacer()
+                        Spacer()
 
-                    if viewModel.isUpdatingPumpState {
-                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                        if viewModel.isUpdatingPumpState {
+                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                        }
                     }
                 }
                 .disabled(viewModel.isUpdatingPumpState)
