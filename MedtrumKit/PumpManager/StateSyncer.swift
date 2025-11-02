@@ -9,6 +9,14 @@ enum StateSyncer {
         StateSyncer.updatePumpState(syncResponse: syncResponse, state: state)
 
         if let reservoir = syncResponse.reservoir {
+            if let lowReservoirWarning = state.lowReservoirWarning,
+               state.reservoir > lowReservoirWarning,
+               reservoir < lowReservoirWarning
+            {
+                // Send low reservoir warning notification to user
+                NotificationManager.reservoirLowNotification(reservoir)
+            }
+
             state.reservoir = reservoir
             if state.initialReservoir == nil {
                 state.initialReservoir = state.reservoir
