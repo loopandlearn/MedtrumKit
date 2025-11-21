@@ -12,6 +12,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
     private let processQueue = DispatchQueue(label: "com.nightscout.medtrumkit.settingsViewModel")
 
     @Published var pumpBaseSN: String = ""
+    @Published var swVersion: String = ""
     @Published var pumpName: String = ""
     @Published var model: String = ""
     @Published var patchId: UInt64 = 0
@@ -21,8 +22,8 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
     @Published var reservoirLevel: Double = 0
     @Published var battery: Double = 0
     @Published var maxReservoirLevel: Double = 1
-    @Published var pumpTime: Date = Date.distantPast
-    @Published var pumpTimeSyncedAt: Date = Date.distantPast
+    @Published var pumpTime = Date.distantPast
+    @Published var pumpTimeSyncedAt = Date.distantPast
     @Published var patchState: PatchState = .none
     @Published var patchStateString: String = PatchState.none.description
     @Published var basalType: BasalState = .active
@@ -291,18 +292,24 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
             return
         }
     }
-    
+
     func syncPumpTime() {
         guard let pumpManager = pumpManager else {
             return
         }
-        
+
         isUpdatingPumpState = true
-        
-        Task {
+        pumpManager.bluetooth.ensureConnected { error in
+            if let error = error {
+                await MainActor.run {
+                    self.isUpdatingPumpState = false
+                }
+                return
+            }
+
             await StateSyncer.syncTime(pumpManager: pumpManager)
             await MainActor.run {
-                isUpdatingPumpState = false
+                self.isUpdatingPumpState = false
             }
         }
     }
@@ -337,6 +344,7 @@ extension MedtrumKitSettingsViewModel {
 
         pumpBaseSN = state.pumpSN.hexEncodedString().uppercased()
         pumpName = state.pumpName
+        swVersion = state.swVersion
         patchId = state.patchId.toUInt64()
         showPumpTimeSyncWarning = state.shouldShowTimeWarning()
         patchState = state.pumpState

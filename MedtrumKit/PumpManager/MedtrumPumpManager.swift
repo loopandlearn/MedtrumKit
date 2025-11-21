@@ -186,7 +186,9 @@ public extension MedtrumPumpManager {
     }
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
-        guard Date.now.timeIntervalSince(state.lastSync) > .minutes(4) else {
+        guard Date.now.timeIntervalSince(state.lastSync) > .minutes(4) ||
+            Date.now.timeIntervalSince(state.patchActivatedAt) < .minutes(4)
+        else {
             log.warning("Skipping status update -> data is fresh: \(Date.now.timeIntervalSince(state.lastSync)) sec")
             completion?(state.lastSync)
             return
@@ -255,7 +257,7 @@ public extension MedtrumPumpManager {
                     state: self.state,
                     pumpManager: self
                 )
-                
+
                 self.pumpDelegate.notify { delegate in
                     delegate?.pumpManager(
                         self,
@@ -296,14 +298,14 @@ public extension MedtrumPumpManager {
         activationType: LoopKit.BolusActivationType,
         completion: @escaping (LoopKit.PumpManagerError?) -> Void
     ) {
-        let duration = estimatedDuration(toBolus: units)
-        log.info("Enact bolus - \(units)U, \(duration)sec")
-
         guard let insulinType = state.insulinType else {
             log.error("Insulin type is nil...")
             completion(.configuration(.none))
             return
         }
+
+        let duration = estimatedDuration(toBolus: units)
+        log.info("Enact bolus - \(units)U, \(duration)sec")
 
         bluetooth.ensureConnected { error in
             if let error = error {
@@ -349,12 +351,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents: [event],
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: false,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             self.doseEntry = doseEntry
@@ -429,12 +430,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents:events,
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: true,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             self.notifyStateDidChange()
@@ -490,12 +490,11 @@ public extension MedtrumPumpManager {
                         hasNewPumpEvents: events,
                         lastReconciliation: self.state.lastSync,
                         replacePendingEvents: true,
-                        completion: { error in
-                            if let error = error {
-                                self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                            }
+                    ) { error in
+                        if let error = error {
+                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                         }
-                    )
+                    }
                 }
 
                 completion(nil)
@@ -528,12 +527,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents: events,
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: true,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             completion(nil)
@@ -578,12 +576,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents: events,
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: true,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             completion(nil)
@@ -624,12 +621,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents: events,
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: true,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             completion(nil)
@@ -681,12 +677,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents: [],
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: true,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             completion(.success(basalSchedule))
@@ -702,6 +697,8 @@ public extension MedtrumPumpManager {
     }
 
     func primePatch(_ completion: @escaping (MedtrumPrimePatchResult) -> Void) {
+        log.info("Start priming patch...")
+
         if state.pumpSN.isEmpty {
             // Need to scan for pump base first
             log.warning("No pump base known yet...")
@@ -710,6 +707,8 @@ public extension MedtrumPumpManager {
         }
 
         if state.sessionToken.isEmpty {
+            log.debug("Refreshing session token...")
+
             // Patch has been disabled and thus a new session token is needed
             state.sessionToken = Crypto.genSessionToken()
             notifyStateDidChange()
@@ -757,6 +756,8 @@ public extension MedtrumPumpManager {
                 return
             }
 
+            await StateSyncer.syncTime(pumpManager: self)
+
             let packet = ActivatePacket(
                 expirationTimer: self.state.expirationTimer,
                 alarmSetting: self.state.alarmSetting,
@@ -801,12 +802,11 @@ public extension MedtrumPumpManager {
                         hasNewPumpEvents: events,
                         lastReconciliation: self.state.lastSync,
                         replacePendingEvents: true,
-                        completion: { error in
-                            if let error = error {
-                                self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                            }
+                    ) { error in
+                        if let error = error {
+                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                         }
-                    )
+                    }
                     delegate?.pumpManagerPumpWasReplaced(self)
                 }
 
@@ -863,12 +863,11 @@ public extension MedtrumPumpManager {
                     hasNewPumpEvents: events,
                     lastReconciliation: self.state.lastSync,
                     replacePendingEvents: true,
-                    completion: { error in
-                        if let error = error {
-                            self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                        }
+                ) { error in
+                    if let error = error {
+                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                     }
-                )
+                }
             }
 
             self.log.info("Patch deactivated")
@@ -962,7 +961,7 @@ public extension MedtrumPumpManager {
                 guard let delegate = delegate else {
                     return
                 }
-                
+
                 delegate.pumpManager(
                     self,
                     didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
@@ -1024,13 +1023,12 @@ public extension MedtrumPumpManager {
                 self,
                 hasNewPumpEvents: events,
                 lastReconciliation: self.state.lastSync,
-                replacePendingEvents: true,
-                completion: { error in
-                    if let error = error {
-                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                    }
+                replacePendingEvents: true
+            ) { error in
+                if let error = error {
+                    self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                 }
-            )
+            }
         }
     }
     
