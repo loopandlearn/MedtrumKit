@@ -186,15 +186,11 @@ extension BluetoothManager {
         advertisementData: [String: Any],
         rssi _: NSNumber
     ) {
-        guard let deviceName = peripheral.name, !deviceName.isEmpty else {
+        guard let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String, !name.isEmpty, name == "MT" else {
             return
         }
 
-        guard deviceName == "MT" else {
-            return
-        }
-
-        let manufacturerData = advertisementData["kCBAdvDataManufacturerData"]
+        let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey]
         guard let manufacturerData = manufacturerData as? Data, manufacturerData.count >= 7 else {
             logger.warning("No ManufacturerData or too short - " + advertisementData.keys.joined(separator: ", "))
             return
