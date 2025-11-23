@@ -345,6 +345,7 @@ struct MedtrumKitSettings: View {
                         Spacer()
                         Text(viewModel.dateTimeFormatter.string(from: previousPatch.activatedAt))
                             .foregroundColor(.secondary)
+                            .multilineTextAlignment(.trailing)
                     }
                     HStack {
                         Text(LocalizedString("Deactivated at", comment: "Text for deactivatedAt"))
@@ -352,6 +353,7 @@ struct MedtrumKitSettings: View {
                         Spacer()
                         Text(viewModel.dateTimeFormatter.string(from: previousPatch.deactivatedAt))
                             .foregroundColor(.secondary)
+                            .multilineTextAlignment(.trailing)
                     }
                     HStack {
                         Text(LocalizedString("Battery", comment: "Text for battery voltageB"))
