@@ -190,7 +190,7 @@ public extension MedtrumPumpManager {
             Date.now.timeIntervalSince(state.patchActivatedAt) < .minutes(4)
         else {
             log.warning("Skipping status update -> data is fresh: \(Date.now.timeIntervalSince(state.lastSync)) sec")
-            completion?(state.lastSync)
+            completion?(nil)
             return
         }
 
@@ -251,6 +251,9 @@ public extension MedtrumPumpManager {
                 } catch {
                     self.log.warning("State update: Failed to encode JSON")
                 }
+                
+                self.state.lastSync = Date.now
+                self.notifyStateDidChange()
 
                 StateSyncer.sync(
                     syncResponse: syncResponse,
