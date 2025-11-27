@@ -68,17 +68,16 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     }
 
     func ensureConnected(_ completionAsync: @escaping (MedtrumConnectError?) async -> Void) {
-        let completion = { (_ result: MedtrumConnectError?) -> Void in
+        connectCompletion = { (_ result: MedtrumConnectError?) -> Void in
             Task {
-                await completionAsync(result)
                 self.connectCompletion = nil
+                await completionAsync(result)
             }
         }
-        connectCompletion = completion
-
+        
         if let peripheral = peripheral, peripheral.state == .connected {
-            // We are connected and ready to continue
-            completion(nil)
+            logger.debug("Already connect!")
+            connectCompletion?(nil)
             return
         }
 
@@ -99,7 +98,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
 
         guard var pumpSNState = pumpManager?.state.pumpSN else {
             logger.error("No pump serial number found")
-            completion(.failedToFindDevice)
+            connectCompletion?(.failedToFindDevice)
             return
         }
 
@@ -112,7 +111,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
             case let .failure(error):
                 self.logger.error("Error during scanning: \(error.localizedDescription)")
                 self.manager.stopScan()
-                completion(.failedToFindDevice)
+                self.connectCompletion?(.failedToFindDevice)
 
             case let .success(peripheral, pumpSN, _, _):
                 guard pumpSN == pumpSNState else {

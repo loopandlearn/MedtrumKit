@@ -515,14 +515,11 @@ public extension MedtrumPumpManager {
 
             self.log.info("Set temp basal!")
 
-            let events =
-                [
-                    NewPumpEvent
-                        .tempBasal(
-                            dose: DoseEntry
-                                .tempBasal(absoluteUnit: unitsPerHour, duration: duration, insulinType: self.state.insulinType)
-                        )
-                ]
+            let dose = DoseEntry
+                .tempBasal(absoluteUnit: unitsPerHour, duration: duration, insulinType: self.state.insulinType)
+            let events = [
+                NewPumpEvent.tempBasal(dose: dose)
+            ]
 
             self.state.basalState = .tempBasal
             self.state.basalStateSince = Date.now
