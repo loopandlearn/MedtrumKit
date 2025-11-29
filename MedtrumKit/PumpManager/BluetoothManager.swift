@@ -74,7 +74,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
                 await completionAsync(result)
             }
         }
-        
+
         if let peripheral = peripheral, peripheral.state == .connected {
             logger.debug("Already connect!")
             connectCompletion?(nil)

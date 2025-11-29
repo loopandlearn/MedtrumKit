@@ -1069,14 +1069,14 @@ public extension MedtrumPumpManager {
         }
 
         return NewPumpEvent.tempBasal(
-            dose:
-            DoseEntry.tempBasal(
+            dose: DoseEntry.tempBasal(
                 absoluteUnit: unitsPerHour,
                 duration: duration,
                 insulinType: state.insulinType,
                 startDate: state.basalStateSince,
                 endDate: endDate
-            )
+            ),
+            date: state.basalStateSince
         )
     }
 }
