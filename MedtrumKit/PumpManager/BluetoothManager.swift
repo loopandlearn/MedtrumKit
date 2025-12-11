@@ -245,7 +245,7 @@ extension BluetoothManager {
         peripheral.discoverServices([PeripheralManager.SERVICE_UUID])
     }
 
-    func centralManager(centralManager: CBCentralManager, willRestoreState dict: [String: Any]) {
+    func centralManager(_ centralManager: CBCentralManager, willRestoreState dict: [String: Any]) {
         let peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral] ?? []
         guard let peripheral = peripherals.first else {
             logger.warning("No restored peripherals!")
