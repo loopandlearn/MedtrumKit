@@ -75,7 +75,7 @@ public class MedtrumPumpManager: DeviceManager {
         // We do support rounding down to 0.00u
         supportedBolusVolumes.last(where: { $0 <= units }) ?? 0
     }
-    
+
     public func roundToSupportedBasalRate(unitsPerHour: Double) -> Double {
         supportedBasalRates.last(where: { $0 <= unitsPerHour }) ?? 0
     }
