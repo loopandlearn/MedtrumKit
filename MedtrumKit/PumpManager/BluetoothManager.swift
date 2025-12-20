@@ -13,7 +13,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
 
     var scanCompletion: ((MedtrumScanResult) -> Void)?
     var connectCompletion: ((MedtrumConnectError?) -> Void)?
-    var connectionTimeout: Task<(), Never>?
+    var connectionTimeout: Task<Void, Never>?
 
     public var isConnected: Bool {
         if let peripheral = peripheral, peripheral.state == .connected {
@@ -242,7 +242,7 @@ extension BluetoothManager {
         }
 
         connectionTimeout?.cancel()
-        
+
         self.peripheral = peripheral
         peripheralManager = PeripheralManager(peripheral, self, pumpManager, completion)
         peripheral.discoverServices([PeripheralManager.SERVICE_UUID])
