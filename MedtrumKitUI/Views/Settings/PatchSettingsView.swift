@@ -204,10 +204,10 @@ struct PatchSettingsView: View {
                         Text(LocalizedString("Continue", comment: "Continue"))
                     }
                 } else {
-                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                    ActivityIndicator()
                 }
             }
-            .disabled(viewModel.isUpdating)
+            .disabled(viewModel.isUpdating || doDirtyCheck && !viewModel.isDirty)
             .buttonStyle(ActionButtonStyle())
             .padding([.bottom, .horizontal])
         }
