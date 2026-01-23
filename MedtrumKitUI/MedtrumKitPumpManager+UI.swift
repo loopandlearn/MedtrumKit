@@ -134,7 +134,7 @@ extension MedtrumPumpManager: PumpManagerUI {
             let completed = expiresAt.timeIntervalSince(state.patchActivatedAt) / TimeInterval(hours: 80)
             return PumpLifecycleProgress(percentComplete: completed, progressState: .warning)
         }
-        
+
         return nil
     }
 
