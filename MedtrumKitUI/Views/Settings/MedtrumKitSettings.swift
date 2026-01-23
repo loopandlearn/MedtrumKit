@@ -523,6 +523,7 @@ struct MedtrumKitSettings: View {
             if viewModel.patchLifecycleExpiration {
                 ProgressView(progress: viewModel.patchLifecycleProgress)
                     .padding(.top, -5)
+                    .foregroundStyle(viewModel.patchLifecycleState == .expired ? .red : .primary)
             }
         }
     }
