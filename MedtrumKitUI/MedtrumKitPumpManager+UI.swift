@@ -131,9 +131,10 @@ extension MedtrumPumpManager: PumpManagerUI {
 
         if expiresAt.addingTimeInterval(.hours(-8)) <= Date.now {
             // Patch is in grace period
-            return PumpLifecycleProgress(percentComplete: 100, progressState: .warning)
+            let completed = expiresAt.timeIntervalSince(state.patchActivatedAt) / TimeInterval(hours: 80)
+            return PumpLifecycleProgress(percentComplete: completed, progressState: .warning)
         }
-
+        
         return nil
     }
 
