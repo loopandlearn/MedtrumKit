@@ -81,7 +81,7 @@ extension MedtrumPumpManager: PumpManagerUI {
                 imageName: "exclamationmark.circle.fill",
                 state: .critical
             )
-        } else if state.reservoir < 1 {
+        } else if state.reservoir < 1 || state.pumpState == .reservoirEmpty {
             return PumpStatusHighlight(
                 localizedMessage: LocalizedString("No Insulin", comment: "Status highlight that a pump is out of insulin."),
                 imageName: "exclamationmark.circle.fill",
@@ -118,14 +118,37 @@ extension MedtrumPumpManager: PumpManagerUI {
                 imageName: "exclamationmark.circle.fill",
                 state: .critical
             )
-        } 
+        } else if state.pumpState.rawValue > PatchState.active_alt.rawValue {
+            return PumpStatusHighlight(
+                localizedMessage: LocalizedString(
+                    "Patch Error",
+                    comment: "Status highlight message for other alarm."
+                ),
+                imageName: "exclamationmark.circle.fill",
+                state: .critical
+            )
+        }
 
         return nil
     }
 
-    // Not needed
     public var pumpLifecycleProgress: DeviceLifecycleProgress? {
-        nil
+        guard let expiresAt = state.patchExpiresAt else {
+            return nil
+        }
+
+        if expiresAt <= Date.now {
+            // Patch is expired
+            return PumpLifecycleProgress(percentComplete: 100, progressState: .critical)
+        }
+
+        if expiresAt.addingTimeInterval(.hours(-8)) <= Date.now {
+            // Patch is in grace period
+            let completed = expiresAt.timeIntervalSince(state.patchActivatedAt) / TimeInterval(hours: 80)
+            return PumpLifecycleProgress(percentComplete: completed, progressState: .warning)
+        }
+
+        return nil
     }
 
     // LoopKit only requires here to show "time sync required"

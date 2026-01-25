@@ -13,6 +13,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
 
     var scanCompletion: ((MedtrumScanResult) -> Void)?
     var connectCompletion: ((MedtrumConnectError?) -> Void)?
+    var connectionTimeout: Task<Void, Never>?
 
     public var isConnected: Bool {
         if let peripheral = peripheral, peripheral.state == .connected {
@@ -79,6 +80,8 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
         connectCompletion = { (_ result: MedtrumConnectError?) -> Void in
             Task {
                 self.connectCompletion = nil
+                self.connectionTimeout?.cancel()
+                self.connectionTimeout = nil
                 await completionAsync(result)
             }
         }
@@ -133,7 +136,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     }
 
     func startTimeout(seconds: TimeInterval) {
-        Task {
+        connectionTimeout = Task {
             do {
                 try await Task.sleep(nanoseconds: UInt64(seconds) * 1_000_000_000)
                 guard let connectionCallback = self.connectCompletion else {
@@ -240,6 +243,8 @@ extension BluetoothManager {
             return
         }
 
+        connectionTimeout?.cancel()
+
         self.peripheral = peripheral
         peripheralManager = PeripheralManager(peripheral, self, pumpManager, completion)
         peripheral.discoverServices([PeripheralManager.SERVICE_UUID])
@@ -280,8 +285,11 @@ extension BluetoothManager {
         peripheralManager.peripheral(peripheral, didDiscoverCharacteristicsFor: service, error: nil)
     }
 
-    func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error _: Error?) {
-        logger.info("Device disconnected, name: \(peripheral.name ?? "<NO_NAME>")")
+    func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        logger
+            .info(
+                "Device disconnected, name: \(peripheral.name ?? "<NO_NAME>"), error: \(error?.localizedDescription ?? "No error")"
+            )
 
         if let pumpManager = self.pumpManager {
             pumpManager.state.isConnected = false
@@ -293,16 +301,14 @@ extension BluetoothManager {
             peripheralManager = nil
         }
 
-        // Temporary disabled auto reconnect...
-//        ensureConnected { error in
-//            if let error = error {
-//                self.logger.error("Failed to auto reconnect - \(error)")
-//            }
-//        }
+        connectCompletion = nil
     }
 
     func centralManager(_: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        logger.info("Device connect error, name: \(peripheral.name ?? "<NO_NAME>"), error: \(error!.localizedDescription)")
+        logger
+            .info(
+                "Device connect error, name: \(peripheral.name ?? "<NO_NAME>"), error: \(error?.localizedDescription ?? "No error")"
+            )
 
         guard let pumpManager = self.pumpManager else {
             return

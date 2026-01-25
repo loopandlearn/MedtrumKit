@@ -88,6 +88,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
     let toSettings: () -> Void
     let toInsulinType: () -> Void
     let pumpActivationAction: (Bool) -> Void
+    let activatePatchAction: () -> Void
     private let log = MedtrumLogger(category: "settingsViewModel")
     private let pumpManager: MedtrumPumpManager?
     init(
@@ -96,7 +97,8 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         _ pumpActivationAction: @escaping (Bool) -> Void,
         _ toSettings: @escaping () -> Void,
         _ toInsulinType: @escaping () -> Void,
-        _ pumpRemovalAction: @escaping () -> Void
+        _ pumpRemovalAction: @escaping () -> Void,
+        _ activatePatchAction: @escaping () -> Void
     ) {
         self.pumpManager = pumpManager
         self.deactivatePatchAction = deactivatePatchAction
@@ -104,6 +106,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         self.pumpRemovalAction = pumpRemovalAction
         self.toInsulinType = toInsulinType
         self.toSettings = toSettings
+        self.activatePatchAction = activatePatchAction
 
         guard let pumpManager = pumpManager else {
             return
@@ -365,13 +368,10 @@ extension MedtrumKitSettingsViewModel {
         battery = state.battery
 
         if !state.patchId.isEmpty {
-            let lifetime: Double = state.expirationTimer == 0 ? 120 : 80
-            
-            patchLifecycleProgress = min(
-                (Date.now.timeIntervalSince1970 - state.patchActivatedAt.timeIntervalSince1970) / TimeInterval(hours: lifetime),
-                1
-            )
-            
+            let totalLifetime = TimeInterval(hours: state.expirationTimer == 0 ? 120 : 80)
+            let progress = Date.now.timeIntervalSince1970 - state.patchActivatedAt.timeIntervalSince1970
+
+            patchLifecycleProgress = min(progress / totalLifetime, 1)
             patchLifecycleState = patchLifecycleProgress == 1 ? (state.expirationTimer == 0 ? .expiredBasalOnly : .expired) : .active
         } else {
             patchLifecycleState = .noPatch
