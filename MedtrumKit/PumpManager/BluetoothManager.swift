@@ -82,7 +82,6 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
                 self.connectCompletion = nil
                 self.connectionTimeout?.cancel()
                 self.connectionTimeout = nil
-
                 await completionAsync(result)
             }
         }
