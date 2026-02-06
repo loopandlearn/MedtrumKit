@@ -104,7 +104,7 @@ extension MedtrumPumpManager: PumpManagerUI {
             return PumpStatusHighlight(
                 localizedMessage: LocalizedString(
                     "Patch expired. Basal only.",
-                    comment: "Status highlight when extended patch has expired, i.e. lifetime past 120 hours.."
+                    comment: "Status highlight when extended patch has expired, i.e. lifetime past 120 hours."
                 ),
                 imageName: "exclamationmark.circle.fill",
                 state: .critical
