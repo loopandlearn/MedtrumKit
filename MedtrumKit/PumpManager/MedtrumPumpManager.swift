@@ -486,8 +486,6 @@ public extension MedtrumPumpManager {
                     return
                 }
 
-                self.state.basalState = .active
-                self.state.basalStateSince = Date.now
                 self.log.info("Cancelled temp basal!")
             }
 
@@ -511,6 +509,10 @@ public extension MedtrumPumpManager {
                 }
 
                 self.state.lastSync = Date.now
+                self.state.basalState = .active
+                self.state.basalStateSince = Date.now
+                self.state.tempBasalUnits = nil
+                self.state.tempBasalDuration = nil
                 self.notifyStateDidChange()
 
                 self.pumpDelegate.notify { delegate in
