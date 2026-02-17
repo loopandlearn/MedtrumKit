@@ -96,11 +96,12 @@ extension MedtrumPumpManager: PumpManagerUI {
                 imageName: "pause.circle.fill",
                 state: .warning
             )
-        } else if state.expirationTimer == 0 && min(
+        } else if state.expirationTimer == 0, min(
             // expirationTimer == 0 means user selected extended mode
             // hard check if we are past 120 hrs
             (Date.now.timeIntervalSince1970 - state.patchActivatedAt.timeIntervalSince1970) / TimeInterval(hours: 80),
-            1) == 1 {
+            1
+        ) == 1 {
             return PumpStatusHighlight(
                 localizedMessage: LocalizedString(
                     "Patch expired. Basal only.",

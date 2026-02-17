@@ -555,7 +555,7 @@ public extension MedtrumPumpManager {
                     date: startDate
                 )
             ]
-            
+
             if let tempBasalEvent = self.getTempBasalEvent(endDate: Date.now) {
                 events.append(tempBasalEvent)
             }

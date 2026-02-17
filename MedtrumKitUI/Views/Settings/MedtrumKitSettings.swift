@@ -528,7 +528,10 @@ struct MedtrumKitSettings: View {
                 }
             case .expiredBasalOnly:
                 HStack {
-                    Text(LocalizedString("Extended Patch expired. Basal only.", comment: "Text shown when extended patch expired surpasses 120 hours"))
+                    Text(LocalizedString(
+                        "Extended Patch expired. Basal only.",
+                        comment: "Text shown when extended patch expired surpasses 120 hours"
+                    ))
                         .foregroundStyle(.red)
                     Spacer()
                 }

@@ -45,7 +45,7 @@ public extension DoseEntry {
                 isMutable: false
             )
         }
-        
+
         return DoseEntry(
             type: .tempBasal,
             startDate: startDate,
@@ -76,7 +76,7 @@ public extension DoseEntry {
     static func suspend(suspendDate: Date = Date.now) -> DoseEntry {
         DoseEntry(suspendDate: suspendDate)
     }
-    
+
     private static func roundBasalRate(_ rate: Double) -> Double {
         MedtrumPumpManager.onboardingSupportedBasalRates.last(where: { $0 <= rate }) ?? 0
     }
