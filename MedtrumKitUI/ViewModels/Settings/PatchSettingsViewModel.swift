@@ -75,6 +75,15 @@ class PatchSettingsViewModel: ObservableObject {
         } else {
             pumpManager.state.lowReservoirWarning = lowReservoirNotification
         }
+        
+        let patchActivatedAt = pumpManager.state.patchActivatedAt
+        if expirationTimer == 1 {
+            pumpManager.state.patchGracePeriodFrom = patchActivatedAt.addingTimeInterval(.hours(72))
+            pumpManager.state.patchExpiresAt = patchActivatedAt.addingTimeInterval(.hours(80))
+        } else {
+            pumpManager.state.patchGracePeriodFrom = patchActivatedAt.addingTimeInterval(.hours(112))
+            pumpManager.state.patchExpiresAt = patchActivatedAt.addingTimeInterval(.hours(120))
+        }
 
         pumpManager.notifyStateDidChange()
 

@@ -146,7 +146,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
             return nil
         }
 
-        return Int((patchExpiresAt.timeIntervalSince1970 - Date.now.timeIntervalSince1970).days.rounded(.towardZero))
+        return Int((patchGracePeriodFrom.timeIntervalSince1970 - Date.now.timeIntervalSince1970).days.rounded(.towardZero))
     }
 
     var patchLifecycleHours: Int? {
@@ -155,7 +155,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         }
 
         return Int(
-            (patchExpiresAt.timeIntervalSince1970 - Date.now.timeIntervalSince1970).hours
+            (patchGracePeriodFrom.timeIntervalSince1970 - Date.now.timeIntervalSince1970).hours
                 .truncatingRemainder(dividingBy: 24).rounded(.towardZero)
         )
     }
@@ -166,7 +166,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         }
 
         return Int(
-            (patchExpiresAt.timeIntervalSince1970 - Date.now.timeIntervalSince1970).minutes
+            (patchGracePeriodFrom.timeIntervalSince1970 - Date.now.timeIntervalSince1970).minutes
                 .truncatingRemainder(dividingBy: 60).rounded(.towardZero)
         )
     }

@@ -61,8 +61,8 @@ struct MedtrumKitSettings: View {
                 if viewModel.patchLifecycleState == .gracePeriod {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(String(format: LocalizedString(
-                            "Change your Patch now.Insulin delivery will stop in %1$@ or when no more insulin remains.",
-                            comment: "description for time change detected notice"
+                            "Change your Patch now. Insulin delivery will stop in %1$@ or when no more insulin remains.",
+                            comment: "description for grace period notice"
                         ), viewModel.patchGraceTimeout))
                             .font(Font.footnote.weight(.semibold))
                     }.padding(.vertical, 8)
@@ -251,7 +251,7 @@ struct MedtrumKitSettings: View {
                         .foregroundColor(.secondary)
                 }
                 HStack {
-                    Text(LocalizedString("Activated at", comment: "Text for activatedAt"))
+                    Text(LocalizedString("Activation", comment: "Text for activatedAt"))
                         .foregroundColor(Color.primary)
                     Spacer()
                     if viewModel.patchLifecycleState != .noPatch {
@@ -264,7 +264,7 @@ struct MedtrumKitSettings: View {
                     }
                 }
                 HStack {
-                    Text(LocalizedString("Expires at", comment: "Text for expiresAt"))
+                    Text(LocalizedString("Expiration", comment: "Text for expiresAt"))
                         .foregroundColor(Color.primary)
                     Spacer()
                     if viewModel.patchLifecycleState != .noPatch {
@@ -277,7 +277,7 @@ struct MedtrumKitSettings: View {
                     }
                 }
                 HStack {
-                    Text(LocalizedString("No delivery after", comment: "Text for expiresAt"))
+                    Text(LocalizedString("No Delivery", comment: "Text for expiresAt"))
                         .foregroundColor(Color.primary)
                     Spacer()
                     if viewModel.patchLifecycleState != .noPatch {
@@ -506,7 +506,7 @@ struct MedtrumKitSettings: View {
                     Text(LocalizedString("Expires in:", comment: "Text shown while patch is active"))
                         .foregroundStyle(.secondary)
                     Spacer()
-                    viewModel.patchLifecycleDays.map { days in
+                    if let days = viewModel.patchLifecycleDays {
                         timeComponent(
                             value: days,
                             units: days == 1 ?
@@ -514,7 +514,8 @@ struct MedtrumKitSettings: View {
                                 LocalizedString("days", comment: "Unit for plural days")
                         )
                     }
-                    viewModel.patchLifecycleHours.map { hours in
+
+                    if let hours = viewModel.patchLifecycleHours {
                         timeComponent(
                             value: hours,
                             units: hours == 1 ?
@@ -522,7 +523,8 @@ struct MedtrumKitSettings: View {
                                 LocalizedString("hours", comment: "Unit for plural hours")
                         )
                     }
-                    viewModel.patchLifecycleMinutes.map { minutes in
+                    
+                    if let minutes = viewModel.patchLifecycleMinutes, (viewModel.patchLifecycleDays ?? -1) == 0 {
                         timeComponent(
                             value: minutes,
                             units: minutes == 1 ?

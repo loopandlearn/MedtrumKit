@@ -1713,7 +1713,7 @@
         }
       }
     },
-    "Activated at" : {
+    "Activation" : {
       "comment" : "Text for activatedAt",
       "extractionState" : "manual",
       "localizations" : {
@@ -1744,7 +1744,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activated at"
+            "value" : "Activation"
           }
         },
         "es" : {
@@ -3209,6 +3209,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取消"
+          }
+        }
+      }
+    },
+    "Change your Patch now. Insulin delivery will stop in %1$@ or when no more insulin remains." : {
+      "comment" : "description for grace period notice",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change your Patch now. Insulin delivery will stop in %1$@ or when no more insulin remains."
           }
         }
       }
@@ -6213,7 +6225,7 @@
         }
       }
     },
-    "Expires at" : {
+    "Expiration" : {
       "comment" : "Text for expiresAt",
       "extractionState" : "manual",
       "localizations" : {
@@ -6244,7 +6256,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Expires at"
+            "value" : "Expiration"
           }
         },
         "es" : {
@@ -10563,14 +10575,14 @@
         }
       }
     },
-    "No delivery after" : {
+    "No Delivery" : {
       "comment" : "label no delivery",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No delivery after"
+            "value" : "No Delivery"
           }
         }
       }
