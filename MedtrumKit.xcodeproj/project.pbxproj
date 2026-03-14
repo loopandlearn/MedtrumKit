@@ -716,15 +716,11 @@
 				fi,
 				nl,
 				ro,
-				he,
 				tr,
 				ar,
 				cs,
-				hi,
 				sk,
 				sl,
-				ce,
-				hu,
 				uk,
 			);
 			mainGroup = B7D3A8C62C148CC4002EE003;

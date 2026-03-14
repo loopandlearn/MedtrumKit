@@ -523,7 +523,7 @@ struct MedtrumKitSettings: View {
                                 LocalizedString("hours", comment: "Unit for plural hours")
                         )
                     }
-                    
+
                     if let minutes = viewModel.patchLifecycleMinutes, (viewModel.patchLifecycleDays ?? -1) == 0 {
                         timeComponent(
                             value: minutes,
