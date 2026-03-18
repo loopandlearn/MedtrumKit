@@ -14,6 +14,7 @@ enum MedtrumUIScreen {
     case patchActivationScreen
     case settingsScreen
     case patchDetailsScreen
+    case patchPreviousDetailsScreen
 }
 
 class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, CompletionNotifying,
@@ -208,6 +209,9 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
             let toPatchDetails = {
                 self.navigateTo(.patchDetailsScreen)
             }
+            let toPreviousPatchDetails = {
+                self.navigateTo(.patchPreviousDetailsScreen)
+            }
             let toInsulinType = {
                 self.navigateTo(.insulinTypeScreen)
             }
@@ -221,6 +225,7 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
                 toActivation,
                 toSettings,
                 toPatchDetails,
+                toPreviousPatchDetails,
                 toInsulinType,
                 pumpRemoval,
                 toActivatePatch
@@ -232,6 +237,9 @@ class MedtrumKitUICoordinator: UINavigationController, PumpManagerOnboarding, Co
         case .patchDetailsScreen:
             let viewModel = PatchDetailsViewModel(pumpManager: pumpManager)
             return hostingController(rootView: PatchDetailsView(viewModel: viewModel))
+        case .patchPreviousDetailsScreen:
+            let viewModel = PreviousPatchDetailsViewModel(pumpManager: pumpManager)
+            return hostingController(rootView: PreviousPatchDetailsView(viewModel: viewModel))
         }
     }
 

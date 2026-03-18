@@ -269,7 +269,7 @@ struct MedtrumKitSettings: View {
                     }
                 }
                 HStack {
-                    Text(LocalizedString("Patch details", comment: "header patch details"))
+                    Text(LocalizedString("Patch Details", comment: "header patch details"))
                         .foregroundColor(Color.primary)
                     Spacer()
                     Image(systemName: "chevron.right")
@@ -279,6 +279,25 @@ struct MedtrumKitSettings: View {
                 .contentShape(Rectangle())
                 .onTapGesture {
                     viewModel.toPatchDetails()
+                }
+                HStack {
+                    Text(LocalizedString("Previous Patch Details", comment: "header patch details"))
+                        .foregroundColor(Color.primary)
+                    Spacer()
+                    if viewModel.hasPreviousPatch {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: UIFont.systemFontSize, weight: .medium))
+                            .opacity(0.3)
+                    } else {
+                        Text("-")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    if viewModel.hasPreviousPatch {
+                        viewModel.toPreviousPatchDetails()
+                    }
                 }
 
             } header: {
@@ -331,64 +350,6 @@ struct MedtrumKitSettings: View {
                     comment: "The title for patch time"
                 ))
             }
-
-//            if let previousPatch = viewModel.previousPatch {
-//                Section {
-//                    HStack {
-//                        Text(LocalizedString("Patch ID", comment: "Text for patchId"))
-//                            .foregroundColor(Color.primary)
-//                        Spacer()
-//                        Text("\(previousPatch.patchId.toUInt64())")
-//                            .foregroundColor(.secondary)
-//                    }
-//                    HStack {
-//                        Text(LocalizedString("Patch state", comment: "Text for state"))
-//                            .foregroundColor(Color.primary)
-//                        Spacer()
-//                        Text((PatchState(rawValue: previousPatch.lastStateRaw) ?? .none).description)
-//                            .foregroundColor(.secondary)
-//                    }
-//                    HStack {
-//                        Text(LocalizedString("Activated at", comment: "Text for activatedAt"))
-//                            .foregroundColor(Color.primary)
-//                        Spacer()
-//                        Text(viewModel.dateTimeFormatter.string(from: previousPatch.activatedAt))
-//                            .foregroundColor(.secondary)
-//                            .multilineTextAlignment(.trailing)
-//                    }
-//                    HStack {
-//                        Text(LocalizedString("Deactivated at", comment: "Text for deactivatedAt"))
-//                            .foregroundColor(Color.primary)
-//                        Spacer()
-//                        Text(viewModel.dateTimeFormatter.string(from: previousPatch.deactivatedAt))
-//                            .foregroundColor(.secondary)
-//                            .multilineTextAlignment(.trailing)
-//                    }
-//                    HStack {
-//                        Text(LocalizedString("Battery", comment: "Text for battery voltageB"))
-//                            .foregroundColor(Color.primary)
-//                        Spacer()
-//                        Text(viewModel.batteryText(for: previousPatch.battery))
-//                            .foregroundColor(.secondary)
-//                    }
-//                    if let reservoirLevel = previousPatch.reservoirLevel,
-//                       let initialReservoirLevel = previousPatch.initialReservoirLevel
-//                    {
-//                        HStack {
-//                            Text(LocalizedString("Insulin used", comment: "Text for Insulin used"))
-//                                .foregroundColor(Color.primary)
-//                            Spacer()
-//                            Text(viewModel.reservoirText(for: initialReservoirLevel - reservoirLevel))
-//                                .foregroundColor(.secondary)
-//                        }
-//                    }
-//                } header: {
-//                    Text(LocalizedString(
-//                        "Previous Patch Details",
-//                        comment: "label for previous patch details"
-//                    ))
-//                }
-//            }
 
             Section {
                 Button(LocalizedString("Share Medtrum patch logs", comment: "Share logs")) {

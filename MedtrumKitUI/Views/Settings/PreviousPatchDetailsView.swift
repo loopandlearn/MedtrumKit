@@ -1,42 +1,44 @@
 import SwiftUI
 
-struct PatchDetailsView: View {
-    @ObservedObject var viewModel: PatchDetailsViewModel
+struct PreviousPatchDetailsView: View {
+    @ObservedObject var viewModel: PreviousPatchDetailsViewModel
 
     var body: some View {
         List {
             Section {
                 sectionItem(
+                    title: LocalizedString("Patch ID", comment: "Text for pumpSN"),
+                    value: viewModel.patchId
+                )
+                sectionItem(
                     title: LocalizedString("Patch state", comment: "Text for patch state"),
                     value: viewModel.patchStateString
                 )
                 sectionItem(
-                    title: LocalizedString("Pump base SN", comment: "Text for pumpSN"),
-                    value: viewModel.pumpBaseSN
+                    title: LocalizedString("Activation", comment: "Text for activatedAt"),
+                    value: viewModel.activatedAt
                 )
                 sectionItem(
-                    title: LocalizedString("Pump base model", comment: "Text for model"),
-                    value: viewModel.model
-                )
-                sectionItem(
-                    title: LocalizedString("Patch ID", comment: "Text for pumpSN"),
-                    value: viewModel.patchId
+                    title: LocalizedString("Deactivation", comment: "Text for deactivation"),
+                    value: viewModel.deactivatedAt
                 )
                 sectionItem(
                     title: LocalizedString("Battery", comment: "Text for battery voltageB"),
                     value: viewModel.batteryText(for: viewModel.battery)
                 )
 
-                if let initialReservoirLevel = viewModel.initialReservoirLevel {
+                if let reservoirLevel = viewModel.reservoirLevel,
+                   let initialReservoirLevel = viewModel.initialReservoirLevel
+                {
                     sectionItem(
                         title: LocalizedString("Insulin used", comment: "Text for Insulin used"),
-                        value: viewModel.reservoirText(for: initialReservoirLevel - viewModel.reservoirLevel)
+                        value: viewModel.reservoirText(for: initialReservoirLevel - reservoirLevel)
                     )
                 }
             }
         }
         .listStyle(InsetGroupedListStyle())
-        .navigationBarTitle(LocalizedString("Patch Details", comment: "header patch details"))
+        .navigationBarTitle(LocalizedString("Previous Patch Details", comment: "header patch details"))
     }
 
     @ViewBuilder func sectionItem(title: String, value: String) -> some View {

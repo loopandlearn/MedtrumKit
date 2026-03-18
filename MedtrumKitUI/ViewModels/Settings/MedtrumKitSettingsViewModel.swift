@@ -39,7 +39,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
     @Published var isUpdatingTempBasal = false
     @Published var showingHeartbeatWarning = false
     @Published var showingDeleteConfirmation = false
-    @Published var previousPatch: PreviousPatch? = nil
+    @Published var hasPreviousPatch = false
 
     public var pumpName: String {
         pumpManager?.state.pumpName ?? "Medtrum Nano"
@@ -85,6 +85,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
     let pumpRemovalAction: () -> Void
     let toSettings: () -> Void
     let toPatchDetails: () -> Void
+    let toPreviousPatchDetails: () -> Void
     let toInsulinType: () -> Void
     let pumpActivationAction: (Bool) -> Void
     let activatePatchAction: () -> Void
@@ -96,6 +97,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         _ pumpActivationAction: @escaping (Bool) -> Void,
         _ toSettings: @escaping () -> Void,
         _ toPatchDetails: @escaping () -> Void,
+        _ toPreviousPatchDetails: @escaping () -> Void,
         _ toInsulinType: @escaping () -> Void,
         _ pumpRemovalAction: @escaping () -> Void,
         _ activatePatchAction: @escaping () -> Void
@@ -106,6 +108,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
         self.pumpRemovalAction = pumpRemovalAction
         self.toInsulinType = toInsulinType
         self.toPatchDetails = toPatchDetails
+        self.toPreviousPatchDetails = toPreviousPatchDetails
         self.toSettings = toSettings
         self.activatePatchAction = activatePatchAction
 
@@ -339,6 +342,7 @@ extension MedtrumKitSettingsViewModel {
         patchActivatedAt = state.patchActivatedAt
         patchGracePeriodFrom = state.patchGracePeriodFrom ?? state.patchActivatedAt.addingTimeInterval(.hours(72))
         patchExpiresAt = state.patchExpiresAt ?? state.patchActivatedAt.addingTimeInterval(.hours(80))
+        hasPreviousPatch = state.previousPatch != nil
 
         if !state.patchId.isEmpty {
             let totalLifetime = patchGracePeriodFrom.timeIntervalSince(patchActivatedAt)
@@ -357,10 +361,6 @@ extension MedtrumKitSettingsViewModel {
 
         if let insulinType = state.insulinType {
             self.insulinType = insulinType
-        }
-
-        if let previewPatchState = state.previousPatch {
-            previousPatch = previewPatchState
         }
     }
 

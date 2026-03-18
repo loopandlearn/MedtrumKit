@@ -271,11 +271,11 @@ public class MedtrumPumpState: RawRepresentable {
     public var pumpName: String {
         let model = self.model
         if model == "MD8301" {
-            return "TouchCare Nano 300U"
+            return "Medtrum Nano 300U"
         } else if model == "INVALID" {
-            return "TouchCare Nano UNKNOWN"
+            return "Medtrum Nano UNKNOWN"
         } else {
-            return "TouchCare Nano 200U"
+            return "Medtrum Nano 200U"
         }
     }
 
