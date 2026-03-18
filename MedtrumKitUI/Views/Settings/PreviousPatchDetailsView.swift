@@ -34,6 +34,11 @@ struct PreviousPatchDetailsView: View {
                         title: LocalizedString("Insulin used", comment: "Text for Insulin used"),
                         value: viewModel.reservoirText(for: initialReservoirLevel - reservoirLevel)
                     )
+                } else {
+                    sectionItem(
+                        title: LocalizedString("Insulin used", comment: "Text for Insulin used"),
+                        value: "0 U"
+                    )
                 }
             }
         }

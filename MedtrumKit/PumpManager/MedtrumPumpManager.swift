@@ -936,6 +936,10 @@ public extension MedtrumPumpManager {
             self.state.pumpState = .none
             self.state.sessionToken = Data()
             self.state.lastSync = Date.now
+            self.state.basalState = .active
+            self.state.basalStateSince = Date.now
+            self.state.tempBasalUnits = nil
+            self.state.tempBasalDuration = nil
             self.notifyStateDidChange()
 
             self.pumpDelegate.notify { delegate in
@@ -953,6 +957,47 @@ public extension MedtrumPumpManager {
 
             self.log.info("Patch deactivated")
             completion(.success)
+        }
+    }
+
+    func forceDeactivatePatch() {
+        var events = [NewPumpEvent.suspend(dose: DoseEntry.suspend())]
+        if let tempBasalEvent = getTempBasalEvent(endDate: Date.now) {
+            events.append(tempBasalEvent)
+        }
+
+        state.previousPatch = PreviousPatch(
+            patchId: state.patchId,
+            lastStateRaw: state.pumpState.rawValue,
+            lastSyncAt: state.lastSync,
+            battery: state.battery,
+            activatedAt: state.patchActivatedAt,
+            deactivatedAt: Date.now,
+            initialReservoirLevel: state.initialReservoir,
+            reservoirLevel: state.reservoir
+        )
+
+        state.patchId = Data()
+        state.pumpState = .none
+        state.sessionToken = Data()
+        state.lastSync = Date.now
+        state.basalState = .active
+        state.basalStateSince = Date.now
+        state.tempBasalUnits = nil
+        state.tempBasalDuration = nil
+        notifyStateDidChange()
+
+        pumpDelegate.notify { delegate in
+            delegate?.pumpManager(
+                self,
+                hasNewPumpEvents: events,
+                lastReconciliation: self.state.lastSync,
+                replacePendingEvents: true,
+            ) { error in
+                if let error = error {
+                    self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
+                }
+            }
         }
     }
 

@@ -150,6 +150,7 @@
       }
     },
     "%llu" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
