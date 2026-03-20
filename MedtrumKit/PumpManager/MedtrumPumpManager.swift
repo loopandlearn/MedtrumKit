@@ -1124,7 +1124,9 @@ public extension MedtrumPumpManager {
 
         log.warning("Bolus was not completed... \(doseEntry.deliveredUnits)U of the \(doseEntry.value)U")
 
-        // There was a bolus going on, unsure if the bolus is completed...
+        // There was still a bolus running...
+        // We assume the bolus will complete since we lost the connection
+        doseEntry.deliveredUnits = doseEntry.value
         let dose = doseEntry.toDoseEntry()
         var events = [
             NewPumpEvent.bolus(
