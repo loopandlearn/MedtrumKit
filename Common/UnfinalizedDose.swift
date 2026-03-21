@@ -13,7 +13,7 @@ public class UnfinalizedDose {
     public let insulinType: InsulinType?
     public let automatic: Bool?
 
-    public init(units: Double, duration: TimeInterval, activationType: BolusActivationType, insulinType: InsulinType) {
+    public init(units: Double, duration: TimeInterval, activationType: BolusActivationType, insulinType: InsulinType?) {
         var endTime = Date.now
         endTime.addTimeInterval(duration)
 
@@ -26,11 +26,17 @@ public class UnfinalizedDose {
         automatic = activationType.isAutomatic
     }
 
-    public func toDoseEntry(isMutable: Bool = false) -> DoseEntry {
-        DoseEntry(
+    public func toDoseEntry(isMutable: Bool = false, useEstimatedEndDate: Bool = false) -> DoseEntry {
+        var endDate = isMutable || useEstimatedEndDate ? endDate : Date.now
+        if useEstimatedEndDate, endDate > Date.now {
+            // The endDate of a bolus cannot be in the future...
+            endDate = Date.now
+        }
+
+        return DoseEntry(
             type: .bolus,
             startDate: startDate,
-            endDate: isMutable ? endDate : Date(),
+            endDate: endDate,
             value: value.rounded(toPlaces: 2),
             unit: .units,
             deliveredUnits: isMutable ? nil : deliveredUnits.rounded(toPlaces: 2),

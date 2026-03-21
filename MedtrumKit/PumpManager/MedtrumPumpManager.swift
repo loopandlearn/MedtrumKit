@@ -25,7 +25,6 @@ public class MedtrumPumpManager: DeviceManager {
     private var doseEntry: UnfinalizedDose?
 
     let bluetooth: BluetoothManager
-
     init(state: MedtrumPumpState) {
         self.state = state
         oldState = MedtrumPumpState(rawValue: state.rawValue)
@@ -152,7 +151,7 @@ public extension MedtrumPumpManager {
     }
 
     var pumpReservoirCapacity: Double {
-        state.reservoir
+        state.model == "MD8301" ? 300 : 200
     }
 
     var lastSync: Date? {
@@ -262,7 +261,8 @@ public extension MedtrumPumpManager {
                 StateSyncer.sync(
                     syncResponse: syncResponse,
                     state: self.state,
-                    pumpManager: self
+                    pumpManager: self,
+                    duringReconnect: false
                 )
 
                 self.pumpDelegate.notify { delegate in
@@ -296,21 +296,11 @@ public extension MedtrumPumpManager {
         units * TimeInterval(minutes: 1)
     }
 
-    func startScan(_ callback: @escaping (MedtrumScanResult) -> Void) {
-        bluetooth.startScan(callback)
-    }
-
     func enactBolus(
         units: Double,
         activationType: LoopKit.BolusActivationType,
         completion: @escaping (LoopKit.PumpManagerError?) -> Void
     ) {
-        guard let insulinType = state.insulinType else {
-            log.error("Insulin type is nil...")
-            completion(.configuration(.none))
-            return
-        }
-
         guard state.bolusState == .noBolus else {
             log.error("Pump is in bolus state...")
             completion(.deviceState(MedtrumConnectError.isBolussing))
@@ -344,7 +334,7 @@ public extension MedtrumPumpManager {
                 units: units,
                 duration: duration,
                 activationType: activationType,
-                insulinType: insulinType
+                insulinType: self.state.insulinType
             )
 
             self.pumpDelegate.notify { delegate in
@@ -1055,7 +1045,7 @@ public extension MedtrumPumpManager {
         }
     }
 
-    func updateBolusProgress(delivered: Double, completed: Bool) {
+    func updateBolusProgress(delivered: Double, completed: Bool, useEstimatedEndDate: Bool) {
         if let doseReporter = doseReporter {
             doseReporter.notify(deliveredUnits: delivered)
         }
@@ -1068,7 +1058,7 @@ public extension MedtrumPumpManager {
 
         if completed {
             state.bolusState = .noBolus
-            let dose = doseEntry.toDoseEntry()
+            let dose = doseEntry.toDoseEntry(useEstimatedEndDate: useEstimatedEndDate)
             var events = [
                 NewPumpEvent.bolus(
                     dose: dose,
@@ -1116,16 +1106,16 @@ public extension MedtrumPumpManager {
         }
     }
 
-    internal func checkBolusDone() {
+    func checkBolusDone() {
         guard let doseEntry = self.doseEntry else {
-            // Disconnect was done after bolus was complete!
+            // No bolus was in progress during disconnect
             return
         }
 
-        log.warning("Bolus was not completed... \(doseEntry.deliveredUnits)U of the \(doseEntry.value)U")
+        log.warning("Bolus was not completed... \(doseEntry.deliveredUnits) U of the \(doseEntry.value) U")
 
-        // There was still a bolus running...
-        // We assume the bolus will complete since we lost the connection
+        // We assume the bolus has completed, but did not receive completed event
+        // due to being disconnected for too long
         doseEntry.deliveredUnits = doseEntry.value
         let dose = doseEntry.toDoseEntry()
         var events = [

@@ -289,6 +289,7 @@ public class MedtrumPumpState: RawRepresentable {
             "## MedtrumPumpState - \(Date.now)",
             "* isOnboarded: \(isOnboarded)",
             "* lastSync: \(lastSync)",
+            "* pumpState: \(pumpState.rawValue)",
             "* pumpSN: \(pumpSN.hexEncodedString())",
             "* pumpName: \(pumpName)",
             "* model: \(model)",
@@ -298,8 +299,9 @@ public class MedtrumPumpState: RawRepresentable {
             "* battery: \(battery)",
             "* pumpTime: \(pumpTime)",
             "* pumpTimeSyncedAt: \(pumpTimeSyncedAt)",
-            "* insulinType: \(insulinType ?? .afrezza)",
+            "* insulinType: \(String(describing: insulinType))",
             "* reservoirLevel: \(reservoir)",
+            "* lowReservoirWarning: \(String(describing: lowReservoirWarning))",
             "* bolusState: \(bolusState.rawValue)"
         ].joined(separator: "\n")
     }
