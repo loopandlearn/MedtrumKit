@@ -1117,7 +1117,7 @@ public extension MedtrumPumpManager {
         // We assume the bolus has completed, but did not receive completed event
         // due to being disconnected for too long
         doseEntry.deliveredUnits = doseEntry.value
-        let dose = doseEntry.toDoseEntry()
+        let dose = doseEntry.toDoseEntry(useEstimatedEndDate: true)
         var events = [
             NewPumpEvent.bolus(
                 dose: dose,
