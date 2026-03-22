@@ -21,9 +21,6 @@ public class MedtrumPumpManager: DeviceManager {
         state.rawValue
     }
 
-    private var doseReporter: MedtrumDoseProgressReporter?
-    private var doseEntry: UnfinalizedDose?
-
     let bluetooth: BluetoothManager
     init(state: MedtrumPumpState) {
         self.state = state
@@ -180,7 +177,7 @@ public extension MedtrumPumpManager {
         case .canceling:
             return .canceling
         case .inProgress:
-            if let dose = doseEntry?.toDoseEntry(isMutable: true) {
+            if let dose = state.doseEntry?.toDoseEntry(isMutable: true) {
                 return .inProgress(dose)
             }
 
@@ -287,8 +284,16 @@ public extension MedtrumPumpManager {
 
     func setMustProvideBLEHeartbeat(_: Bool) {}
 
-    func createBolusProgressReporter(reportingOn _: DispatchQueue) -> (any LoopKit.DoseProgressReporter)? {
-        doseReporter
+    func createBolusProgressReporter(reportingOn: DispatchQueue) -> (any LoopKit.DoseProgressReporter)? {
+        if let doseEntry = state.doseEntry {
+            return MedtrumDoseProgressReporter(
+                pumpManager: self,
+                dose: doseEntry,
+                reportingQueue: reportingOn
+            )
+        }
+
+        return nil
     }
 
     func estimatedDuration(toBolus units: Double) -> TimeInterval {
@@ -361,8 +366,7 @@ public extension MedtrumPumpManager {
                 }
             }
 
-            self.doseEntry = doseEntry
-            self.doseReporter = MedtrumDoseProgressReporter(total: units)
+            self.state.doseEntry = doseEntry
             self.state.bolusState = .inProgress
             self.notifyStateDidChange()
 
@@ -372,8 +376,7 @@ public extension MedtrumPumpManager {
 
     private func resetBolusState() {
         state.bolusState = .noBolus
-        doseReporter = nil
-        doseEntry = nil
+        state.doseEntry = nil
         notifyStateDidChange()
     }
 
@@ -410,7 +413,7 @@ public extension MedtrumPumpManager {
             self.state.bolusState = .noBolus
             self.notifyStateDidChange()
 
-            guard let doseEntry = self.doseEntry else {
+            guard let doseEntry = self.state.doseEntry else {
                 completion(.success(nil))
                 return
             }
@@ -421,9 +424,7 @@ public extension MedtrumPumpManager {
                 events.append(tempBasalEvent)
             }
 
-            self.doseEntry = nil
-            self.doseReporter = nil
-
+            self.state.doseEntry = nil
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
 
@@ -1046,68 +1047,66 @@ public extension MedtrumPumpManager {
     }
 
     func updateBolusProgress(delivered: Double, completed: Bool, useEstimatedEndDate: Bool) {
-        if let doseReporter = doseReporter {
-            doseReporter.notify(deliveredUnits: delivered)
-        }
-
-        guard let doseEntry = self.doseEntry else {
+        guard let doseEntry = state.doseEntry else {
             return
         }
 
         doseEntry.deliveredUnits = delivered
 
-        if completed {
-            state.bolusState = .noBolus
-            let dose = doseEntry.toDoseEntry(useEstimatedEndDate: useEstimatedEndDate)
-            var events = [
-                NewPumpEvent.bolus(
-                    dose: dose,
-                    units: dose.programmedUnits,
-                    date: dose.startDate
-                )
-            ]
-            if let tempBasalEvent = getTempBasalEvent() {
-                events.append(tempBasalEvent)
+        if !completed {
+            notifyStateDidChange()
+            return
+        }
+
+        state.bolusState = .noBolus
+        let dose = doseEntry.toDoseEntry(useEstimatedEndDate: useEstimatedEndDate)
+        var events = [
+            NewPumpEvent.bolus(
+                dose: dose,
+                units: dose.programmedUnits,
+                date: dose.startDate
+            )
+        ]
+        if let tempBasalEvent = getTempBasalEvent() {
+            events.append(tempBasalEvent)
+        }
+
+        state.doseEntry = nil
+        state.lastSync = Date.now
+        notifyStateDidChange()
+
+        pumpDelegate.notify { delegate in
+            guard let delegate = delegate else {
+                return
             }
 
-            self.doseEntry = nil
-            doseReporter = nil
-            state.lastSync = Date.now
-            notifyStateDidChange()
-
-            pumpDelegate.notify { delegate in
-                guard let delegate = delegate else {
-                    return
+            delegate.pumpManager(
+                self,
+                didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
+                at: self.state.lastSync
+            ) { result in
+                switch result {
+                case let .failure(error):
+                    self.handlePumpDelegateError(method: "didReadReservoirValue", error)
+                case .success:
+                    break
                 }
-
-                delegate.pumpManager(
-                    self,
-                    didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
-                    at: self.state.lastSync
-                ) { result in
-                    switch result {
-                    case let .failure(error):
-                        self.handlePumpDelegateError(method: "didReadReservoirValue", error)
-                    case .success:
-                        break
-                    }
-                }
-                delegate.pumpManager(
-                    self,
-                    hasNewPumpEvents: events,
-                    lastReconciliation: self.state.lastSync,
-                    replacePendingEvents: true
-                ) { error in
-                    if let error = error {
-                        self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
-                    }
+            }
+            delegate.pumpManager(
+                self,
+                hasNewPumpEvents: events,
+                lastReconciliation: self.state.lastSync,
+                replacePendingEvents: true
+            ) { error in
+                if let error = error {
+                    self.handlePumpDelegateError(method: "hasNewPumpEvents", error)
                 }
             }
         }
     }
 
     func checkBolusDone() {
-        guard let doseEntry = self.doseEntry else {
+        guard let doseEntry = state.doseEntry else {
             // No bolus was in progress during disconnect
             return
         }
@@ -1131,7 +1130,7 @@ public extension MedtrumPumpManager {
 
         state.bolusState = .noBolus
         state.lastSync = Date.now
-        self.doseEntry = nil
+        state.doseEntry = nil
         notifyStateDidChange()
 
         pumpDelegate.notify { delegate in

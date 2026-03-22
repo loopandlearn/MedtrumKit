@@ -61,6 +61,12 @@ public class MedtrumPumpState: RawRepresentable {
             insulinType = InsulinType(rawValue: rawInsulinType)
         }
 
+        if let rawDoseEntry = rawValue["doseEntry"] as? UnfinalizedDose.RawValue {
+            doseEntry = UnfinalizedDose(rawValue: rawDoseEntry)
+        } else {
+            doseEntry = nil
+        }
+
         if let pumpStateRaw = rawValue["pumpState"] as? PatchState.RawValue {
             pumpState = PatchState(rawValue: pumpStateRaw) ?? .none
         } else {
@@ -98,6 +104,7 @@ public class MedtrumPumpState: RawRepresentable {
         lastSync = Date.distantPast
         pumpSN = Data()
         lowReservoirWarning = nil
+        doseEntry = nil
         sessionToken = Data()
         patchId = Data()
         patchActivatedAt = Date.distantPast
@@ -153,6 +160,7 @@ public class MedtrumPumpState: RawRepresentable {
         value["basalSchedule"] = basalSchedule.rawValue
         value["bolusState"] = bolusState.rawValue
         value["initialReservoir"] = initialReservoir
+        value["doseEntry"] = doseEntry?.rawValue
         value["reservoir"] = reservoir
         value["battery"] = battery
         value["basalState"] = basalState.rawValue
@@ -194,6 +202,7 @@ public class MedtrumPumpState: RawRepresentable {
     public var pumpTimeSyncedAt: Date
 
     public var pumpState: PatchState
+    public var doseEntry: UnfinalizedDose?
     public var initialReservoir: Double?
     public var reservoir: Double
     public var battery: Double
