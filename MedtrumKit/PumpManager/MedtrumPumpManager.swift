@@ -297,8 +297,8 @@ public extension MedtrumPumpManager {
     }
 
     func estimatedDuration(toBolus units: Double) -> TimeInterval {
-        // 1 unit per minute
-        units * TimeInterval(minutes: 1)
+        // 1.5 unit per minute
+        units / 1.5 * TimeInterval(minutes: 1)
     }
 
     func enactBolus(
