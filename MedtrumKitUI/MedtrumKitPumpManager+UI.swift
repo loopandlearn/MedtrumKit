@@ -74,7 +74,8 @@ extension MedtrumPumpManager: PumpManagerUI {
     public var pumpStatusHighlight: DeviceStatusHighlight? {
         if state.patchId.isEmpty {
             return PumpStatusHighlight(
-                localizedMessage: LocalizedString(
+                localizedMessage: String(
+                    localized:
                     "No patch",
                     comment: "Status highlight when no patch is active."
                 ),
@@ -83,13 +84,14 @@ extension MedtrumPumpManager: PumpManagerUI {
             )
         } else if state.reservoir < 1 || state.pumpState == .reservoirEmpty {
             return PumpStatusHighlight(
-                localizedMessage: LocalizedString("No Insulin", comment: "Status highlight that a pump is out of insulin."),
+                localizedMessage: String(localized: "No Insulin", comment: "Status highlight that a pump is out of insulin."),
                 imageName: "exclamationmark.circle.fill",
                 state: .critical
             )
         } else if state.basalState == .suspended {
             return PumpStatusHighlight(
-                localizedMessage: LocalizedString(
+                localizedMessage: String(
+                    localized:
                     "Insulin Suspended",
                     comment: "Status highlight that insulin delivery was suspended."
                 ),
@@ -98,7 +100,8 @@ extension MedtrumPumpManager: PumpManagerUI {
             )
         } else if state.expiryMode == .extended, let expiresAt = state.patchExpiresAt, Date.now > expiresAt {
             return PumpStatusHighlight(
-                localizedMessage: LocalizedString(
+                localizedMessage: String(
+                    localized:
                     "Patch expired. Basal only.",
                     comment: "Status highlight when extended patch has expired, i.e. lifetime past 120 hours."
                 ),
@@ -107,7 +110,8 @@ extension MedtrumPumpManager: PumpManagerUI {
             )
         } else if Date.now.timeIntervalSince(state.lastSync) > .minutes(12) {
             return PumpStatusHighlight(
-                localizedMessage: LocalizedString(
+                localizedMessage: String(
+                    localized:
                     "Signal Loss",
                     comment: "Status highlight when communications with the patch haven't happened recently."
                 ),
@@ -116,7 +120,8 @@ extension MedtrumPumpManager: PumpManagerUI {
             )
         } else if state.pumpState.rawValue > PatchState.active_alt.rawValue {
             return PumpStatusHighlight(
-                localizedMessage: LocalizedString(
+                localizedMessage: String(
+                    localized:
                     "Patch Error",
                     comment: "Status highlight message for other alarm."
                 ),
