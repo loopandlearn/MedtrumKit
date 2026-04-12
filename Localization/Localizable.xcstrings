@@ -15536,12 +15536,6 @@
         }
       }
     },
-    "Reservoir empty" : {
-      "comment" : "Patch state for reservoirEmpty"
-    },
-    "Reservoir low (%iU)" : {
-      "comment" : "Title low reservoir notification"
-    },
     "Reservoir low (%lld U)" : {
       "comment" : "Title low reservoir notification",
       "extractionState" : "manual",
