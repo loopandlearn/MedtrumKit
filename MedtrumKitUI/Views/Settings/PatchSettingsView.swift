@@ -153,8 +153,7 @@ struct PatchSettingsView: View {
 
                     sectionItem(
                         title: String(
-                            localized:
-                            "Notification for low reservoir",
+                            localized: "Notification for low reservoir",
                             comment: "Label for low reservoir notification"
                         ),
                         isEditing: isEditingLowReservoir,

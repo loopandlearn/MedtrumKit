@@ -49,7 +49,7 @@ public extension NewPumpEvent {
             date: date,
             dose: dose,
             raw: "\(DoseType.suspend.rawValue) \(dateFormatter.string(from: date))".data(using: .utf8) ?? Data([]),
-            title: String(localized: "Suspend", comment: "Pump Event title for UnfinalizedDose with doseType of .suspend")
+            title: String(localized: "Suspended", comment: "Pump Event title for UnfinalizedDose with doseType of .suspend")
         )
     }
 

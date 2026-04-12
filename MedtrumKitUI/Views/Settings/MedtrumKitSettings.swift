@@ -35,16 +35,16 @@ struct MedtrumKitSettings: View {
                 comment: "Message for suspend action"
             ),
             buttons: [
-                .default(Text("30 minutes", comment: "suspend for 10 min")) {
+                .default(Text("30 minutes", comment: "suspend for 30 min")) {
                     self.viewModel.suspendDelivery(duration: .minutes(30))
                 },
-                .default(Text("1 hour", comment: "suspend for 10 min")) {
+                .default(Text("1 hour", comment: "suspend for 1h")) {
                     self.viewModel.suspendDelivery(duration: .minutes(60))
                 },
-                .default(Text("1.5 hour", comment: "suspend for 10 min")) {
+                .default(Text("1.5 hours", comment: "suspend for 1.5h")) {
                     self.viewModel.suspendDelivery(duration: .minutes(90))
                 },
-                .default(Text("2 hour", comment: "suspend for 10 min")) {
+                .default(Text("2 hours", comment: "suspend for 2h")) {
                     self.viewModel.suspendDelivery(duration: .minutes(120))
                 },
                 .cancel(Text("Cancel", comment: "button cancel"))
