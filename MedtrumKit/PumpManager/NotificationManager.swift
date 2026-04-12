@@ -93,7 +93,7 @@ class NotificationManager {
             let content = UNMutableNotificationContent()
             content.title = String(
                 format:
-                String(localized: "Reservoir low (%iU)", comment: "Title low reservoir notification"),
+                String(localized: "Reservoir low (%lld U)", comment: "Title low reservoir notification"),
                 Int(reservoir)
             )
             content.body = String(localized: "Your patch is running out of insulin!", comment: "Body low reservoir notification")
