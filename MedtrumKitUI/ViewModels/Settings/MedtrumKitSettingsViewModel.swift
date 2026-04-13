@@ -53,6 +53,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver {
 
     let reservoirVolumeFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
+        formatter.roundingMode = .floor
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 0
         return formatter
