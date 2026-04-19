@@ -65,7 +65,7 @@ struct PatchActivationView: View {
                 if viewModel.isActivating {
                     ActivityIndicator()
                 } else {
-                    Text("Activate patch", comment: "label for activate patch")
+                    Text("Activate Patch", comment: "label for activate patch")
                 }
             }
             .disabled(viewModel.isActivating)
@@ -74,7 +74,7 @@ struct PatchActivationView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .edgesIgnoringSafeArea(.bottom)
-        .navigationTitle(String(localized: "Patch activation", comment: "Patch activation header"))
+        .navigationTitle(String(localized: "Patch Activation", comment: "Patch activation header"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(String(localized: "Cancel", comment: "Cancel button title"), action: {

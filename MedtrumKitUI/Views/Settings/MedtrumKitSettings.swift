@@ -29,7 +29,7 @@ struct MedtrumKitSettings: View {
 
     var suspendSheet: ActionSheet {
         ActionSheet(
-            title: Text("Suspend patch", comment: "Title for suspend action"),
+            title: Text("Suspend Insulin Delivery", comment: "Title for suspend action"),
             message: Text(
                 "How long you wish to suspend your patch maximum? It will resume automaticly after this time.",
                 comment: "Message for suspend action"
@@ -158,9 +158,9 @@ struct MedtrumKitSettings: View {
                     }) {
                         HStack {
                             if viewModel.basalType == .suspended {
-                                Text("Resume delivery", comment: "Resume patch")
+                                Text("Resume Insulin Delivery", comment: "Resume patch")
                             } else {
-                                Text("Suspend delivery", comment: "Suspend patch")
+                                Text("Suspend Insulin Delivery", comment: "Suspend patch")
                             }
                             Spacer()
                             if viewModel.isUpdatingSuspend {
@@ -211,7 +211,7 @@ struct MedtrumKitSettings: View {
                     if viewModel.patchState.rawValue < PatchState.active.rawValue && viewModel.patchState != .none {
                         Button(action: { viewModel.toPumpActivation() }) {
                             HStack {
-                                Text("Activate patch", comment: "label for activate patch")
+                                Text("Activate Patch", comment: "label for activate patch")
                                 Spacer()
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: UIFont.systemFontSize, weight: .bold))
@@ -248,7 +248,7 @@ struct MedtrumKitSettings: View {
                     }
 
                     HStack {
-                        Text("Patch state", comment: "Text for patch state")
+                        Text("Patch State", comment: "Text for patch state")
                             .foregroundColor(Color.primary)
                         Spacer()
                         Text(viewModel.patchStateString)
@@ -256,7 +256,7 @@ struct MedtrumKitSettings: View {
                     }
 
                     HStack {
-                        Text("Last sync", comment: "Text for last sync")
+                        Text("Last Sync", comment: "Text for last sync")
                             .foregroundColor(Color.primary)
                         Spacer()
                         if viewModel.patchLifecycleState != .noPatch {
@@ -280,7 +280,7 @@ struct MedtrumKitSettings: View {
                 } else {
                     Button(action: { viewModel.activatePatchAction() }) {
                         HStack {
-                            Text("Activate new Patch", comment: "activate patch")
+                            Text("Activate Patch", comment: "activate patch")
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .font(.system(size: UIFont.systemFontSize, weight: .bold))
@@ -308,7 +308,7 @@ struct MedtrumKitSettings: View {
                 }
 
                 HStack {
-                    Text("Patch settings", comment: "Text for patch settings view")
+                    Text("Patch Settings", comment: "Text for patch settings view")
                         .foregroundColor(Color.primary)
                     Spacer()
                     Image(systemName: "chevron.right")
@@ -407,7 +407,7 @@ struct MedtrumKitSettings: View {
 
             Section {
                 HStack {
-                    Text("Patch time", comment: "Text for pump time")
+                    Text("Patch Time", comment: "Text for pump time")
                         .foregroundColor(Color.primary)
                     Spacer()
                     if viewModel.showPumpTimeSyncWarning {
@@ -443,7 +443,7 @@ struct MedtrumKitSettings: View {
                 }
             }
             header: {
-                Text("Patch time", comment: "The title for patch time")
+                Text("Patch Time", comment: "The title for patch time")
             }
 
             Section {

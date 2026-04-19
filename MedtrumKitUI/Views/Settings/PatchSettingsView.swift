@@ -56,7 +56,7 @@ struct PatchSettingsView: View {
                     }
 
                     sectionItem(
-                        title: String(localized: "Alarm setting", comment: "Label for alarm settings"),
+                        title: String(localized: "Alarm Setting", comment: "Label for alarm settings"),
                         isEditing: isEditingAlarmSetting,
                         value: $viewModel.alarmSettings,
                         valueRange: viewModel.alarmOptions,
@@ -100,7 +100,7 @@ struct PatchSettingsView: View {
                     }
 
                     sectionItem(
-                        title: String(localized: "Patch lifetime", comment: "Label for expiration alarm"),
+                        title: String(localized: "Patch Lifetime", comment: "Label for expiration alarm"),
                         isEditing: isEditingExpirationTimer,
                         value: $viewModel.expirationTimer,
                         valueRange: Array(0 ... 1).map({ Double($0) }),
@@ -220,7 +220,7 @@ struct PatchSettingsView: View {
             .padding([.bottom, .horizontal])
         }
         .edgesIgnoringSafeArea(.bottom)
-        .navigationBarTitle(String(localized: "Patch settings", comment: "Text for patch settings view"))
+        .navigationBarTitle(String(localized: "Patch Settings", comment: "Text for patch settings view"))
     }
 
     @ViewBuilder func sectionItem(

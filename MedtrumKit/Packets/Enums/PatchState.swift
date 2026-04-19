@@ -50,9 +50,9 @@ public enum PatchState: UInt8, Codable {
         case .autoSuspended:
             return String(localized: "Suspended - Auto", comment: "Patch state for autoSuspended")
         case .hourlyMaxSuspended:
-            return String(localized: "Suspended - Hourly max", comment: "Patch state for hourlyMaxSuspended")
+            return String(localized: "Suspended - Hourly Max", comment: "Patch state for hourlyMaxSuspended")
         case .dailyMaxSuspended:
-            return String(localized: "Suspended - Daily max", comment: "Patch state for dailyMaxSuspended")
+            return String(localized: "Suspended - Daily Max", comment: "Patch state for dailyMaxSuspended")
         case .suspended:
             return String(localized: "Suspended", comment: "Patch state for suspended")
         case .paused:
@@ -62,15 +62,15 @@ public enum PatchState: UInt8, Codable {
         case .expired:
             return String(localized: "Expired", comment: "Patch state for expired")
         case .reservoirEmpty:
-            return String(localized: "Reservoir empty", comment: "Patch state for reservoirEmpty")
+            return String(localized: "Reservoir Empty", comment: "Patch state for reservoirEmpty")
         case .baseFault,
              .patchFault,
              .patchFaultd2:
             return String(localized: "Fault", comment: "Patch state for patchFault, patchFaultd2, baseFault")
         case .batteryOut:
-            return String(localized: "Battery empty", comment: "Patch state for batteryOut")
+            return String(localized: "Battery Empty", comment: "Patch state for batteryOut")
         case .noCalibration:
-            return String(localized: "No calibration", comment: "Patch state for noCalibration")
+            return String(localized: "No Calibration", comment: "Patch state for noCalibration")
         case .stopped:
             return String(localized: "Stopped", comment: "Patch state for stopped")
         }

@@ -9,7 +9,7 @@ func removePumpManagerActionSheet(deleteAction: @escaping () -> Void) -> ActionS
         ),
         buttons: [
             .destructive(Text(
-                "Delete pump",
+                "Delete Pump",
                 comment: "Button text to confirm PumpManager deletion"
             )) {
                 deleteAction()

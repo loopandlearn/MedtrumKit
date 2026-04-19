@@ -7,7 +7,7 @@ struct PatchDetailsView: View {
         List {
             Section {
                 sectionItem(
-                    title: Text("Patch state", comment: "Text for patch state"),
+                    title: Text("Patch State", comment: "Text for patch state"),
                     value: viewModel.patchStateString
                 )
                 sectionItem(
@@ -33,7 +33,7 @@ struct PatchDetailsView: View {
 
                 if let initialReservoirLevel = viewModel.initialReservoirLevel {
                     sectionItem(
-                        title: Text("Insulin used", comment: "Text for Insulin used"),
+                        title: Text("Insulin Used", comment: "Text for Insulin used"),
                         value: viewModel.reservoirText(for: initialReservoirLevel - viewModel.reservoirLevel)
                     )
                 }

@@ -11,7 +11,7 @@ struct PreviousPatchDetailsView: View {
                     value: viewModel.patchId
                 )
                 sectionItem(
-                    title: Text("Patch state", comment: "Text for patch state"),
+                    title: Text("Patch State", comment: "Text for patch state"),
                     value: viewModel.patchStateString
                 )
                 sectionItem(
@@ -31,12 +31,12 @@ struct PreviousPatchDetailsView: View {
                    let initialReservoirLevel = viewModel.initialReservoirLevel
                 {
                     sectionItem(
-                        title: Text("Insulin used", comment: "Text for Insulin used"),
+                        title: Text("Insulin Used", comment: "Text for Insulin used"),
                         value: viewModel.reservoirText(for: initialReservoirLevel - reservoirLevel)
                     )
                 } else {
                     sectionItem(
-                        title: Text("Insulin used", comment: "Text for Insulin used"),
+                        title: Text("Insulin Used", comment: "Text for Insulin used"),
                         value: "0 U"
                     )
                 }
