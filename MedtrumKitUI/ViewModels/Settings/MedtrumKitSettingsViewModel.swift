@@ -371,7 +371,7 @@ extension MedtrumKitSettingsViewModel {
         patchGracePeriodFrom = state.patchGracePeriodFrom
         patchExpiresAt = state.patchExpiresAt
         if let patchActivatedAt = state.patchActivatedAt {
-            patchLifetime = self.processPatchLifetime(patchActivatedAt, Date())
+            patchLifetime = processPatchLifetime(patchActivatedAt, Date())
         }
         hasPreviousPatch = state.previousPatch != nil
         hourlyLimit = Int(state.maxHourlyInsulin)

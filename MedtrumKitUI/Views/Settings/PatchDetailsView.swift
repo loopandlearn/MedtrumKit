@@ -31,11 +31,11 @@ struct PatchDetailsView: View {
                     value: viewModel.batteryText(for: viewModel.battery)
                 )
                 sectionItem(
-                    title: LocalizedString("Activation", comment: "Text for activatedAt"),
+                    title: Text("Activation", comment: "Text for activatedAt"),
                     value: viewModel.activatedAt
                 )
                 sectionItem(
-                    title: LocalizedString("Cannula Age", comment: "Text for cannula age (CAGE)"),
+                    title: Text("Cannula Age", comment: "Text for cannula age (CAGE)"),
                     value: viewModel.patchLifetime
                 )
 
