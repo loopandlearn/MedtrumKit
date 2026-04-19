@@ -23,6 +23,10 @@ struct PreviousPatchDetailsView: View {
                     value: viewModel.deactivatedAt
                 )
                 sectionItem(
+                    title: Text("Cannula Age", comment: "Text for cannula age (CAGE)"),
+                    value: viewModel.patchLifetime
+                )
+                sectionItem(
                     title: Text("Battery", comment: "Text for battery voltageB"),
                     value: viewModel.batteryText(for: viewModel.battery)
                 )

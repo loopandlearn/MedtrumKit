@@ -5681,6 +5681,18 @@
         }
       }
     },
+    "Cannula Age" : {
+      "comment" : "Text for cannula age (CAGE)",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cannula Age"
+          }
+        }
+      }
+    },
     "Change your Patch now. Insulin delivery will stop in {0} or when no more insulin remains." : {
       "comment" : "description for grace period notice",
       "extractionState" : "manual",

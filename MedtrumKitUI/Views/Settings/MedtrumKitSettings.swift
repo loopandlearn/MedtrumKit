@@ -324,6 +324,19 @@ struct MedtrumKitSettings: View {
             }
 
             Section {
+                HStack {
+                        Text(LocalizedString("Cannula Age", comment: "Text for cannula age (CAGE)"),)
+                            .foregroundColor(Color.primary)
+                        Spacer()
+                        if viewModel.patchLifecycleState != .noPatch {
+                            Text(viewModel.patchLifetime)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.trailing)
+                        } else {
+                            Text("-")
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 if let activatedAt = viewModel.patchActivatedAt {
                     HStack {
                         Text("Activation", comment: "Text for activatedAt")
