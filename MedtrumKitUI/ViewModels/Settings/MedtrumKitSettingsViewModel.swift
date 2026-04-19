@@ -44,6 +44,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver, 
     @Published var isUpdatingTempBasal = false
     @Published var showingHeartbeatWarning = false
     @Published var showingDeleteConfirmation = false
+    @Published var showingSuspendPicker = false
     @Published var hasPreviousPatch = false
     @Published var isClearingAlert = false
 
@@ -53,6 +54,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver, 
 
     let reservoirVolumeFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
+        formatter.roundingMode = .floor
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 0
         return formatter
@@ -231,32 +233,40 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver, 
         pumpActivationAction(alreadyPrimed)
     }
 
+    func suspendDelivery(duration: TimeInterval) {
+        guard let pumpManager else {
+            return
+        }
+
+        pumpManager.suspendPatch(duration: duration) { error in
+            DispatchQueue.main.async {
+                self.isUpdatingSuspend = false
+            }
+
+            if let error = error {
+                self.log.error("Failed to suspend delivery: \(error)")
+            }
+        }
+    }
+
     func suspendResumeButtonPressed() {
+        if basalType != .suspended {
+            showingSuspendPicker = true
+            return
+        }
+
         guard let pumpManager = self.pumpManager else {
             return
         }
 
         isUpdatingSuspend = true
-        if basalType == .suspended {
-            pumpManager.resumeDelivery { error in
-                DispatchQueue.main.async {
-                    self.isUpdatingSuspend = false
-                }
-
-                if let error = error {
-                    self.log.error("Failed to resume delivery: \(error)")
-                }
+        pumpManager.resumeDelivery { error in
+            DispatchQueue.main.async {
+                self.isUpdatingSuspend = false
             }
 
-        } else {
-            pumpManager.suspendDelivery { error in
-                DispatchQueue.main.async {
-                    self.isUpdatingSuspend = false
-                }
-
-                if let error = error {
-                    self.log.error("Failed to suspend delivery: \(error)")
-                }
+            if let error = error {
+                self.log.error("Failed to resume delivery: \(error)")
             }
         }
     }
