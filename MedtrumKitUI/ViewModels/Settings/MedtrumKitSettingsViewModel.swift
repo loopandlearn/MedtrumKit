@@ -304,7 +304,7 @@ class MedtrumKitSettingsViewModel: ObservableObject, PumpManagerStatusObserver, 
             return
         } else {
             // Disconnect from patch
-            pumpManager.bluetooth.disconnect()
+            pumpManager.bluetooth.disconnect(force: true)
             return
         }
     }

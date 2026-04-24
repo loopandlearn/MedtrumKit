@@ -10,6 +10,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
 
     private var peripheral: CBPeripheral?
     private var peripheralManager: PeripheralManager?
+    private var forcedDisconnect: Bool = false
 
     var scanCompletion: ((MedtrumScanResult) -> Void)?
     var connectCompletion: ((MedtrumConnectError?) -> Void)?
@@ -69,6 +70,9 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     }
 
     func ensureConnected(_ completionAsync: @escaping (MedtrumConnectError?) async -> Void) {
+        // Reset force disconnect
+        forcedDisconnect = false
+
         guard connectCompletion == nil else {
             logger.error("EnsureConnected is already running...")
             Task {
@@ -166,9 +170,15 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
         return await peripheralManager.writePacket(packet)
     }
 
-    func disconnect() {
-        if let peripheral = self.peripheral, peripheral.state == .connected {
+    func disconnect(force: Bool = false) {
+        forcedDisconnect = force
+
+        if let peripheral, peripheral.state == .connected {
             manager.cancelPeripheralConnection(peripheral)
+        }
+
+        if force {
+            clearPeripheral()
         }
     }
 
@@ -314,9 +324,7 @@ extension BluetoothManager {
             connectCompletion(.failedToConnectToDevice)
             self.connectCompletion = nil
 
-        } else {
-            // Prevent reconnect spam
-            // Only try to reconnect if Authorization was successful
+        } else if !forcedDisconnect {
             ensureConnected { error in
                 if let error = error {
                     self.logger.warning("Failed to auto-reconnect: \(error)")

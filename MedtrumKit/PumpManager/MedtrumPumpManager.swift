@@ -943,6 +943,8 @@ public extension MedtrumPumpManager {
 
             self.log.info("Patch deactivated")
             completion(.success)
+
+            self.bluetooth.disconnect(force: true)
         }
     }
 
