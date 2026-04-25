@@ -28,7 +28,6 @@ extension PatchLifetimeFormatting {
             }
 
             return [
-
                 "\(days) \(days == 1 ? DAY : DAYS)",
                 "\(hours) \(hours == 1 ? HOUR : HOURS)"
             ].joined(separator: " ")
