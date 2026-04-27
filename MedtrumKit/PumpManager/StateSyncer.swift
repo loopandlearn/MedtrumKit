@@ -23,7 +23,7 @@ enum StateSyncer {
                 state.initialReservoir = state.reservoir
             }
         }
-        
+
         if let basal = syncResponse.basal {
             switch basal.type {
             case .ABSOLUTE_TEMP,
