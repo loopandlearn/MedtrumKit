@@ -29,7 +29,6 @@ enum StateSyncer {
             case .ABSOLUTE_TEMP,
                  .RELATIVE_TEMP:
                 state.basalState = .tempBasal
-                state.tempBasalUnits = basal.rate
 
             case .STOP,
                  .STOP_BASE_FAULT,
@@ -51,8 +50,6 @@ enum StateSyncer {
 
             default:
                 state.basalState = .active
-                state.tempBasalUnits = nil
-                state.tempBasalDuration = nil
             }
         }
 
