@@ -121,8 +121,6 @@ class MedtrumKitSettingsViewModel: PatchLifetimeFormatting, ObservableObject, Pu
         self.activatePatchAction = activatePatchAction
         super.init()
 
-        super.init()
-
         guard let pumpManager = pumpManager else {
             return
         }
