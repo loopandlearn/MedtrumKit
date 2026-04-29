@@ -51,6 +51,12 @@
             "value" : "-"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "-"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -205,6 +211,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ unités restantes à %@"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ יחידות שנותרו ב %@"
           }
         },
         "hu" : {
@@ -363,6 +375,12 @@
             "value" : "%@U"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ U"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -519,6 +537,12 @@
             "value" : "1 heure"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שעה אחת"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -668,6 +692,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1."
+          }
+        },
+        "he" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1."
@@ -829,6 +859,12 @@
             "value" : "1,5 heure"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.5 שעות"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -985,6 +1021,12 @@
             "value" : "2 heures"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שעתיים"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1134,6 +1176,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2."
+          }
+        },
+        "he" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "2."
@@ -1293,6 +1341,12 @@
             "value" : "3."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1442,6 +1496,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4."
+          }
+        },
+        "he" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "4."
@@ -1601,6 +1661,12 @@
             "value" : "5."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1750,6 +1816,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6."
+          }
+        },
+        "he" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "6."
@@ -1909,6 +1981,12 @@
             "value" : "7."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2058,6 +2136,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8."
+          }
+        },
+        "he" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "8."
@@ -2219,6 +2303,12 @@
             "value" : "30 minutes"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 דקות"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2371,6 +2461,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1234ABCD"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1234 אבקדי"
           }
         },
         "hu" : {
@@ -2529,6 +2625,12 @@
             "value" : "Activer le nouveau patch"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעל תיקון חדש"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2683,6 +2785,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activer le patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעל את התיקון"
           }
         },
         "hu" : {
@@ -2841,6 +2949,12 @@
             "value" : "Activer le patch"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעל את התיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2995,6 +3109,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Patch activé à"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעלה"
           }
         },
         "hu" : {
@@ -3153,6 +3273,12 @@
             "value" : "Actif"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פעיל"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3307,6 +3433,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Âge:"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "גיל:"
           }
         },
         "hu" : {
@@ -3465,6 +3597,12 @@
             "value" : "Réglage de l'alarme"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרת אזעקה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3619,6 +3757,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réglage de l'alarme"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרת אזעקה"
           }
         },
         "hu" : {
@@ -3777,6 +3921,12 @@
             "value" : "Alerte : Insuline maximale quotidienne"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התראה: אינסולין מקסימלי יומי"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3931,6 +4081,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerte : Insuline maximale horaire"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התראה: אינסולין מקסימלי לשעה"
           }
         },
         "hu" : {
@@ -4089,6 +4245,12 @@
             "value" : "Êtes-vous sûr de vouloir arrêter d'utiliser Medtrum TouchCare Nano 200u/300u?"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "האם אתה בטוח שאתה רוצה להפסיק להשתמש ב- Medtrum TouchCare ננו 200u/300u?"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4243,6 +4405,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Êtes-vous sûr ?"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "האם אתה בטוח?"
           }
         },
         "hu" : {
@@ -4401,6 +4569,12 @@
             "value" : "Attachez la pompe au corps."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חבר את המשאבה לגוף."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4555,6 +4729,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Authentification et désactivation du patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לאמת ולבטל את התיקון"
           }
         },
         "hu" : {
@@ -4713,6 +4893,12 @@
             "value" : "Échec de l'authentification"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כשל באימות"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4867,6 +5053,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Basal"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בסיסי"
           }
         },
         "hu" : {
@@ -5025,6 +5217,12 @@
             "value" : "Batterie"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סוללה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5179,6 +5377,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Batterie vide"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סוללה ריקה"
           }
         },
         "hu" : {
@@ -5337,6 +5541,12 @@
             "value" : "Batterie vide"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סוללה ריקה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5491,6 +5701,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bip seulement"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "צפצוף בלבד"
           }
         },
         "hu" : {
@@ -5649,6 +5865,12 @@
             "value" : "Bolus"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בולוס"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5803,6 +6025,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Annuler"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בטל"
           }
         },
         "hu" : {
@@ -5961,6 +6189,12 @@
             "value" : "Âge de la canule"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עידן הצינורית"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6115,6 +6349,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remplacez le patch maintenant. La distribution d'insuline s'arrête dans %@ ou lorsqu'il n'y a plus d'insuline."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שנה את התיקון שלך עכשיו. אספקת האינסולין תיפסק ב %@ או כאשר לא יישאר עוד אינסולין."
           }
         },
         "hu" : {
@@ -6273,6 +6513,12 @@
             "value" : "Remplacez le patch maintenant. La distribution d'insuline s'arrête dans %@ ou lorsqu'il n'y a plus d'insuline."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שנה את התיקון שלך עכשיו. אספקת האינסולין תיפסק ב %@ או כאשר לא יישאר עוד אינסולין."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6429,6 +6675,12 @@
             "value" : "Contrôlé à"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נבדק ב"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6581,6 +6833,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerte claire"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התראה ברורה"
           }
         },
         "hu" : {
@@ -6739,6 +6997,12 @@
             "value" : "Configuration"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תצורה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6893,6 +7157,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirmer"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לאשר"
           }
         },
         "hu" : {
@@ -7051,6 +7321,12 @@
             "value" : "Connectez la base de votre pompe au patch."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חבר את בסיס המשאבה שלך לתיקון."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7205,6 +7481,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Connecté"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מחובר"
           }
         },
         "hu" : {
@@ -7363,6 +7645,12 @@
             "value" : "Continuer"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "המשך"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7517,6 +7805,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Actuellement, vous n'utilisez PAS le mode \"heartbeat\". Un battement de cœur est nécessaire pour que %%1$@ continue à fonctionner en arrière-plan. Il est recommandé de continuer à activer cette fonction"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נכון לעכשיו, אינך משתמש במצב פעימות לב. נדרשת פעימת לב כדי לשמור על %%1$@ פועל ברקע. מומלץ להמשיך להפעיל תכונה זו"
           }
         },
         "hu" : {
@@ -7675,6 +7969,12 @@
             "value" : "Actuellement, vous utilisez un mode de pulsation cardiaque. Ceci est nécessaire pour garder %%1$@ en cours d'exécution en arrière-plan. Cela pourrait être intéressant si votre MGC fournit déjà un coup de cœur. Il est recommandé de garder cette fonctionnalité activée"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נכון לעכשיו, אתה משתמש במצב פעימות לב. זה נחוץ כדי לשמור על %%1$@ פועל ברקע. זה עשוי להיות מעניין אם ה- CGM שלך כבר מספק פעימות לב. מומלץ לשמור על תכונה זו מופעלת"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7829,6 +8129,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "jour"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "יום"
           }
         },
         "hu" : {
@@ -7987,6 +8293,12 @@
             "value" : "Jours"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ימים"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8141,6 +8453,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Désactiver le patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בטל את התיקון"
           }
         },
         "hu" : {
@@ -8299,6 +8617,12 @@
             "value" : "Désactiver le correctif"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בטל את התיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8453,6 +8777,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Désactivé le"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושבת ב"
           }
         },
         "hu" : {
@@ -8611,6 +8941,12 @@
             "value" : "Désactivation"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השבתה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8765,6 +9101,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprimer la pompe"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מחק משאבה"
           }
         },
         "hu" : {
@@ -8923,6 +9265,12 @@
             "value" : "Supprimer la pompe"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מחק משאבה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9077,6 +9425,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Disabled"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נכה"
           }
         },
         "hu" : {
@@ -9235,6 +9589,12 @@
             "value" : "Déconnecter"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "להתנתק"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9389,6 +9749,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Déconnecté"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מנותק"
           }
         },
         "hu" : {
@@ -9547,6 +9913,12 @@
             "value" : "Ne pas encore attacher le patch au corps"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אל תחבר את התיקון לגוף עדיין"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9701,6 +10073,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fait"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בוצע"
           }
         },
         "hu" : {
@@ -9859,6 +10237,12 @@
             "value" : "Ejecté"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נפלט"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10013,6 +10397,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ejection"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פליטה"
           }
         },
         "hu" : {
@@ -10171,6 +10561,12 @@
             "value" : "Le patch expire le"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תפוגה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10325,6 +10721,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Expiré"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פג תוקף"
           }
         },
         "hu" : {
@@ -10483,6 +10885,12 @@
             "value" : "Expire en :"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פג תוקף ב:"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10637,6 +11045,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le patch étendu a expiré. Basal uniquement."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תוקף התיקון המורחב פג. בסיסי בלבד."
           }
         },
         "hu" : {
@@ -10795,6 +11209,12 @@
             "value" : "Défaut"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תקלה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10949,6 +11369,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remplissez le patch avec de l'insuline. NOTE : Un minimum de 70U est requis pour l'activation."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מלאו את המדבקה באינסולין. הערה: נדרש מינימום של 70U להפעלה."
           }
         },
         "hu" : {
@@ -11107,6 +11533,12 @@
             "value" : "Remplissez la seringue avec l'insuline"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מלאו את המזרק באינסולין"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11261,6 +11693,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rempli"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מלא"
           }
         },
         "hu" : {
@@ -11419,6 +11857,12 @@
             "value" : "Forcer le retrait"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הסר בכפייה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11573,6 +12017,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Retourner à l'amorçage"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חזור לפרימינג"
           }
         },
         "hu" : {
@@ -11731,6 +12181,12 @@
             "value" : "Retour à la base de la pompe"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חזור לבסיס המשאבה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11885,6 +12341,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "h"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ח"
           }
         },
         "hu" : {
@@ -12043,6 +12505,12 @@
             "value" : "heure"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שעה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12197,6 +12665,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "heures"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שעות"
           }
         },
         "hu" : {
@@ -12355,6 +12829,12 @@
             "value" : "Combien de temps souhaitez-vous suspendre votre patch maximum ? Il reprendra automatiquement après ce délai."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כמה זמן אתה רוצה להשעות את התיקון שלך מקסימום? זה יתחדש אוטומטית לאחר זמן זה."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12509,6 +12989,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Au repos"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סרק"
           }
         },
         "hu" : {
@@ -12667,6 +13153,12 @@
             "value" : "Information"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מידע"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -12821,6 +13313,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Insuline\nsuspendue"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אינסולין\nמושעה"
           }
         },
         "hu" : {
@@ -12979,6 +13477,12 @@
             "value" : "Livraison d'insuline"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "משלוח אינסולין"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13133,6 +13637,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'insuline a été suspendue !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "האינסולין הושעה!"
           }
         },
         "hu" : {
@@ -13291,6 +13801,12 @@
             "value" : "Insuline restante"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אינסולין נשאר"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13445,6 +13961,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suspension de l'insuline"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אינסולין מושעה"
           }
         },
         "hu" : {
@@ -13603,6 +14125,12 @@
             "value" : "Type d'insuline"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סוג אינסולין"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -13757,6 +14285,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Insuline utilisée"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אינסולין בשימוש"
           }
         },
         "hu" : {
@@ -13915,6 +14449,12 @@
             "value" : "Insuline utilisée"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אינסולין בשימוש"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14069,6 +14609,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Il est recommandé de désactiver d'abord"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מומלץ להשבית תחילה"
           }
         },
         "hu" : {
@@ -14227,6 +14773,12 @@
             "value" : "Dernière synchronisation"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סנכרון אחרון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14381,6 +14933,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dernière synchronisation"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סנכרון אחרון"
           }
         },
         "hu" : {
@@ -14539,6 +15097,12 @@
             "value" : "Lumière et bip"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אור וצפצוף"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -14693,6 +15257,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lumière et vibration"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אור ורוטט"
           }
         },
         "hu" : {
@@ -14851,6 +15421,12 @@
             "value" : "Lumière seule"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אור בלבד"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15005,6 +15581,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lumière, vibreur et bip"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אור, רוטט וצפצוף"
           }
         },
         "hu" : {
@@ -15163,6 +15745,12 @@
             "value" : "chargement"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "העמסה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15317,6 +15905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Assurez-vous que le numéro de série est correct avant de le connecter au patch."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ודא שהמספר הסידורי נכון לפני חיבורו לתיקון."
           }
         },
         "hu" : {
@@ -15475,6 +16069,12 @@
             "value" : "Synchronisation manuelle de l'heure de la pompe"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סנכרון ידני זמן משאבה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15629,6 +16229,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Insuline quotidienne max"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מקסימום אינסולין יומי"
           }
         },
         "hu" : {
@@ -15787,6 +16393,12 @@
             "value" : "Insuline horaire max"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אינסולין מקסימלי לשעה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15941,6 +16553,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "minute"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "דקה"
           }
         },
         "hu" : {
@@ -16099,6 +16717,12 @@
             "value" : "minutes"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "דקות"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16253,6 +16877,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun patch actif"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין תיקון פעיל"
           }
         },
         "hu" : {
@@ -16411,6 +17041,12 @@
             "value" : "Pas d'étalonnage"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין כיול"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16565,6 +17201,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pas d'étalonnage"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ללא כיול"
           }
         },
         "hu" : {
@@ -16723,6 +17365,12 @@
             "value" : "Aucune administration"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין משלוח"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -16877,6 +17525,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pas d'insuline"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין אינסולין"
           }
         },
         "hu" : {
@@ -17035,6 +17689,12 @@
             "value" : "Pas de patch"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אין תיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17189,6 +17849,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Non, Garder tel quel"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לא, שמור כמו שהוא"
           }
         },
         "hu" : {
@@ -17347,6 +18013,12 @@
             "value" : "Non, conserver la pompe en l'état"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לא, שמור על המשאבה כפי שהיא"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17501,6 +18173,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אף אחד"
           }
         },
         "hu" : {
@@ -17659,6 +18337,12 @@
             "value" : "Notification pour le patch d'expiration"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הודעה על תיקון פג תוקף"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -17813,6 +18497,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notification d'un réservoir bas"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הודעה על מאגר נמוך"
           }
         },
         "hu" : {
@@ -17971,6 +18661,12 @@
             "value" : "Occlusion"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "חסימה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18125,6 +18821,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activation du correctif"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעלת תיקון"
           }
         },
         "hu" : {
@@ -18283,6 +18985,12 @@
             "value" : "Activation du correctif"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הפעלת תיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18437,6 +19145,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Détails du patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פרטי תיקון"
           }
         },
         "hu" : {
@@ -18595,6 +19309,12 @@
             "value" : "Erreur de patch"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שגיאת תיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -18749,6 +19469,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le correctif a expiré"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תוקף התיקון פג"
           }
         },
         "hu" : {
@@ -18907,6 +19633,12 @@
             "value" : "Patch périmé. Basal uniquement."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תוקף התיקון פג. בסיסי בלבד."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19061,6 +19793,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ID du correctif"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מזהה תיקון"
           }
         },
         "hu" : {
@@ -19219,6 +19957,12 @@
             "value" : "Le patch est suspendu. Limite de %lld U dépassée. Si vous augmentez la limite, vous pouvez supprimer l'alerte maintenant. Si vous attendez, le patch reprendra lorsque le temps sera écoulé."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון מושעה. המגבלה של %lld U חרגה. אם תגדיל את המגבלה, תוכל לנקות את ההתראה כעת. אם תחכה, התיקון יתחדש כאשר יעבור מספיק זמן."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19373,6 +20117,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durée de mise à jour"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אורך חיי התיקון"
           }
         },
         "hu" : {
@@ -19531,6 +20281,12 @@
             "value" : "Durée de mise à jour"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תיקון לכל החיים"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19685,6 +20441,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Amorçage du patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תחול תיקון"
           }
         },
         "hu" : {
@@ -19843,6 +20605,12 @@
             "value" : "Amorçage du patch"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תיקון פרימינג"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -19997,6 +20765,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remplacer le patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "החלפת תיקון"
           }
         },
         "hu" : {
@@ -20155,6 +20929,12 @@
             "value" : "Paramètres du correctif"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרות תיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20309,6 +21089,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paramètres du correctif"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרות תיקון"
           }
         },
         "hu" : {
@@ -20467,6 +21253,12 @@
             "value" : "Statut du correctif"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מצב תיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20621,6 +21413,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Statut du correctif"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מדינת תיקון"
           }
         },
         "hu" : {
@@ -20779,6 +21577,12 @@
             "value" : "Le temps de l'écusson"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "זמן תיקון"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20933,6 +21737,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le temps de l'écusson"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "זמן תיקון"
           }
         },
         "hu" : {
@@ -21091,6 +21901,12 @@
             "value" : "En pause"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושהה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21245,6 +22061,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Placez la seringue dans le patch et tirez 1 à 2 tirets d'air."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מניחים את המזרק במדבקה ומשלפים 1 עד 2 מקפים של אוויר."
           }
         },
         "hu" : {
@@ -21403,6 +22225,12 @@
             "value" : "Appuyez sur le bouton de l'aiguille et démarrez le processus d'amorçage."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לחץ על כפתור המחט והתחל בתהליך הפרימינג."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21557,6 +22385,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Appuyez sur le bouton de l'aiguille pour insérer l'aiguille. Cliquez sur \"Activer\" pour terminer le processus d'activation."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לחץ על לחצן המחט כדי להכניס את המחט. לחץ על \"הפעל\" להשלמת תהליך ההפעלה."
           }
         },
         "hu" : {
@@ -21715,6 +22549,12 @@
             "value" : "Détails du patch précédent"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פרטי התיקון הקודם"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21869,6 +22709,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apprêtée"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "דרוך"
           }
         },
         "hu" : {
@@ -22027,6 +22873,12 @@
             "value" : "Amorçage"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "פרימינג"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22181,6 +23033,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Firmware de la base de la pompe"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "קושחת בסיס משאבה"
           }
         },
         "hu" : {
@@ -22339,6 +23197,12 @@
             "value" : "Modèle de base de la pompe"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "דגם בסיס משאבה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22493,6 +23357,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Paramètres de base de la pompe"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הגדרות בסיס משאבה"
           }
         },
         "hu" : {
@@ -22651,6 +23521,12 @@
             "value" : "Base de pompe SN"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בסיס משאבה SN"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -22805,6 +23681,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reconnecter"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התחבר מחדש"
           }
         },
         "hu" : {
@@ -22963,6 +23845,12 @@
             "value" : "Reconnexion en cours..."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מתחבר מחדש..."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -23117,6 +24005,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enlever la pompe"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הסר את המשאבה"
           }
         },
         "hu" : {
@@ -23275,6 +24169,12 @@
             "value" : "Retirez le capot de sécurité du patch."
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הסר את כיסוי הבטיחות מהמדבקה."
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -23429,6 +24329,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remplacez votre patch maintenant !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "החלף את התיקון שלך עכשיו!"
           }
         },
         "hu" : {
@@ -23587,6 +24493,12 @@
             "value" : "Réservoir vide"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מאגר ריק"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -23741,6 +24653,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Réservoir vide"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מאגר ריק"
           }
         },
         "hu" : {
@@ -23899,6 +24817,12 @@
             "value" : "Réservoir bas (%lld U)"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מאגר נמוך (%lld U)"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -24053,6 +24977,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Curriculum vitae"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "קורות חיים"
           }
         },
         "hu" : {
@@ -24211,6 +25141,12 @@
             "value" : "Remise de curriculum vitae"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "המשך המסירה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -24365,6 +25301,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remise de curriculum vitae"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "המשך אספקת האינסולין"
           }
         },
         "hu" : {
@@ -24523,6 +25465,12 @@
             "value" : "Économiser"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שמור"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -24677,6 +25625,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enregistrer et continuer"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שמור והמשך"
           }
         },
         "hu" : {
@@ -24835,6 +25789,12 @@
             "value" : "Basal planifié"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בסיסי מתוזמן"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -24989,6 +25949,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sélectionnez le type d'insuline"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בחר סוג אינסולין"
           }
         },
         "hu" : {
@@ -25147,6 +26113,12 @@
             "value" : "Sélectionnez le type d'insuline que vous utiliserez"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בחר את סוג האינסולין שבו תשתמש"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -25301,6 +26273,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Numéro de série"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מספר סידורי"
           }
         },
         "hu" : {
@@ -25459,6 +26437,12 @@
             "value" : "Partager les rustines de Medtrum"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שתף יומני תיקונים של Medtrum"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -25613,6 +26597,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perte de signal"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "אובדן אותות"
           }
         },
         "hu" : {
@@ -25771,6 +26761,12 @@
             "value" : "Silencieux"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שתיקה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -25925,6 +26921,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Démarrer l'amorçage"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התחל לבצע פרימינג"
           }
         },
         "hu" : {
@@ -26083,6 +27085,12 @@
             "value" : "Statut"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סטטוס"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26237,6 +27245,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Arrêt de la température basale"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "עצור את הטמפרטורה הבסיסית"
           }
         },
         "hu" : {
@@ -26395,6 +27409,12 @@
             "value" : "Arrêtée"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "נעצר"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26549,6 +27569,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suspendre la livraison"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השעה את המסירה"
           }
         },
         "hu" : {
@@ -26707,6 +27733,12 @@
             "value" : "Suspendre l'administration d'insuline"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השהה את אספקת האינסולין"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -26861,6 +27893,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suspendre le patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השהה את התיקון"
           }
         },
         "hu" : {
@@ -27019,6 +28057,12 @@
             "value" : "Suspendu"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושעה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27173,6 +28217,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suspendu - Auto"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושעה - אוטומטי"
           }
         },
         "hu" : {
@@ -27331,6 +28381,12 @@
             "value" : "Suspendu - Maximum journalier"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושעה - דיילי מקס"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27485,6 +28541,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suspendu - Maximum horaire"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושעה - מקסימום לפי שעה"
           }
         },
         "hu" : {
@@ -27643,6 +28705,12 @@
             "value" : "Suspendu - Faible BG"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "מושעה - BG נמוך"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27797,6 +28865,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Synchroniser les données de correctifs"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סנכרון נתוני תיקון"
           }
         },
         "hu" : {
@@ -27955,6 +29029,12 @@
             "value" : "Basal Temporaire"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "טמפ' בסיסי"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28109,6 +29189,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Le patch est destiné à être utilisé pendant 3 jours et 8 heures seulement. Si vous dépassez cette durée, le patch risque de ne plus être fiable. Ceci n'est PAS recommandé. Envisagez d'utiliser la durée de vie normale. Veuillez noter que le nouveau micrologiciel de la dernière génération de bases de pompe peut bloquer les commandes de bolus après 5 jours (120 heures)."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון מיועד לשימוש למשך 3 ימים ו -8 שעות בלבד. חריגה מזמן זה עלולה לגרום לתיקון להיות לא אמין. זה לא מומלץ. שקול להשתמש בחיים רגילים. שים לב כי קושחה חדשה בדור האחרון של בסיסי המשאבה עשויה לחסום פקודות בולוס לאחר 5 ימים (120 שעות)."
           }
         },
         "hu" : {
@@ -28267,6 +29353,12 @@
             "value" : "L'heure de votre pompe est différente de l'heure actuelle. Voulez-vous mettre à jour l'heure de votre pompe pour qu'elle corresponde à l'heure actuelle ?"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הזמן במשאבה שלך שונה מהזמן הנוכחי. האם ברצונך לעדכן את השעה במשאבה שלך לשעה הנוכחית?"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28421,6 +29513,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "L'heure de votre pompe est différente de l'heure actuelle. L'heure de votre pompe contrôle les paramètres de votre thérapie programmée. Faites défiler vers le bas jusqu'à la ligne Heure de la pompe pour consulter le décalage horaire et configurer votre pompe."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "הזמן במשאבה שלך שונה מהזמן הנוכחי. זמן המשאבה שלך שולט בהגדרות הטיפול המתוזמנות שלך. גלול מטה לשורה זמן משאבה כדי לבדוק את הפרש הזמן ולהגדיר את המשאבה שלך."
           }
         },
         "hu" : {
@@ -28579,6 +29677,12 @@
             "value" : "Changement d'heure détecté"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "שינוי זמן זוהה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28735,6 +29839,12 @@
             "value" : "Basculer en mode pulsations cardiaques"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "החלף מצב פעימות לב"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -28886,6 +29996,12 @@
           }
         },
         "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U"
+          }
+        },
+        "he" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "U"
@@ -29047,6 +30163,12 @@
             "value" : "U/h"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "U/שעה"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29201,6 +30323,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "A utiliser à vos risques et périls !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השתמש על אחריותך בלבד!"
           }
         },
         "hu" : {
@@ -29359,6 +30487,12 @@
             "value" : "Utiliser la durée de vie prolongée"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השתמש באורך חיים מורחב"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29513,6 +30647,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Utiliser la durée de vie normale (3d 8h)"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "השתמש בחיים רגילים (3d 8h)"
           }
         },
         "hu" : {
@@ -29671,6 +30811,12 @@
             "value" : "Vibrer et bip"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "רטט וצפצוף"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -29825,6 +30971,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vibrer uniquement"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "רטט בלבד"
           }
         },
         "hu" : {
@@ -29983,6 +31135,12 @@
             "value" : "Bienvenue"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ברוכים הבאים"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -30137,6 +31295,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "En cliquant sur le bouton, vous obtiendrez une invite biométrique. Une fois terminé, le patch sera désactivé et vous serez invité à associer un nouveau patch."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בלחיצה על הכפתור תקבל הנחיה ביומטריה. לאחר השלמתו, התיקון יבוטל ותתבקש להתאים תיקון חדש."
           }
         },
         "hu" : {
@@ -30295,6 +31459,12 @@
             "value" : "Oui, désactiver le mode de pulsation"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כן, השבת מצב פעימות לב"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -30449,6 +31619,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oui, activer le mode pulsation"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כן, אפשר מצב פעימות לב"
           }
         },
         "hu" : {
@@ -30607,6 +31783,12 @@
             "value" : "Oui, synchronisation avec l'heure actuelle"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "כן, סנכרן עם השעה הנוכחית"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -30761,6 +31943,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vous commencerez par configurer votre type d'insuline et vos paramètres de correctifs de base avant d'activer votre patch."
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "תתחיל בהגדרת סוג האינסולין והגדרות התיקון הבסיסיות לפני הפעלת התיקון שלך."
           }
         },
         "hu" : {
@@ -30919,6 +32107,12 @@
             "value" : "Votre patch a %lld heures restantes"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "לתיקון שלך נותרו %lld שעות"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31073,6 +32267,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre patch a détecté une occlusion !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון שלך זיהה חסימה!"
           }
         },
         "hu" : {
@@ -31231,6 +32431,12 @@
             "value" : "Votre patch a atteint son maximum journalier !"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון שלך הגיע למקסימום היומי שלו!"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31385,6 +32591,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre patch a atteint son maximum horaire !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון שלך הגיע למקסימום השעה!"
           }
         },
         "hu" : {
@@ -31543,6 +32755,12 @@
             "value" : "Votre patch est en état de défaut !"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון שלך במצב תקלה!"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -31697,6 +32915,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre patch est en panne d'insuline !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "המדבקה שלך נגמר האינסולין!"
           }
         },
         "hu" : {
@@ -31855,6 +33079,12 @@
             "value" : "Your patch is running out of insulin!"
           }
         },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "המדבקה שלך נגמר האינסולין!"
+          }
+        },
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -32009,6 +33239,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Votre patch va bientôt expirer !"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התיקון שלך יפוג בקרוב!"
           }
         },
         "hu" : {
