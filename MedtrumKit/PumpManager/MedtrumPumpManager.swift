@@ -436,7 +436,7 @@ public extension MedtrumPumpManager {
                 return
             }
 
-            if self.state.basalDose.type == .tempBasal {
+            if self.state.basalState == .tempBasal {
                 // Need to cancel temp basal first before setting temp basal
                 let cancelPacket = CancelTempBasalPacket()
                 let cancelResult = await self.bluetooth.write(cancelPacket)
@@ -580,7 +580,6 @@ public extension MedtrumPumpManager {
 
             self.log.info("Resumed delivery!")
 
-            let start = Date.now
             let resumeDose = UnfinalizedDose(
                 resumeStartTime: Date.now,
                 insulinType: self.state.insulinType
