@@ -185,7 +185,7 @@ public extension MedtrumPumpManager {
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
         guard let activatedAt = state.patchActivatedAt,
-              Date.now.timeIntervalSince(state.lastSync) > .minutes(4) ||
+              Date.now.timeIntervalSince(state.lastSync) > .minutes(2.5) ||
               Date.now.timeIntervalSince(activatedAt) < .minutes(4)
         else {
             log.warning("Skipping status update -> data is fresh or not active: \(Date.now.timeIntervalSince(state.lastSync)) sec")
