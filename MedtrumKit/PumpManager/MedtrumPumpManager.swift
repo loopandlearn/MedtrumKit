@@ -310,6 +310,12 @@ public extension MedtrumPumpManager {
             completion(.deviceState(MedtrumConnectError.isBolussing))
             return
         }
+        
+        guard state.basalState != .suspended else {
+            log.error("Pump is suspended...")
+            completion(.deviceState(MedtrumConnectError.isSuspended))
+            return
+        }
 
         let duration = estimatedDuration(toBolus: units)
         log.info("Enact bolus - \(units)U, \(duration)sec")
