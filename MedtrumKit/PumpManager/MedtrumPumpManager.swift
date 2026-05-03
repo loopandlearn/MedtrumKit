@@ -185,10 +185,10 @@ public extension MedtrumPumpManager {
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
         guard let activatedAt = state.patchActivatedAt,
-              Date.now.timeIntervalSince(state.lastSync) > .minutes(4) ||
+              Date.now.timeIntervalSince(state.lastSync) > .minutes(2.5) ||
               Date.now.timeIntervalSince(activatedAt) < .minutes(4)
         else {
-            log.warning("Skipping status update -> data is fresh: \(Date.now.timeIntervalSince(state.lastSync)) sec")
+            log.warning("Skipping status update -> data is fresh or not active: \(Date.now.timeIntervalSince(state.lastSync)) sec")
             completion?(nil)
             return
         }
@@ -222,7 +222,7 @@ public extension MedtrumPumpManager {
             return
         #endif
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion?(nil)
@@ -230,7 +230,7 @@ public extension MedtrumPumpManager {
             }
 
             let syncResult = await self.bluetooth.write(SynchronizePacket())
-            await StateSyncer.timeSync(pumpManager: self)
+            await StateSyncer.fetchPatchTime(pumpManager: self)
 
             switch syncResult {
             case let .failure(error):
@@ -251,30 +251,13 @@ public extension MedtrumPumpManager {
                     self.log.warning("State update: Failed to encode JSON")
                 }
 
-                self.state.lastSync = Date.now
-                self.notifyStateDidChange()
-
                 StateSyncer.sync(
                     syncResponse: syncResponse,
                     state: self.state,
                     pumpManager: self,
-                    duringReconnect: false
+                    duringReconnect: false,
+                    fullSync: true
                 )
-
-                self.pumpDelegate.notify { delegate in
-                    delegate?.pumpManager(
-                        self,
-                        didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
-                        at: self.state.lastSync
-                    ) { result in
-                        switch result {
-                        case let .failure(error):
-                            self.handlePumpDelegateError(method: "didReadReservoirValue", error)
-                        case .success:
-                            break
-                        }
-                    }
-                }
 
                 completion?(Date.now)
             }
@@ -320,7 +303,7 @@ public extension MedtrumPumpManager {
         let duration = estimatedDuration(toBolus: units)
         log.info("Enact bolus - \(units)U, \(duration)sec")
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 self.resetBolusState()
@@ -371,7 +354,7 @@ public extension MedtrumPumpManager {
         state.bolusState = .canceling
         notifyStateDidChange()
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 self.state.bolusState = oldBolusState
@@ -435,14 +418,14 @@ public extension MedtrumPumpManager {
             return
         }
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(.communication(error))
                 return
             }
 
-            if self.state.basalDose.type == .tempBasal {
+            if self.state.basalState == .tempBasal {
                 // Need to cancel temp basal first before setting temp basal
                 let cancelPacket = CancelTempBasalPacket()
                 let cancelResult = await self.bluetooth.write(cancelPacket)
@@ -531,7 +514,7 @@ public extension MedtrumPumpManager {
     func suspendPatch(duration: TimeInterval, completion: @escaping ((any Error)?) -> Void) {
         log.info("Suspending delivery...")
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(error)
@@ -568,7 +551,7 @@ public extension MedtrumPumpManager {
     func resumeDelivery(completion: @escaping ((any Error)?) -> Void) {
         log.info("Suspending delivery...")
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(error)
@@ -586,7 +569,6 @@ public extension MedtrumPumpManager {
 
             self.log.info("Resumed delivery!")
 
-            let start = Date.now
             let resumeDose = UnfinalizedDose(
                 resumeStartTime: Date.now,
                 insulinType: self.state.insulinType
@@ -615,7 +597,7 @@ public extension MedtrumPumpManager {
             return
         }
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect: \(error.localizedDescription)")
                 completion(.failure(error))
@@ -810,6 +792,8 @@ public extension MedtrumPumpManager {
 
             self.log.info("Patch deactivated")
             completion(.success)
+
+            self.bluetooth.disconnect(force: true)
         }
     }
 
@@ -843,7 +827,7 @@ public extension MedtrumPumpManager {
     func clearAlert(alertType: AlertType, completion: @escaping (Bool) -> Void) {
         log.info("Clearing alert - alertType: \(alertType.rawValue)")
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect to pump: \(error)")
                 completion(false)
@@ -876,7 +860,7 @@ public extension MedtrumPumpManager {
     func updatePatchSettings(completion: @escaping (MedtrumUpdatePatchResult) -> Void) {
         log.info("Update patch settings...")
 
-        bluetooth.ensureConnected { error in
+        ensureConnectedAndActive { error in
             if let error = error {
                 self.log.error("Failed to connect to pump: \(error)")
                 completion(.failure(error: .connectionFailure))
@@ -1030,6 +1014,15 @@ public extension MedtrumPumpManager {
         }
     }
 
+    private func ensureConnectedAndActive(_ completionAsync: @escaping (MedtrumConnectError?) async -> Void) {
+        guard state.pumpState.rawValue >= PatchState.active.rawValue else {
+            log.warning("No active patch, failing immediately")
+            Task { await completionAsync(.failedToFindDevice) }
+            return
+        }
+        bluetooth.ensureConnected(completionAsync)
+    }
+
     private func handlePumpDelegateError(method: String, _ error: Error, _ function: String = #function, _ line: Int = #line) {
         let logLine = "Received pump delegate error in \(method): \(error) at \(function):\(line)"
         log.error(logLine)
@@ -1079,6 +1072,23 @@ public extension MedtrumPumpManager {
         }
 
         return events
+    }
+    
+    func emitReservoirLevel() {
+        self.pumpDelegate.notify { delegate in
+            delegate?.pumpManager(
+                self,
+                didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
+                at: self.state.lastSync
+            ) { result in
+                switch result {
+                case let .failure(error):
+                    self.handlePumpDelegateError(method: "didReadReservoirValue", error)
+                case .success:
+                    break
+                }
+            }
+        }
     }
     
     private func emitPumpEvents(_ events: [NewPumpEvent], replacePendingEvents: Bool = true) {
