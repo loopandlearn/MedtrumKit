@@ -538,6 +538,7 @@ public extension MedtrumPumpManager {
             events.append(NewPumpEvent.suspend(dose: basalDose.toDoseEntry()))
 
             self.state.basalDose = basalDose
+            self.state.basalState = .suspended
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
             
@@ -578,6 +579,7 @@ public extension MedtrumPumpManager {
             events.append(NewPumpEvent.resume(dose: resumeDose.toDoseEntry(), date: resumeDose.startDate))
 
             self.state.basalDose = resumeDose
+            self.state.basalState = .active
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
             
