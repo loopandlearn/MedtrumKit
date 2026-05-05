@@ -163,24 +163,9 @@ public extension MedtrumPumpManager {
             device: device(state),
             pumpBatteryChargeRemaining: nil, // Patch pumps do not need to report back battery status
             basalDeliveryState: state.basalDeliveryState,
-            bolusState: bolusState(state.bolusState),
+            bolusState: state.bolusDeliveryState,
             insulinType: state.insulinType
         )
-    }
-
-    private func bolusState(_ bolusState: BolusState) -> PumpManagerStatus.BolusState {
-        switch bolusState {
-        case .noBolus:
-            return .noBolus
-        case .canceling:
-            return .canceling
-        case .inProgress:
-            if let dose = state.bolusDose?.toDoseEntry(isMutable: true) {
-                return .inProgress(dose)
-            }
-
-            return .noBolus
-        }
     }
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
@@ -188,7 +173,10 @@ public extension MedtrumPumpManager {
               Date.now.timeIntervalSince(state.lastSync) > .minutes(2.5) ||
               Date.now.timeIntervalSince(activatedAt) < .minutes(4)
         else {
-            log.warning("Skipping status update -> data is fresh or not active: \(Date.now.timeIntervalSince(state.lastSync)) sec")
+            log
+                .warning(
+                    "Skipping status update -> data is fresh or not active: \(Date.now.timeIntervalSince(state.lastSync)) sec"
+                )
             completion?(nil)
             return
         }
@@ -294,6 +282,12 @@ public extension MedtrumPumpManager {
             return
         }
 
+        guard state.basalState != .suspended else {
+            log.error("Pump is suspended...")
+            completion(.deviceState(MedtrumConnectError.isSuspended))
+            return
+        }
+
         let duration = estimatedDuration(toBolus: units)
         log.info("Enact bolus - \(units)U, \(duration)sec")
 
@@ -392,7 +386,7 @@ public extension MedtrumPumpManager {
             self.state.bolusDose = nil
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
-            
+
             self.emitPumpEvents(events)
 
             completion(.success(nil))
@@ -447,20 +441,20 @@ public extension MedtrumPumpManager {
                         insulinType: self.state.insulinType,
                         startDate: now
                     )
-                    
+
                     events.append(
                         NewPumpEvent.basal(
                             dose: basalDose.toDoseEntry(),
                             date: now
                         )
                     )
-                    
+
                     self.state.basalDose = basalDose
                 }
 
                 self.state.lastSync = Date.now
                 self.notifyStateDidChange()
-                
+
                 self.emitPumpEvents(events)
 
                 completion(nil)
@@ -494,7 +488,7 @@ public extension MedtrumPumpManager {
             self.state.basalDose = tempBasalDose
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
-            
+
             self.emitPumpEvents(events)
 
             completion(nil)
@@ -524,17 +518,16 @@ public extension MedtrumPumpManager {
                 return
             }
 
-            
             let start = Date.now
             let basalDose = UnfinalizedDose(suspendStartTime: start)
-            
+
             var events = self.getActivePumpEvents(endDate: start)
             events.append(NewPumpEvent.suspend(dose: basalDose.toDoseEntry()))
 
             self.state.basalDose = basalDose
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
-            
+
             self.emitPumpEvents(events)
 
             self.log.info("Delivery suspended for \(duration.minutes) min!")
@@ -567,14 +560,14 @@ public extension MedtrumPumpManager {
                 resumeStartTime: Date.now,
                 insulinType: self.state.insulinType
             )
-            
+
             var events = self.getActivePumpEvents()
             events.append(NewPumpEvent.resume(dose: resumeDose.toDoseEntry(), date: resumeDose.startDate))
 
             self.state.basalDose = resumeDose
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
-            
+
             self.emitPumpEvents(events)
 
             completion(nil)
@@ -611,7 +604,7 @@ public extension MedtrumPumpManager {
             self.state.basalSchedule = schedule
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
-            
+
             self.log.info("Basal schedule sync complete!")
 
             completion(.success(basalSchedule))
@@ -771,7 +764,7 @@ public extension MedtrumPumpManager {
 
             let suspendStart = Date.now
             let suspendDose = UnfinalizedDose(suspendStartTime: suspendStart)
-            
+
             var events = self.getActivePumpEvents(endDate: suspendStart)
             events.append(NewPumpEvent.suspend(dose: suspendDose.toDoseEntry()))
 
@@ -793,7 +786,7 @@ public extension MedtrumPumpManager {
 
     func forceDeactivatePatch() {
         let suspendDose = UnfinalizedDose(suspendStartTime: Date.now)
-        
+
         var events = getActivePumpEvents(endDate: Date.now)
         events.append(NewPumpEvent.suspend(dose: suspendDose.toDoseEntry()))
 
@@ -1038,38 +1031,18 @@ public extension MedtrumPumpManager {
         guard state.basalDose.type == .tempBasal else {
             return []
         }
-        
+
         let basalEntry = state.basalDose.toDoseEntry(isMutable: endDate == nil, endDate: endDate ?? Date.now)
-        var events = [
+        return [
             NewPumpEvent.tempBasal(
                 dose: basalEntry,
                 date: basalEntry.startDate
             )
         ]
-        
-        if !basalEntry.isMutable, basalEntry.endDate == state.basalDose.estimatedEndDate {
-            // Temp basal expired, append normal basal event
-            state.basalDose = UnfinalizedDose(
-                basalRate: state.currentBaseBasalRate,
-                insulinType: state.insulinType,
-                startDate: state.basalDose.estimatedEndDate
-            )
-            
-            events.append(
-                NewPumpEvent.basal(
-                    dose: state.basalDose.toDoseEntry(),
-                    date: state.basalDose.startDate
-                )
-            )
-            
-            notifyStateDidChange()
-        }
-
-        return events
     }
-    
+
     func emitReservoirLevel() {
-        self.pumpDelegate.notify { delegate in
+        pumpDelegate.notify { delegate in
             delegate?.pumpManager(
                 self,
                 didReadReservoirValue: self.state.reservoir.rounded(toPlaces: 1),
@@ -1084,8 +1057,8 @@ public extension MedtrumPumpManager {
             }
         }
     }
-    
-    private func emitPumpEvents(_ events: [NewPumpEvent], replacePendingEvents: Bool = true) {
+
+    func emitPumpEvents(_ events: [NewPumpEvent], replacePendingEvents: Bool = true) {
         pumpDelegate.notify { delegate in
             guard let delegate = delegate else {
                 self.log.warning("No pump delegate, not notifying...")
