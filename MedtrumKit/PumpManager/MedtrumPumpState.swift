@@ -275,7 +275,7 @@ public class MedtrumPumpState: RawRepresentable {
         case .suspend:
             return .suspended(basalDose.startDate)
         case .tempBasal:
-            return .tempBasal(basalDose.toDoseEntry())
+            return .tempBasal(basalDose.toDoseEntry(isMutable: true))
         }
     }
 
