@@ -293,6 +293,12 @@ public extension MedtrumPumpManager {
             completion(.deviceState(MedtrumConnectError.isBolussing))
             return
         }
+        
+        guard state.basalState != .suspended else {
+            log.error("Pump is suspended...")
+            completion(.deviceState(MedtrumConnectError.isSuspended))
+            return
+        }
 
         let duration = estimatedDuration(toBolus: units)
         log.info("Enact bolus - \(units)U, \(duration)sec")
@@ -532,6 +538,7 @@ public extension MedtrumPumpManager {
             events.append(NewPumpEvent.suspend(dose: basalDose.toDoseEntry()))
 
             self.state.basalDose = basalDose
+            self.state.basalState = .suspended
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
             
@@ -572,6 +579,7 @@ public extension MedtrumPumpManager {
             events.append(NewPumpEvent.resume(dose: resumeDose.toDoseEntry(), date: resumeDose.startDate))
 
             self.state.basalDose = resumeDose
+            self.state.basalState = .active
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
             
