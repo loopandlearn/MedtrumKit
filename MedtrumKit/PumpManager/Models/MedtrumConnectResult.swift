@@ -6,6 +6,7 @@ public enum MedtrumConnectError: LocalizedError {
     case failedToFindDevice
     case failedToConnectToDevice
     case isBolussing
+    case isSuspended
 
     public var errorDescription: String? {
         switch self {
@@ -23,9 +24,11 @@ public enum MedtrumConnectError: LocalizedError {
                 comment: "MedtrumError patch failedToConnectToDevice"
             )
         case .failedToFindDevice:
-            return "Failed to find device"
+            return String(localized: "Failed to connect to patch", comment: "MedtrumError patch failedToFindDevice")
         case .isBolussing:
-            return "Device is currently bolussing"
+            return String(localized: "Bolus issue. Patch is already bolussing", comment: "MedtrumError patch bolussing")
+        case .isSuspended:
+            return String(localized: "Bolus issue. Patch is suspended. Resume delivery", comment: "MedtrumError patch suspended")
         }
     }
 }
