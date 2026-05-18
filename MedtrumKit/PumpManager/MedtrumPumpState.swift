@@ -275,7 +275,22 @@ public class MedtrumPumpState: RawRepresentable {
         case .suspend:
             return .suspended(basalDose.startDate)
         case .tempBasal:
-            return .tempBasal(basalDose.toDoseEntry())
+            return .tempBasal(basalDose.toDoseEntry(isMutable: true))
+        }
+    }
+
+    var bolusDeliveryState: PumpManagerStatus.BolusState {
+        switch bolusState {
+        case .noBolus:
+            return .noBolus
+        case .canceling:
+            return .canceling
+        case .inProgress:
+            if let dose = bolusDose?.toDoseEntry(isMutable: true) {
+                return .inProgress(dose)
+            }
+
+            return .noBolus
         }
     }
 

@@ -163,24 +163,9 @@ public extension MedtrumPumpManager {
             device: device(state),
             pumpBatteryChargeRemaining: nil, // Patch pumps do not need to report back battery status
             basalDeliveryState: state.basalDeliveryState,
-            bolusState: bolusState(state.bolusState),
+            bolusState: state.bolusDeliveryState,
             insulinType: state.insulinType
         )
-    }
-
-    private func bolusState(_ bolusState: BolusState) -> PumpManagerStatus.BolusState {
-        switch bolusState {
-        case .noBolus:
-            return .noBolus
-        case .canceling:
-            return .canceling
-        case .inProgress:
-            if let dose = state.bolusDose?.toDoseEntry(isMutable: true) {
-                return .inProgress(dose)
-            }
-
-            return .noBolus
-        }
     }
 
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
@@ -1044,32 +1029,12 @@ public extension MedtrumPumpManager {
         }
 
         let basalEntry = state.basalDose.toDoseEntry(isMutable: endDate == nil, endDate: endDate ?? Date.now)
-        var events = [
+        return [
             NewPumpEvent.tempBasal(
                 dose: basalEntry,
                 date: basalEntry.startDate
             )
         ]
-
-        if !basalEntry.isMutable, basalEntry.endDate == state.basalDose.estimatedEndDate {
-            // Temp basal expired, append normal basal event
-            state.basalDose = UnfinalizedDose(
-                basalRate: state.currentBaseBasalRate,
-                insulinType: state.insulinType,
-                startDate: state.basalDose.estimatedEndDate
-            )
-
-            events.append(
-                NewPumpEvent.basal(
-                    dose: state.basalDose.toDoseEntry(),
-                    date: state.basalDose.startDate
-                )
-            )
-
-            notifyStateDidChange()
-        }
-
-        return events
     }
 
     func emitReservoirLevel() {
@@ -1089,7 +1054,7 @@ public extension MedtrumPumpManager {
         }
     }
 
-    private func emitPumpEvents(_ events: [NewPumpEvent], replacePendingEvents: Bool = true) {
+    func emitPumpEvents(_ events: [NewPumpEvent], replacePendingEvents: Bool = true) {
         pumpDelegate.notify { delegate in
             guard let delegate = delegate else {
                 self.log.warning("No pump delegate, not notifying...")

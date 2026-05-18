@@ -159,12 +159,7 @@ public class UnfinalizedDose {
             )
 
         case .tempBasal:
-            var actualEndDate = isMutable ? estimatedEndDate : endDate
-            if !isMutable, estimatedEndDate < endDate {
-                // Temp basal already expired, update endDate & add normal basal event
-                actualEndDate = estimatedEndDate
-            }
-
+            let actualEndDate = isMutable ? estimatedEndDate : endDate
             let duration = actualEndDate.timeIntervalSince(startDate)
             return DoseEntry(
                 type: .tempBasal,
@@ -181,16 +176,14 @@ public class UnfinalizedDose {
         case .suspend:
             return DoseEntry(
                 suspendDate: startDate,
-                automatic: automatic,
-                isMutable: isMutable
+                automatic: automatic
             )
 
         case .resume:
             return DoseEntry(
                 resumeDate: startDate,
                 insulinType: insulinType,
-                automatic: automatic,
-                isMutable: isMutable
+                automatic: automatic
             )
         }
     }
