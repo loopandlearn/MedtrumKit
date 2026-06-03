@@ -13,8 +13,9 @@ public class UnfinalizedDose {
     public var deliveredUnits: Double = 0
     public let insulinType: InsulinType?
     public let automatic: Bool
+    public var decisionId: UUID?
 
-    public init(units: Double, duration: TimeInterval, activationType: BolusActivationType, insulinType: InsulinType?) {
+    public init(decisionId: UUID?, units: Double, duration: TimeInterval, activationType: BolusActivationType, insulinType: InsulinType?) {
         var estimatedEndDate = Date.now
         estimatedEndDate.addTimeInterval(duration)
 
@@ -24,6 +25,7 @@ public class UnfinalizedDose {
         self.estimatedEndDate = estimatedEndDate
         self.insulinType = insulinType
         automatic = activationType.isAutomatic
+        self.decisionId = decisionId
     }
 
     public init(basalRate: Double, insulinType: InsulinType?, startDate: Date = Date.now) {
@@ -35,13 +37,14 @@ public class UnfinalizedDose {
         automatic = false
     }
 
-    public init(tempRate: Double, duration: TimeInterval, insulinType: InsulinType?) {
+    public init(decisionId: UUID?, tempRate: Double, duration: TimeInterval, insulinType: InsulinType?) {
         type = .tempBasal
         value = tempRate
         startDate = Date.now
         self.insulinType = insulinType
         estimatedEndDate = startDate.addingTimeInterval(duration)
         automatic = true
+        self.decisionId = decisionId
     }
 
     public init(suspendStartTime: Date) {
@@ -112,6 +115,10 @@ public class UnfinalizedDose {
             logger.warning("Couldn't convert automatic")
             return nil
         }
+
+        if let decisionIdString = rawValue["decisionId"] as? String {
+            self.decisionId = UUID(uuidString: decisionIdString)
+        }
     }
 
     public var rawValue: RawValue {
@@ -124,6 +131,7 @@ public class UnfinalizedDose {
         raw["deliveredUnits"] = deliveredUnits
         raw["insulinType"] = insulinType?.rawValue
         raw["automatic"] = automatic
+        raw["decisionId"] = decisionId?.uuidString
 
         return raw
     }
@@ -143,6 +151,7 @@ public class UnfinalizedDose {
                 endDate: endDate,
                 value: value.rounded(toPlaces: 2),
                 unit: .units,
+                decisionId: decisionId,
                 deliveredUnits: isMutable ? nil : deliveredUnits.rounded(toPlaces: 2),
                 insulinType: insulinType,
                 automatic: automatic,
@@ -167,6 +176,7 @@ public class UnfinalizedDose {
                 endDate: actualEndDate,
                 value: value,
                 unit: .unitsPerHour,
+                decisionId: decisionId,
                 deliveredUnits: isMutable ? nil : roundBasalRate(value * (duration / .hours(1))),
                 insulinType: insulinType,
                 automatic: automatic,

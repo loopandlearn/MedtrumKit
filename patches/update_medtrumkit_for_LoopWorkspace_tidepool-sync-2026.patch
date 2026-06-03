@@ -1,0 +1,346 @@
+diff --git a/MedtrumKit.xcodeproj/project.pbxproj b/MedtrumKit.xcodeproj/project.pbxproj
+index 1234567..abcdefg 100644
+--- a/MedtrumKit.xcodeproj/project.pbxproj
++++ b/MedtrumKit.xcodeproj/project.pbxproj
+@@ -946,5 +949,5 @@
+ 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
++				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -988,8 +988,8 @@
+ 				GENERATE_INFOPLIST_FILE = NO;
+ 				INFOPLIST_FILE = MedtrumKitPlugin/Info.plist;
+ 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+ 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
++				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -1065,7 +1065,7 @@
+ 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+ 				GCC_WARN_UNUSED_FUNCTION = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
++				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+ 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+ 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+ 				MTL_FAST_MATH = YES;
+@@ -1126,7 +1126,7 @@
+ 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+ 				GCC_WARN_UNUSED_FUNCTION = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
++				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+ 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+ 				MTL_ENABLE_DEBUG_INFO = NO;
+ 				MTL_FAST_MATH = YES;
+@@ -1157,7 +1157,7 @@
+ 				INFOPLIST_FILE = MedtrumKit/Info.plist;
+ 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+ 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
++				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+@@ -1201,7 +1201,7 @@
+ 				INFOPLIST_FILE = MedtrumKit/Info.plist;
+ 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+ 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
++				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+ 				LD_RUNPATH_SEARCH_PATHS = (
+ 					"$(inherited)",
+ 					"@executable_path/Frameworks",
+diff --git a/Common/UnfinalizedDose.swift b/Common/UnfinalizedDose.swift
+index 1234567..abcdefg 100644
+--- a/Common/UnfinalizedDose.swift
++++ b/Common/UnfinalizedDose.swift
+@@ -12,8 +12,9 @@
+     public var deliveredUnits: Double = 0
+     public let insulinType: InsulinType?
+     public let automatic: Bool
++    public var decisionId: UUID?
+
+-    public init(units: Double, duration: TimeInterval, activationType: BolusActivationType, insulinType: InsulinType?) {
++    public init(decisionId: UUID?, units: Double, duration: TimeInterval, activationType: BolusActivationType, insulinType: InsulinType?) {
+         var estimatedEndDate = Date.now
+         estimatedEndDate.addTimeInterval(duration)
+
+@@ -23,6 +24,7 @@
+         self.estimatedEndDate = estimatedEndDate
+         self.insulinType = insulinType
+         automatic = activationType.isAutomatic
++        self.decisionId = decisionId
+     }
+
+     public init(basalRate: Double, insulinType: InsulinType?, startDate: Date = Date.now) {
+@@ -35,13 +37,14 @@
+         automatic = false
+     }
+
+-    public init(tempRate: Double, duration: TimeInterval, insulinType: InsulinType?) {
++    public init(decisionId: UUID?, tempRate: Double, duration: TimeInterval, insulinType: InsulinType?) {
+         type = .tempBasal
+         value = tempRate
+         startDate = Date.now
+         self.insulinType = insulinType
+         estimatedEndDate = startDate.addingTimeInterval(duration)
+         automatic = true
++        self.decisionId = decisionId
+     }
+
+     public init(suspendStartTime: Date) {
+@@ -109,8 +113,12 @@
+             automatic = rawAutomatic
+         } else {
+             logger.warning("Couldn't convert automatic")
+             return nil
+         }
++
++        if let decisionIdString = rawValue["decisionId"] as? String {
++            self.decisionId = UUID(uuidString: decisionIdString)
++        }
+     }
+
+     public var rawValue: RawValue {
+@@ -123,6 +131,7 @@
+         raw["deliveredUnits"] = deliveredUnits
+         raw["insulinType"] = insulinType?.rawValue
+         raw["automatic"] = automatic
++        raw["decisionId"] = decisionId?.uuidString
+
+         return raw
+     }
+@@ -140,7 +149,8 @@
+                 startDate: startDate,
+                 endDate: endDate,
+                 value: value.rounded(toPlaces: 2),
+                 unit: .units,
++                decisionId: decisionId,
+                 deliveredUnits: isMutable ? nil : deliveredUnits.rounded(toPlaces: 2),
+                 insulinType: insulinType,
+                 automatic: automatic,
+@@ -163,6 +173,7 @@
+                 endDate: actualEndDate,
+                 value: value,
+                 unit: .unitsPerHour,
++                decisionId: decisionId,
+                 deliveredUnits: isMutable ? nil : roundBasalRate(value * (duration / .hours(1))),
+                 insulinType: insulinType,
+                 automatic: automatic,
+diff --git a/MedtrumKit/PumpManager/MedtrumPumpManager.swift b/MedtrumKit/PumpManager/MedtrumPumpManager.swift
+index 1234567..abcdefg 100644
+--- a/MedtrumKit/PumpManager/MedtrumPumpManager.swift
++++ b/MedtrumKit/PumpManager/MedtrumPumpManager.swift
+@@ -3,8 +3,16 @@
+ import LoopKit
+
+ public class MedtrumPumpManager: DeviceManager {
+-    public static let pluginIdentifier = "Medtrum"
++    public let pluginIdentifier = "Medtrum"
+     public let localizedTitle: String = "Medtrum Nano"
++
++    public var inSignalLoss: Bool {
++        Date.now.timeIntervalSince(state.lastSync) > .minutes(12)
++    }
++
++    public var isInoperable: Bool {
++        state.basalDeliveryState == .pumpInoperable
++    }
+
+     public let managerIdentifier: String = "Medtrum"
+
+@@ -105,8 +113,8 @@
+         state.debugDescription
+     }
+
+-    public func acknowledgeAlert(alertIdentifier _: LoopKit.Alert.AlertIdentifier, completion: @escaping ((any Error)?) -> Void) {
+-        completion(nil)
++    public func acknowledgeAlert(alertIdentifier _: LoopKit.Alert.AlertIdentifier) async throws {
++        // No alerts to acknowledge for Medtrum
+     }
+
+     public func getSoundBaseURL() -> URL? {
+@@ -271,8 +279,9 @@
+         units / 1.5 * TimeInterval(minutes: 1)
+     }
+
+-    func enactBolus(
++    func enactBolus(
++        decisionId: UUID?,
+         units: Double,
+         activationType: LoopKit.BolusActivationType,
+         completion: @escaping (LoopKit.PumpManagerError?) -> Void
+     ) {
+@@ -309,6 +318,7 @@
+             }
+
+             let doseEntry = UnfinalizedDose(
++                decisionId: decisionId,
+                 units: units,
+                 duration: duration,
+                 activationType: activationType,
+@@ -389,8 +399,9 @@
+         }
+     }
+
+-    func enactTempBasal(
++    func enactTempBasal(
++        decisionId: UUID?,
+         unitsPerHour: Double,
+         for duration: TimeInterval,
+         completion: @escaping (LoopKit.PumpManagerError?) -> Void
+     ) {
+@@ -466,5 +477,6 @@
+
+             let tempBasalDose = UnfinalizedDose(
++                decisionId: decisionId,
+                 tempRate: unitsPerHour,
+                 duration: duration,
+                 insulinType: self.state.insulinType
+diff --git a/MedtrumKit/PumpManager/MedtrumPumpState.swift b/MedtrumKit/PumpManager/MedtrumPumpState.swift
+index 1234567..abcdefg 100644
+--- a/MedtrumKit/PumpManager/MedtrumPumpState.swift
++++ b/MedtrumKit/PumpManager/MedtrumPumpState.swift
+@@ -267,6 +267,10 @@
+     public var basalSchedule: BasalSchedule
+
+     public var basalDeliveryState: PumpManagerStatus.BasalDeliveryState {
++        if pumpState.rawValue >= PatchState.occlusion.rawValue {
++            return .pumpInoperable
++        }
++
+         switch basalDose.type {
+         case .basal,
+              .bolus,
+diff --git a/MedtrumKitUI/MedtrumKitPumpManager+UI.swift b/MedtrumKitUI/MedtrumKitPumpManager+UI.swift
+index 1234567..abcdefg 100644
+--- a/MedtrumKitUI/MedtrumKitPumpManager+UI.swift
++++ b/MedtrumKitUI/MedtrumKitPumpManager+UI.swift
+@@ -71,7 +71,7 @@
+         )
+     }
+
+-    public var pumpStatusHighlight: DeviceStatusHighlight? {
++    public var pumpStatusHighlight: PumpStatusHighlight? {
+         if state.patchId.isEmpty {
+             return PumpStatusHighlight(
+                 localizedMessage: String(
+@@ -105,7 +105,7 @@
+                 imageName: "exclamationmark.circle.fill",
+                 state: .critical
+             )
+-        } else if Date.now.timeIntervalSince(state.lastSync) > .minutes(12) {
++        } else if inSignalLoss {
+             return PumpStatusHighlight(
+                 localizedMessage: String(
+                     localized: "Signal Loss",
+diff --git a/MedtrumKitUI/ViewModels/Settings/MedtrumKitSettingsViewModel.swift b/MedtrumKitUI/ViewModels/Settings/MedtrumKitSettingsViewModel.swift
+index 1234567..abcdefg 100644
+--- a/MedtrumKitUI/ViewModels/Settings/MedtrumKitSettingsViewModel.swift
++++ b/MedtrumKitUI/ViewModels/Settings/MedtrumKitSettingsViewModel.swift
+@@ -1,4 +1,3 @@
+-import HealthKit
+ import LoopKit
+ import LoopKitUI
+ import SwiftUI
+@@ -278,6 +277,6 @@
+
+         isUpdatingTempBasal = true
+-        pumpManager.enactTempBasal(unitsPerHour: 0, for: 0) { error in
++        pumpManager.enactTempBasal(decisionId: nil, unitsPerHour: 0, for: 0) { error in
+             DispatchQueue.main.async {
+                 self.isUpdatingTempBasal = false
+             }
+diff --git a/MedtrumKitUI/ViewModels/Settings/PatchDetailsViewModel.swift b/MedtrumKitUI/ViewModels/Settings/PatchDetailsViewModel.swift
+index 1234567..abcdefg 100644
+--- a/MedtrumKitUI/ViewModels/Settings/PatchDetailsViewModel.swift
++++ b/MedtrumKitUI/ViewModels/Settings/PatchDetailsViewModel.swift
+@@ -1,4 +1,4 @@
+-import HealthKit
++import LoopAlgorithm
+ import LoopKit
+ import SwiftUI
+
+@@ -17,6 +17,6 @@
+
+     let reservoirVolumeFormatter: QuantityFormatter = {
+-        let formatter = QuantityFormatter(for: .internationalUnit())
++        let formatter = QuantityFormatter(for: .internationalUnit)
+         formatter.numberFormatter.minimumFractionDigits = 0
+         formatter.numberFormatter.maximumFractionDigits = 0
+         return formatter
+@@ -61,12 +61,12 @@
+     }
+
+     func batteryText(for voltage: Double) -> String {
+-        let quantity = HKQuantity(unit: .volt(), doubleValue: voltage)
++        let quantity = LoopQuantity(unit: .volt, doubleValue: voltage)
+         return batteryFormatter.string(from: quantity) ?? ""
+     }
+
+     func reservoirText(for units: Double) -> String {
+-        let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: units)
++        let quantity = LoopQuantity(unit: .internationalUnit, doubleValue: units)
+         return reservoirVolumeFormatter.string(from: quantity) ?? ""
+     }
+ }
+diff --git a/MedtrumKitUI/ViewModels/Settings/PreviousPatchDetailsViewModel.swift b/MedtrumKitUI/ViewModels/Settings/PreviousPatchDetailsViewModel.swift
+index 1234567..abcdefg 100644
+--- a/MedtrumKitUI/ViewModels/Settings/PreviousPatchDetailsViewModel.swift
++++ b/MedtrumKitUI/ViewModels/Settings/PreviousPatchDetailsViewModel.swift
+@@ -1,4 +1,4 @@
+-import HealthKit
++import LoopAlgorithm
+ import LoopKit
+ import SwiftUI
+
+@@ -15,6 +15,6 @@
+
+     let reservoirVolumeFormatter: QuantityFormatter = {
+-        let formatter = QuantityFormatter(for: .internationalUnit())
++        let formatter = QuantityFormatter(for: .internationalUnit)
+         formatter.numberFormatter.minimumFractionDigits = 0
+         formatter.numberFormatter.maximumFractionDigits = 0
+         return formatter
+@@ -59,12 +59,12 @@
+     }
+
+     func batteryText(for voltage: Double) -> String {
+-        let quantity = HKQuantity(unit: .volt(), doubleValue: voltage)
++        let quantity = LoopQuantity(unit: .volt, doubleValue: voltage)
+         return batteryFormatter.string(from: quantity) ?? ""
+     }
+
+     func reservoirText(for units: Double) -> String {
+-        let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: units)
++        let quantity = LoopQuantity(unit: .internationalUnit, doubleValue: units)
+         return reservoirVolumeFormatter.string(from: quantity) ?? ""
+     }
+ }
+--- a/MedtrumKitUI/Views/Settings/PatchSettingsView.swift
++++ b/MedtrumKitUI/Views/Settings/PatchSettingsView.swift
+@@ -238,11 +238,14 @@ struct PatchSettingsView: View {
+         .foregroundColor(isEditing ? Color.accentColor : Color.primary)
+ 
+         if isEditing {
+-            ResizeablePicker(
+-                selection: value,
+-                data: valueRange,
+-                formatter: { value in formatter(value) }
+-            )
++            Picker(selection: value) {
++                ForEach(valueRange, id: \.self) { item in
++                    Text(formatter(item))
++                }
++            } label: {
++                EmptyView()
++            }
++            .pickerStyle(.wheel)
+             .padding(.horizontal)
+         }
+     }

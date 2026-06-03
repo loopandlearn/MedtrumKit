@@ -71,7 +71,7 @@ extension MedtrumPumpManager: PumpManagerUI {
         )
     }
 
-    public var pumpStatusHighlight: DeviceStatusHighlight? {
+    public var pumpStatusHighlight: PumpStatusHighlight? {
         if state.patchId.isEmpty {
             return PumpStatusHighlight(
                 localizedMessage: String(
@@ -105,7 +105,7 @@ extension MedtrumPumpManager: PumpManagerUI {
                 imageName: "exclamationmark.circle.fill",
                 state: .critical
             )
-        } else if Date.now.timeIntervalSince(state.lastSync) > .minutes(12) {
+        } else if inSignalLoss {
             return PumpStatusHighlight(
                 localizedMessage: String(
                     localized: "Signal Loss",

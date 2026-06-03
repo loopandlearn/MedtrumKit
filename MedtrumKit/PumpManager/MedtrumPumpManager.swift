@@ -3,8 +3,16 @@ import HealthKit
 import LoopKit
 
 public class MedtrumPumpManager: DeviceManager {
-    public static let pluginIdentifier = "Medtrum"
+    public let pluginIdentifier = "Medtrum"
     public let localizedTitle: String = "Medtrum Nano"
+
+    public var inSignalLoss: Bool {
+        Date.now.timeIntervalSince(state.lastSync) > .minutes(12)
+    }
+
+    public var isInoperable: Bool {
+        state.basalDeliveryState == .pumpInoperable
+    }
 
     public let managerIdentifier: String = "Medtrum"
 
@@ -105,8 +113,8 @@ public class MedtrumPumpManager: DeviceManager {
         state.debugDescription
     }
 
-    public func acknowledgeAlert(alertIdentifier _: LoopKit.Alert.AlertIdentifier, completion: @escaping ((any Error)?) -> Void) {
-        completion(nil)
+    public func acknowledgeAlert(alertIdentifier _: LoopKit.Alert.AlertIdentifier) async throws {
+        // No alerts to acknowledge for Medtrum
     }
 
     public func getSoundBaseURL() -> URL? {
@@ -272,6 +280,7 @@ public extension MedtrumPumpManager {
     }
 
     func enactBolus(
+        decisionId: UUID?,
         units: Double,
         activationType: LoopKit.BolusActivationType,
         completion: @escaping (LoopKit.PumpManagerError?) -> Void
@@ -312,6 +321,7 @@ public extension MedtrumPumpManager {
             }
 
             let doseEntry = UnfinalizedDose(
+                decisionId: decisionId,
                 units: units,
                 duration: duration,
                 activationType: activationType,
@@ -394,6 +404,7 @@ public extension MedtrumPumpManager {
     }
 
     func enactTempBasal(
+        decisionId: UUID?,
         unitsPerHour: Double,
         for duration: TimeInterval,
         completion: @escaping (LoopKit.PumpManagerError?) -> Void
@@ -473,6 +484,7 @@ public extension MedtrumPumpManager {
             self.log.info("Set temp basal!")
 
             let tempBasalDose = UnfinalizedDose(
+                decisionId: decisionId,
                 tempRate: unitsPerHour,
                 duration: duration,
                 insulinType: self.state.insulinType

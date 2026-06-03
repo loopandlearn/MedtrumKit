@@ -238,11 +238,14 @@ struct PatchSettingsView: View {
         .foregroundColor(isEditing ? Color.accentColor : Color.primary)
 
         if isEditing {
-            ResizeablePicker(
-                selection: value,
-                data: valueRange,
-                formatter: { value in formatter(value) }
-            )
+            Picker(selection: value) {
+                ForEach(valueRange, id: \.self) { item in
+                    Text(formatter(item))
+                }
+            } label: {
+                EmptyView()
+            }
+            .pickerStyle(.wheel)
             .padding(.horizontal)
         }
     }

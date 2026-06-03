@@ -1,4 +1,4 @@
-import HealthKit
+import LoopAlgorithm
 import LoopKit
 import SwiftUI
 
@@ -15,7 +15,7 @@ class PreviousPatchDetailsViewModel: PatchLifetimeFormatting, ObservableObject {
     @Published var initialReservoirLevel: Double? = nil
 
     let reservoirVolumeFormatter: QuantityFormatter = {
-        let formatter = QuantityFormatter(for: .internationalUnit())
+        let formatter = QuantityFormatter(for: .internationalUnit)
         formatter.numberFormatter.minimumFractionDigits = 0
         formatter.numberFormatter.maximumFractionDigits = 0
         return formatter
@@ -59,12 +59,12 @@ class PreviousPatchDetailsViewModel: PatchLifetimeFormatting, ObservableObject {
     }
 
     func batteryText(for voltage: Double) -> String {
-        let quantity = HKQuantity(unit: .volt(), doubleValue: voltage)
+        let quantity = LoopQuantity(unit: .volt, doubleValue: voltage)
         return batteryFormatter.string(from: quantity) ?? ""
     }
 
     func reservoirText(for units: Double) -> String {
-        let quantity = HKQuantity(unit: .internationalUnit(), doubleValue: units)
+        let quantity = LoopQuantity(unit: .internationalUnit, doubleValue: units)
         return reservoirVolumeFormatter.string(from: quantity) ?? ""
     }
 }

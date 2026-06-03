@@ -267,6 +267,10 @@ public class MedtrumPumpState: RawRepresentable {
     public var basalSchedule: BasalSchedule
 
     public var basalDeliveryState: PumpManagerStatus.BasalDeliveryState {
+        if pumpState.rawValue >= PatchState.occlusion.rawValue {
+            return .pumpInoperable
+        }
+
         switch basalDose.type {
         case .basal,
              .bolus,
