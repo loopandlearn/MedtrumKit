@@ -164,6 +164,7 @@ public class UnfinalizedDose {
                 startDate: startDate,
                 value: roundBasalRate(value),
                 unit: .unitsPerHour,
+                decisionId: decisionId,
                 insulinType: insulinType
             )
 
