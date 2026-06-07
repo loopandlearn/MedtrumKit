@@ -23,12 +23,14 @@ class PatchDetailsViewModel: PatchLifetimeFormatting, ObservableObject {
         return formatter
     }()
 
-    //let batteryFormatter: QuantityFormatter = {
-    //    let formatter = QuantityFormatter(for: .volt())
-    //    formatter.numberFormatter.minimumFractionDigits = 2
-    //    formatter.numberFormatter.maximumFractionDigits = 2
-    //    return formatter
-    //}()
+    // LoopUnit has no `.volt` case, so volts are rendered via NumberFormatter + " V".
+    let batteryFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }()
 
     let dateTimeFormatter = {
         let formatter = DateFormatter()
@@ -61,8 +63,8 @@ class PatchDetailsViewModel: PatchLifetimeFormatting, ObservableObject {
     }
 
     func batteryText(for voltage: Double) -> String {
-        let quantity = voltage
-        return String(format: "%0.2f", quantity)
+        guard let formatted = batteryFormatter.string(from: NSNumber(value: voltage)) else { return "" }
+        return "\(formatted) V"
     }
 
     func reservoirText(for units: Double) -> String {
