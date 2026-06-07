@@ -1,6 +1,8 @@
 import LoopKit
 
 enum StateSyncer {
+    private static let logger = MedtrumLogger(category: "StateSyncer")
+
     static func sync(
         syncResponse: SynchronizePacketResponse,
         state: MedtrumPumpState,
@@ -141,9 +143,8 @@ enum StateSyncer {
         pumpManager.notifyStateDidChange()
     }
 
-    public static func fetchPatchTime(pumpManager: MedtrumPumpManager) async {
-        let logger = MedtrumLogger(category: "TimeSync")
-        let timeData = await pumpManager.bluetooth.write(GetTimePacket())
+    public static func fetchPatchTime(pumpManager: MedtrumPumpManager) {
+        let timeData = pumpManager.bluetooth.write(GetTimePacket())
 
         switch timeData {
         case let .failure(error: error):
@@ -161,10 +162,8 @@ enum StateSyncer {
         }
     }
 
-    public static func syncTime(pumpManager: MedtrumPumpManager) async {
-        let logger = MedtrumLogger(category: "TimeSync")
-
-        let timeData = await pumpManager.bluetooth.write(SetTimePacket(date: Date.now))
+    public static func syncTime(pumpManager: MedtrumPumpManager) {
+        let timeData = pumpManager.bluetooth.write(SetTimePacket(date: Date.now))
         switch timeData {
         case let .failure(error: error):
             logger.error("Failed to sync time: \(error.errorDescription)")
@@ -173,7 +172,7 @@ enum StateSyncer {
             break
         }
 
-        let timeZoneData = await pumpManager.bluetooth.write(
+        let timeZoneData = pumpManager.bluetooth.write(
             SetTimeZonePacket(date: Date.now, timeZone: TimeZone.current)
         )
         switch timeZoneData {
@@ -181,7 +180,7 @@ enum StateSyncer {
             logger.error("Failed to sync timezone: \(error.errorDescription)")
             return
         default:
-            await StateSyncer.fetchPatchTime(pumpManager: pumpManager)
+            StateSyncer.fetchPatchTime(pumpManager: pumpManager)
         }
     }
 
