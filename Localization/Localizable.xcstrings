@@ -18771,6 +18771,9 @@
         }
       }
     },
+    "OK" : {
+      "comment" : "Acknoledge alert"
+    },
     "Patch activation" : {
       "comment" : "Patch activation header",
       "extractionState" : "manual",

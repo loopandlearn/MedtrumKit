@@ -1,0 +1,154 @@
+import LoopKit
+
+enum MedtrumAlert {
+    case patchExpiredNotification(after: TimeInterval)
+    case lowReservoir(level: Double)
+    case patchDailyMaxNotification
+    case patchHourlyMaxNotification
+    case occlusionNotification
+    case patchFaultNotification
+    case reservoirEmptyNotification
+    
+    var alert: Alert {
+        let content = alertContent
+        return Alert(
+            identifier: identifier,
+            foregroundContent: content,
+            backgroundContent: content,
+            trigger: trigger,
+        )
+    }
+    
+    private static let managerIdentifier = "Medtrum"
+    private var identifier: Alert.Identifier {
+        switch self {
+        case .patchExpiredNotification:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.patch-expired"
+            )
+        case .patchDailyMaxNotification:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.patch-daily-limit"
+            )
+        case .patchHourlyMaxNotification:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.patch-hourly-limit"
+            )
+        case .occlusionNotification:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.patch-occlussion"
+            )
+        case .patchFaultNotification:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.patch-fault"
+            )
+        case .reservoirEmptyNotification:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.patch-empty"
+            )
+        case .lowReservoir:
+            return Alert.Identifier(
+                managerIdentifier: MedtrumAlert.managerIdentifier,
+                alertIdentifier: "com.nightscout.medtrumkit.reservoir-low"
+            )
+        }
+    }
+        
+    private var alertContent: Alert.Content {
+        switch self {
+        case .patchExpiredNotification(let after):
+            return Alert.Content(
+                title: String(
+                    localized: "Your patch will expire soon!",
+                    comment: "Title expire reminder notification"
+                ),
+                body: String(
+                    format: String(
+                        localized: "Your patch has %lld hours left",
+                        comment: "Body expire reminder notification"
+                    ),
+                    Int(80 - after.hours)
+                ),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        case .patchDailyMaxNotification:
+            return Alert.Content(
+                title: String(localized: "Insulin has been suspended!", comment: "Title insulin suspended notification"),
+                body: String(localized: "Your patch has reached its daily maximum!", comment: "Body daily max notification"),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        case .patchHourlyMaxNotification:
+            return Alert.Content(
+                title: String(localized: "Insulin has been suspended!", comment: "Title insulin suspended notification"),
+                body: String(
+                    localized: "Your patch has reached its hourly maximum!",
+                    comment: "Body hourly max notification"
+                ),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        case .occlusionNotification:
+            return Alert.Content(
+                title: String(localized: "Replace your patch now!", comment: "Title replace patch notification"),
+                body: String(localized: "Your patch has detected an occlussion!", comment: "Body occlussion notification"),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        case .patchFaultNotification:
+            return Alert.Content(
+                title: String(localized: "Replace your patch now!", comment: "Title replace patch notification"),
+                body: String(localized: "Your patch is in Fault state!", comment: "Body fault notification"),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        case .reservoirEmptyNotification:
+            return Alert.Content(
+                title: String(localized: "Replace your patch now!", comment: "Title replace patch notification"),
+                body: String(localized: "Your patch is out of insulin!", comment: "Body reservoir empty notification"),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        case .lowReservoir(let level):
+            return Alert.Content(
+                title: String(
+                    format: String(localized: "Reservoir low (%lld U)", comment: "Title low reservoir notification"),
+                    Int(level)
+                ),
+                body: String(localized: "Your patch is running out of insulin!", comment: "Body low reservoir notification"),
+                acknowledgeActionButtonLabel: String(
+                    localized: "OK",
+                    comment: "Acknoledge alert"
+                )
+            )
+        }
+    }
+    
+    private var trigger: Alert.Trigger {
+        switch self {
+        case .patchExpiredNotification(let after):
+            return Alert.Trigger.delayed(interval: after)
+        default:
+            return Alert.Trigger.immediate
+        }
+    }
+}

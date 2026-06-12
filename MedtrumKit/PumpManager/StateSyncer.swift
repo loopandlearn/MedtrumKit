@@ -12,7 +12,7 @@ enum StateSyncer {
             pumpManager.state.lastSync = Date.now
         }
 
-        StateSyncer.updatePumpState(syncResponse: syncResponse, state: state)
+        StateSyncer.updatePumpState(syncResponse: syncResponse, pumpManager: pumpManager)
 
         if let reservoir = syncResponse.reservoir {
             if let lowReservoirWarning = state.lowReservoirWarning,
@@ -20,7 +20,7 @@ enum StateSyncer {
                reservoir < lowReservoirWarning
             {
                 // Send low reservoir warning notification to user
-                NotificationManager.reservoirLowNotification(reservoir)
+                pumpManager.notifyAlert(alertType: .lowReservoir(level: reservoir))
             }
 
             state.reservoir = reservoir
@@ -137,24 +137,24 @@ enum StateSyncer {
         }
     }
 
-    private static func updatePumpState(syncResponse: SynchronizePacketResponse, state: MedtrumPumpState) {
-        state.pumpState = syncResponse.state
+    private static func updatePumpState(syncResponse: SynchronizePacketResponse, pumpManager: MedtrumPumpManager) {
+        pumpManager.state.pumpState = syncResponse.state
 
         // Send notification for specific states
         // If this has already been done, iOS will remove the old one
         switch syncResponse.state {
         case .dailyMaxSuspended:
-            NotificationManager.patchDailyMaxNotification()
+            pumpManager.notifyAlert(alertType: .patchDailyMaxNotification)
         case .hourlyMaxSuspended:
-            NotificationManager.patchHourlyMaxNotification()
+            pumpManager.notifyAlert(alertType: .patchHourlyMaxNotification)
         case .occlusion:
-            NotificationManager.occlusionNotification()
+            pumpManager.notifyAlert(alertType: .occlusionNotification)
         case .baseFault,
              .patchFault,
              .patchFaultd2:
-            NotificationManager.patchFaultNotification()
+            pumpManager.notifyAlert(alertType: .patchFaultNotification)
         case .reservoirEmpty:
-            NotificationManager.reservoirEmptyNotification()
+            pumpManager.notifyAlert(alertType: .reservoirEmptyNotification)
         default:
             break
         }
