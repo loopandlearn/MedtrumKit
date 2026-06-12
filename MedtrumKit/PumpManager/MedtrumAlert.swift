@@ -9,6 +9,38 @@ enum MedtrumAlert {
     case patchFaultNotification
     case reservoirEmptyNotification
     
+    var title: String? {
+        switch self {
+        case .patchDailyMaxNotification:
+            return String(localized: "Alert: Daily Insulin Limit", comment: "alert daily limit")
+        case .patchHourlyMaxNotification:
+            return String(localized: "Alert: Hourly Insulin Limit", comment: "alert hourly limit")
+        case .occlusionNotification:
+            return String(localized: "Alert: Occlussion", comment: "alert occlussion")
+        case .patchFaultNotification:
+            return String(localized: "Alert: Patch fault", comment: "alert patch fault")
+        case .reservoirEmptyNotification:
+            return String(localized: "Alert: Reservoir empty", comment: "alert reservoir empty")
+        default:
+            return nil
+        }
+    }
+    
+    var type: PumpAlarmType? {
+        switch self {
+        case .patchDailyMaxNotification,
+                .patchHourlyMaxNotification,
+                .patchFaultNotification:
+            return .noDelivery
+        case .occlusionNotification:
+            return .occlusion
+        case .reservoirEmptyNotification:
+            return .noInsulin
+        default:
+            return nil
+        }
+    }
+    
     var alert: Alert {
         let content = alertContent
         return Alert(

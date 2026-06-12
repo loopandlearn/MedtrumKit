@@ -20,7 +20,7 @@ enum StateSyncer {
                reservoir < lowReservoirWarning
             {
                 // Send low reservoir warning notification to user
-                pumpManager.notifyAlert(alertType: .lowReservoir(level: reservoir))
+                pumpManager.emitAlert(alertType: .lowReservoir(level: reservoir))
             }
 
             state.reservoir = reservoir
@@ -144,17 +144,17 @@ enum StateSyncer {
         // If this has already been done, iOS will remove the old one
         switch syncResponse.state {
         case .dailyMaxSuspended:
-            pumpManager.notifyAlert(alertType: .patchDailyMaxNotification)
+            pumpManager.emitAlert(alertType: .patchDailyMaxNotification)
         case .hourlyMaxSuspended:
-            pumpManager.notifyAlert(alertType: .patchHourlyMaxNotification)
+            pumpManager.emitAlert(alertType: .patchHourlyMaxNotification)
         case .occlusion:
-            pumpManager.notifyAlert(alertType: .occlusionNotification)
+            pumpManager.emitAlert(alertType: .occlusionNotification)
         case .baseFault,
              .patchFault,
              .patchFaultd2:
-            pumpManager.notifyAlert(alertType: .patchFaultNotification)
+            pumpManager.emitAlert(alertType: .patchFaultNotification)
         case .reservoirEmpty:
-            pumpManager.notifyAlert(alertType: .reservoirEmptyNotification)
+            pumpManager.emitAlert(alertType: .reservoirEmptyNotification)
         default:
             break
         }
