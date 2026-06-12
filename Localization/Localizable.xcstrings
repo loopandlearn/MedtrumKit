@@ -2682,7 +2682,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activați un nou patch"
+            "value" : "Activați un nou plasture"
           }
         },
         "ru" : {
@@ -3168,7 +3168,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patch activat la"
+            "value" : "Activare"
           }
         },
         "ru" : {
@@ -4464,7 +4464,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sunteți sigur/ă?"
+            "value" : "Sunteți sigur?"
           }
         },
         "ru" : {
@@ -4950,7 +4950,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eșecul autentificării"
+            "value" : "Eșec autentificare"
           }
         },
         "ru" : {
@@ -5112,7 +5112,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazal"
+            "value" : "Bazală"
           }
         },
         "ru" : {
@@ -5598,7 +5598,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Baterie goală"
+            "value" : "Baterie descărcată"
           }
         },
         "ru" : {
@@ -5975,6 +5975,330 @@
         }
       }
     },
+    "Bolus issue. Patch is already bolussing" : {
+      "comment" : "MedtrumError patch bolussing",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشكلة البلعة. البقعة تتبلع بالفعل"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problém s bolusem. Patch již bolusuje"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem med bolus. Plasteret er allerede i bolus"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus-Problem. Patch ist bereits Bolus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus issue. Patch is already bolussing"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema con el bolo. Parche ya está bolusing"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusongelma. Laastari on jo bolusing"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problème de bolus. Le patch est déjà un bolus"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סוגיית בולוס. התיקון כבר מתגלגל"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus probléma. A tapasz már boluszi"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema di bolo. La patch è già in bolo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ボーラス問題。パッチはすでにボーラスしている"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "볼러스 문제. 패치가 이미 볼루싱 중입니다."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusproblem. Patchen boluserer allerede"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusprobleem. Patch is al aan het bolussen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem z bolusem. Patch już działa"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema de bolus. O adesivo já está a ser aplicado"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema bolusului. Patch este deja bolusing"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проблема с болюсом. Патч уже болюсный"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problém s bolusom. Patch už je bolusový"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vprašanje bolusa. Obliž se že bolusira"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusproblem. Patch är redan bolus"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus sorunu. Yama zaten bolus yapıyor"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проблема з болюсом. Патч вже болючий"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vấn đề Bolus. Bản vá đã phát triển"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "栓剂问题。补丁已经在栓塞"
+          }
+        }
+      }
+    },
+    "Bolus issue. Patch is suspended. Resume delivery" : {
+      "comment" : "MedtrumError patch suspended",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشكلة البلعة. تم تعليق التصحيح. استئناف التسليم"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problém s bolusem. Záplata je pozastavena. Obnovte dodávku"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem med bolus. Plasteret er suspenderet. Genoptag levering"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus-Problem. Patch wird ausgesetzt. Lieferung fortsetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus issue. Patch is suspended. Resume delivery"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema de bolo. Parche suspendido. Reanudar entrega"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusongelma. Laastari on keskeytetty. Jatka toimitusta"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problème de bolus. Le patch est suspendu. Reprendre l'administration"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "סוגיית בולוס. התיקון מושעה. המשך המסירה"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus probléma. A javítás felfüggesztésre került. Folytassa a szállítást"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema di bolo. La patch è sospesa. Riprendere la consegna"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ボーラス問題。パッチを中断。配信再開"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "볼러스 문제. 패치가 일시 중단되었습니다. 배달 재개"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusproblem. Lappen er suspendert. Gjenoppta levering"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusprobleem. Patch is opgeschort. Hervat levering"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problem z bolusem. Patch został zawieszony. Wznowienie dostarczania"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema de bolus. O patch está suspenso. Retomar a entrega"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problema bolusului. Patch-ul este suspendat. Reluați livrarea"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проблема с болюсом. Действие патча приостановлено. Возобновить доставку"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problém s bolusom. Patch je pozastavený. Obnovenie dodávky"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vprašanje bolusa. Popravek je začasno ustavljen. Nadaljujte z dostavo"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolusproblem. Patchen är avbruten. Återuppta leverans"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bolus sorunu. Yama askıya alındı. Teslimata devam edin"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Болюсний випуск. Видачу патчу призупинено. Відновити доставку"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vấn đề Bolus. Patch bị đình chỉ. Sơ yếu lý lịch giao hàng"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "栓剂问题。补丁暂停。恢复配送"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "comment" : "cancel force remove",
       "extractionState" : "manual",
@@ -6084,7 +6408,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Anulează"
+            "value" : "Anulați"
           }
         },
         "ru" : {
@@ -6246,7 +6570,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vârsta canulei"
+            "value" : "Vechimea canulei"
           }
         },
         "ru" : {
@@ -6408,7 +6732,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schimbați Patch-ul acum. Administrarea insulinei se va opri în %@ sau când nu va mai rămâne insulină."
+            "value" : "Schimbați plasturele acum. Administrarea insulinei se va opri în %@ sau când nu va mai rămâne insulină."
           }
         },
         "ru" : {
@@ -6570,7 +6894,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schimbați Patch-ul acum. Administrarea insulinei se va opri în %@ sau când nu va mai rămâne insulină."
+            "value" : "Schimbați plasturele acum. Administrarea insulinei se va opri în %@ sau când nu va mai rămâne insulină."
           }
         },
         "ru" : {
@@ -6892,7 +7216,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alertă clară"
+            "value" : "Ștergeți alerta"
           }
         },
         "ru" : {
@@ -7378,7 +7702,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conectați baza pompei la plasture transdermic."
+            "value" : "Conectați baza pompei la plasture."
           }
         },
         "ru" : {
@@ -7864,7 +8188,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "În prezent, NU folosiți un mod de bătăi ale inimii. O bătăi ale inimii este necesară pentru a menține %%1$@ în fundal. Este recomandat să continuați activarea acestei funcții"
+            "value" : "În prezent, NU folosiți un mod puls de sincronizare. Un puls de sincronizare este necesar pentru a menține %%1$@ în fundal. Este recomandat să păstrați activată această funcție"
           }
         },
         "ru" : {
@@ -8026,7 +8350,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "În prezent, folosiți un mod de bătăi ale inimii. Acest lucru este necesar pentru a menține %%1$@ să ruleze în fundal. Acest lucru poate fi interesant dacă CGM vă oferă deja o bătăi de inimă. Este recomandat să păstrați această caracteristică activată"
+            "value" : "În prezent, folosiți un mod puls de sincronizare. Acest lucru este necesar pentru a menține %%1$@ să ruleze în fundal. Acest lucru poate fi interesant dacă CGM vă oferă un puls de sincronizare. Este recomandat să păstrați această funcție activată"
           }
         },
         "ru" : {
@@ -8836,7 +9160,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dezactivată la"
+            "value" : "Dezactivat la"
           }
         },
         "ru" : {
@@ -9646,7 +9970,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deconectare"
+            "value" : "Deconectați"
           }
         },
         "ru" : {
@@ -10456,7 +10780,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ejectarea"
+            "value" : "Ejectare"
           }
         },
         "ru" : {
@@ -10618,7 +10942,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patch expiră la"
+            "value" : "Plasturele expiră la"
           }
         },
         "ru" : {
@@ -11157,6 +11481,330 @@
         }
       }
     },
+    "Failed to connect to patch" : {
+      "comment" : "MedtrumError patch failedToFindDevice",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فشل الاتصال بالتصحيح"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepodařilo se připojit k opravě"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunne ikke oprette forbindelse til patch"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung zum Patch fehlgeschlagen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to connect to patch"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fallo al conectar con el parche"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yhteyden muodostaminen laastariin epäonnistui"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la connexion au patch"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התחברות לתיקון נכשלה"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nem sikerült csatlakozni a javításhoz"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile connettersi alla patch"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パッチへの接続に失敗しました"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "패치에 연결하지 못했습니다."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunne ikke koble til oppdateringen"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinding met patch mislukt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się połączyć z patchem"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falha na ligação ao patch"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A eșuat conectarea la patch-uri"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось подключиться к патчу"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepodarilo sa pripojiť k záplate"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ni se uspelo povezati z obližem"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misslyckades med att ansluta till patch"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yamaya bağlanılamadı"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося підключитися до патчу"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không thể kết nối với bản vá"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接补丁失败"
+          }
+        }
+      }
+    },
+    "Failed to connect to patch -> Timeout reached" : {
+      "comment" : "MedtrumError patch failedToConnectToDevice",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "فشل الاتصال بالتصحيح -> تم الوصول إلى المهلة"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepodařilo se připojit k opravě -> bylo dosaženo časového limitu"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunne ikke oprette forbindelse til patch -> Timeout nået"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung zum Patch fehlgeschlagen -> Timeout erreicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to connect to patch -> Timeout reached"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se ha podido conectar con el parche -> Se ha alcanzado el tiempo de espera"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yhteyden muodostaminen laastariin epäonnistui -> aikakatkaisu saavutettu"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Échec de la connexion au patch -> Timeout atteint"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "התחברות לתיקון נכשלה -> פסק הזמן הושג"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nem sikerült csatlakozni a javításhoz -> Timeout elérve"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile connettersi alla patch -> Timeout raggiunto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パッチへの接続に失敗しました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "패치에 연결하지 못함 -> 시간 초과에 도달했습니다."
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunne ikke koble til patch -> Tidsavbrudd nådd"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan geen verbinding maken met patch -> Time-out bereikt"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nie udało się połączyć z patchem -> Osiągnięto limit czasu"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Falha na ligação ao patch -> Tempo limite atingido"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A eșuat conectarea la patch-uri -> S-a atins limita de timp"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось подключиться к патчу -> Достигнут таймаут"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nepodarilo sa pripojiť k patchu -> dosiahnutý časový limit"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuspešno vzpostavljena povezava z obližem -> dosežen je časovni rok"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Misslyckades med att ansluta till patch -> Timeout uppnådd"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yamaya bağlanılamadı -> Zaman aşımına ulaşıldı"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не вдалося підключитися до патчу -> Вичерпано тайм-аут"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không thể kết nối với bản vá -> Đã đạt đến thời gian chờ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接补丁失败 -> 已超时"
+          }
+        }
+      }
+    },
     "Fault" : {
       "comment" : "Patch state for patchFault, patchFaultd2, baseFault",
       "extractionState" : "manual",
@@ -11266,7 +11914,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Defect"
+            "value" : "Defecțiune"
           }
         },
         "ru" : {
@@ -12076,7 +12724,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Întoarce-te la amorsare"
+            "value" : "Înapoi la amorsare"
           }
         },
         "ru" : {
@@ -12238,7 +12886,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Întoarce-te la baza pompei"
+            "value" : "Înapoi la baza pompei"
           }
         },
         "ru" : {
@@ -12886,7 +13534,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cât timp doriți să vă suspendați patch-ul maxim? Acesta va fi reluat automat după acest timp."
+            "value" : "Care este durata maximă de suspendare a plasturelui? Acesta își va relua automat activitatea după acest timp."
           }
         },
         "ru" : {
@@ -13534,7 +14182,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Livrare insulină"
+            "value" : "Administrare insulină"
           }
         },
         "ru" : {
@@ -14020,7 +14668,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Insulină suspendată"
+            "value" : "Insulina suspendată"
           }
         },
         "ru" : {
@@ -15964,7 +16612,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Asigurați-vă că numărul de serie este corect înainte de a-l conecta la plasturele transdermic."
+            "value" : "Asigurați-vă că numărul de serie este corect înainte de a-l conecta la plasture."
           }
         },
         "ru" : {
@@ -17422,7 +18070,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fără livrare"
+            "value" : "Fără administrare"
           }
         },
         "ru" : {
@@ -18772,7 +19420,166 @@
       }
     },
     "OK" : {
-      "comment" : "Acknoledge alert"
+      "comment" : "",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسناً"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dobře"
+          }
+        },
+        "da" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vale"
+          }
+        },
+        "fi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selvä"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D'accord"
+          }
+        },
+        "he" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "בסדר"
+          }
+        },
+        "hu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rendben"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Va bene"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "알겠습니다"
+          }
+        },
+        "nb" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oké"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ro" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bine"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хорошо"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "sl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V redu"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okej"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Гаразд"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ĐƯỢC"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好的"
+          }
+        }
+      }
     },
     "Patch activation" : {
       "comment" : "Patch activation header",
@@ -18883,7 +19690,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activarea plasturelui"
+            "value" : "Activare plasture"
           }
         },
         "ru" : {
@@ -19045,7 +19852,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activarea plasturelui"
+            "value" : "Activare plasture"
           }
         },
         "ru" : {
@@ -19207,7 +20014,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Detalii despre patch-uri"
+            "value" : "Detalii plasture"
           }
         },
         "ru" : {
@@ -19369,7 +20176,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eroare de patch"
+            "value" : "Eroare plasture"
           }
         },
         "ru" : {
@@ -19531,7 +20338,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plasture expirat"
+            "value" : "Plasturele a expirat"
           }
         },
         "ru" : {
@@ -19693,7 +20500,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plasture expirat. Doar bazală."
+            "value" : "Plasturele a expirat. Doar bazală."
           }
         },
         "ru" : {
@@ -20017,7 +20824,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patch-ul este suspendat. Limita de %lld U depășită. Dacă măriți limita, puteți șterge alerta acum. Dacă așteptați, patch-ul va fi reluat când va trece suficient timp."
+            "value" : "Plasturele este suspendat. Limita de %lld U depășită. Dacă măriți limita, puteți șterge alerta acum. Dacă așteptați, acesta își va relua activitatea când va trece suficient timp."
           }
         },
         "ru" : {
@@ -20179,7 +20986,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Durata de utilizare a plasturelui"
+            "value" : "Durată de viață plasture"
           }
         },
         "ru" : {
@@ -20503,7 +21310,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pregătirea plasturelui"
+            "value" : "Amorsare plasture"
           }
         },
         "ru" : {
@@ -20665,7 +21472,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pregătirea plasturelui"
+            "value" : "Amorsarea plasturelui"
           }
         },
         "ru" : {
@@ -20827,7 +21634,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patch înlocuiți"
+            "value" : "Înlocuiți plasturele"
           }
         },
         "ru" : {
@@ -20989,7 +21796,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Setări ceas"
+            "value" : "Setări plasture"
           }
         },
         "ru" : {
@@ -21151,7 +21958,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Setări ceas"
+            "value" : "Setări plasture"
           }
         },
         "ru" : {
@@ -21313,7 +22120,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Starea plasturelui"
+            "value" : "Stare plasture"
           }
         },
         "ru" : {
@@ -21475,7 +22282,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Starea plasturelui"
+            "value" : "Stare plasture"
           }
         },
         "ru" : {
@@ -21637,7 +22444,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oră plasture"
+            "value" : "Timp plasture"
           }
         },
         "ru" : {
@@ -22447,7 +23254,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apăsați butonul acului pentru a introduce acul. Atingeți butonul \"Activare\" pentru a finaliza procesul de activare."
+            "value" : "Apăsați butonul acului pentru a introduce acul. Atingeți butonul \"Activați\" pentru a finaliza procesul de activare."
           }
         },
         "ru" : {
@@ -22771,7 +23578,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Primat"
+            "value" : "Amorsat"
           }
         },
         "ru" : {
@@ -23257,7 +24064,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Modelul de bază al pompei"
+            "value" : "Model bază pompă"
           }
         },
         "ru" : {
@@ -23581,7 +24388,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pompa de bază SN"
+            "value" : "SN bază pompă"
           }
         },
         "ru" : {
@@ -23743,7 +24550,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reconectare"
+            "value" : "Reconectați"
           }
         },
         "ru" : {
@@ -24067,7 +24874,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elimină pompa"
+            "value" : "Eliminați pompa"
           }
         },
         "ru" : {
@@ -24391,7 +25198,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Înlocuiți plasturele acum!"
+            "value" : "Înlocuiți-vă plasturele acum!"
           }
         },
         "ru" : {
@@ -25039,7 +25846,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CV"
+            "value" : "Reluați"
           }
         },
         "ru" : {
@@ -25201,7 +26008,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Livrarea CV-ului"
+            "value" : "Reluați administrarea"
           }
         },
         "ru" : {
@@ -25363,7 +26170,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Livrarea CV-ului"
+            "value" : "Reluați administrarea insulinei"
           }
         },
         "ru" : {
@@ -25687,7 +26494,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salvează și continuă"
+            "value" : "Salvați și continuați"
           }
         },
         "ru" : {
@@ -26011,7 +26818,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Selectați tipul de insulină"
+            "value" : "Selectați tipul insulină"
           }
         },
         "ru" : {
@@ -26497,7 +27304,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Distribuie jurnalele plasturelui Medtrum"
+            "value" : "Distribuiți jurnalele plasturelui Medtrum"
           }
         },
         "ru" : {
@@ -26983,7 +27790,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Începe amorsarea"
+            "value" : "Începeți amorsarea"
           }
         },
         "ru" : {
@@ -27307,7 +28114,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Opriți temp bazal"
+            "value" : "Opriți bazala temporară"
           }
         },
         "ru" : {
@@ -27631,7 +28438,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suspendarea livrării"
+            "value" : "Suspendați administrarea"
           }
         },
         "ru" : {
@@ -27793,7 +28600,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suspendarea administrării insulinei"
+            "value" : "Suspendați administrarea insulinei"
           }
         },
         "ru" : {
@@ -27955,7 +28762,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suspendați patch-ul"
+            "value" : "Suspendați plasturele"
           }
         },
         "ru" : {
@@ -28441,7 +29248,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suspendat - Daily Max"
+            "value" : "Suspendat - Maxim zilnic"
           }
         },
         "ru" : {
@@ -28603,7 +29410,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suspendat - Max orar"
+            "value" : "Suspendat - Maxim orar"
           }
         },
         "ru" : {
@@ -28765,7 +29572,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Suspendat - BG scăzut"
+            "value" : "Suspendat - Glicemie scăzută"
           }
         },
         "ru" : {
@@ -29089,7 +29896,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bazală Temporală"
+            "value" : "Bazală temporală"
           }
         },
         "ru" : {
@@ -29251,7 +30058,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plasturele este destinat a fi utilizat timp de numai 3 zile și 8 ore. Depășirea acestei perioade poate face ca plasturele să nu mai fie fiabil. Acest lucru NU este recomandat. Luați în considerare utilizarea duratei de viață normale. Vă rugăm să rețineți că noul firmware din ultima generație de baze de pompe poate bloca comenzile bolus după 5 zile (120 de ore)."
+            "value" : "Plasturele este destinat a fi utilizat timp de numai 3 zile și 8 ore. Depășirea acestei perioade poate face ca plasturele să fie nefiabil. Acest lucru NU este recomandat. Luați în considerare utilizarea duratei de viață normale. Vă rugăm să rețineți că noul firmware din ultima generație de baze de pompe poate bloca comenzile bolus după 5 zile (120 de ore)."
           }
         },
         "ru" : {
@@ -29413,7 +30220,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timpul din pompa dumneavoastră este diferit de ora curentă. Doriți să actualizați timpul din pompă la ora actuală?"
+            "value" : "Timpul din pompa dumneavoastră este diferit de timpul curent. Doriți să actualizați timpul din pompă la timpul actual?"
           }
         },
         "ru" : {
@@ -29575,7 +30382,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timpul din pompa dumneavoastră este diferit de momentul actual. Timpul pompei dumneavoastră controlează setările de terapie programate. Derulați în jos pentru a pompa rândul timp pentru a analiza diferența de timp și pentru a configura pompa."
+            "value" : "Timpul din pompa dumneavoastră este diferit de timpul actual. Timpul pompei dumneavoastră controlează setările de terapie programate. Derulați în jos la rândul Timp pompă pentru a revizui diferența de timp și pentru a vă configura pompa."
           }
         },
         "ru" : {
@@ -29737,7 +30544,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schimbare timp detectată"
+            "value" : "Schimbare de timp detectată"
           }
         },
         "ru" : {
@@ -29899,7 +30706,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Comută modul puls"
+            "value" : "Comutați modul puls"
           }
         },
         "ru" : {
@@ -30547,7 +31354,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Utilizați o durată de viață extinsă"
+            "value" : "Utilizați durata de viață extinsă"
           }
         },
         "ru" : {
@@ -31357,7 +32164,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Când atingeți butonul, veți primi o solicitare biometrică. Odată finalizat, plasturele va fi dezactivat și vi se va solicita să asociați un nou plasture transdermic."
+            "value" : "Când atingeți butonul, veți primi o solicitare biometrică. Odată finalizat, plasturele va fi dezactivat și vi se va solicita să asociați un nou plasture."
           }
         },
         "ru" : {
@@ -31519,7 +32326,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Da, dezactivează modul puls"
+            "value" : "Da, dezactivați modul puls"
           }
         },
         "ru" : {
@@ -31681,7 +32488,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Da, activează modul puls"
+            "value" : "Da, activați modul puls"
           }
         },
         "ru" : {
@@ -32005,7 +32812,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Veți începe prin a alege tipul de insulină & setările de bază ale plasturelui înainte de a activarea acestuia."
+            "value" : "Veți începe prin a alege tipul de insulină & setările de bază ale plasturelui înainte de activarea acestuia."
           }
         },
         "ru" : {
@@ -32167,7 +32974,7 @@
         "ro" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Patch-ul dvs. are %lld ore rămase"
+            "value" : "Plasturele dumneavoastră are %lld ore rămase"
           }
         },
         "ru" : {
