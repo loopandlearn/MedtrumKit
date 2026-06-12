@@ -1,6 +1,8 @@
 import LoopKit
 
 enum StateSyncer {
+    private static let logger = MedtrumLogger(category: "StateSyncer")
+
     static func sync(
         syncResponse: SynchronizePacketResponse,
         state: MedtrumPumpState,
@@ -56,9 +58,55 @@ enum StateSyncer {
                  .SUSPEND_MORE_THAN_MAX_PER_DAY,
                  .SUSPEND_MORE_THAN_MAX_PER_HOUR,
                  .SUSPEND_PREDICT_LOW_GLUCOSE:
+                if state.basalDose.type == .basal || state.basalDose.type == .resume || state.basalDose.type == .tempBasal {
+                    // Patch unexpectedly suspended itself
+                    let eventTime = Date.now
+                    let dose = state.basalDose.toDoseEntry(isMutable: false, endDate: eventTime)
+                    state.basalDose = UnfinalizedDose(suspendStartTime: eventTime)
+                    let basalDose = state.basalDose.toDoseEntry()
+
+                    var events: [NewPumpEvent] = [NewPumpEvent.basal(dose: basalDose, date: basalDose.startDate)]
+                    if dose.type == .tempBasal {
+                        // Record finalized temp basal, resume/basal is already finalized
+                        events.append(NewPumpEvent.tempBasal(dose: dose, date: dose.startDate))
+                    }
+
+                    pumpManager.emitPumpEvents(events)
+                    pumpManager.notifyStateDidChange()
+                }
+
                 state.basalState = .suspended
 
             default:
+                if state.basalDose.type == .suspend || state.basalDose.type == .tempBasal {
+                    // unfinalized dose is finalized!
+                    let eventTime = Date.now
+                    let dose = state.basalDose.toDoseEntry(isMutable: false, endDate: eventTime)
+                    state.basalDose = dose.type == .tempBasal ?
+                        UnfinalizedDose(
+                            basalRate: state.currentBaseBasalRate,
+                            insulinType: state.insulinType
+                        ) :
+                        UnfinalizedDose(
+                            resumeStartTime: eventTime,
+                            insulinType: state.insulinType
+                        )
+
+                    let basalDose = state.basalDose.toDoseEntry(isMutable: true)
+                    var events: [NewPumpEvent] = [
+                        basalDose.type == .resume ?
+                            NewPumpEvent.resume(dose: basalDose, date: basalDose.startDate) :
+                            NewPumpEvent.basal(dose: basalDose, date: basalDose.startDate)
+                    ]
+                    if dose.type == .tempBasal {
+                        // Record finalized temp basal, suspend is already finalized
+                        events.append(NewPumpEvent.tempBasal(dose: dose, date: dose.startDate))
+                    }
+
+                    pumpManager.emitPumpEvents(events)
+                    pumpManager.notifyStateDidChange()
+                }
+
                 state.basalState = .active
             }
         }
@@ -88,14 +136,15 @@ enum StateSyncer {
             pumpManager.state.bolusState = bolusProgress.completed ? .noBolus : .inProgress
         } else if duringReconnect {
             pumpManager.checkBolusDone()
+        } else {
+            pumpManager.state.bolusState = .noBolus
         }
 
         pumpManager.notifyStateDidChange()
     }
 
-    public static func fetchPatchTime(pumpManager: MedtrumPumpManager) async {
-        let logger = MedtrumLogger(category: "TimeSync")
-        let timeData = await pumpManager.bluetooth.write(GetTimePacket())
+    public static func fetchPatchTime(pumpManager: MedtrumPumpManager) {
+        let timeData = pumpManager.bluetooth.write(GetTimePacket())
 
         switch timeData {
         case let .failure(error: error):
@@ -113,10 +162,8 @@ enum StateSyncer {
         }
     }
 
-    public static func syncTime(pumpManager: MedtrumPumpManager) async {
-        let logger = MedtrumLogger(category: "TimeSync")
-
-        let timeData = await pumpManager.bluetooth.write(SetTimePacket(date: Date.now))
+    public static func syncTime(pumpManager: MedtrumPumpManager) {
+        let timeData = pumpManager.bluetooth.write(SetTimePacket(date: Date.now))
         switch timeData {
         case let .failure(error: error):
             logger.error("Failed to sync time: \(error.errorDescription)")
@@ -125,7 +172,7 @@ enum StateSyncer {
             break
         }
 
-        let timeZoneData = await pumpManager.bluetooth.write(
+        let timeZoneData = pumpManager.bluetooth.write(
             SetTimeZonePacket(date: Date.now, timeZone: TimeZone.current)
         )
         switch timeZoneData {
@@ -133,7 +180,7 @@ enum StateSyncer {
             logger.error("Failed to sync timezone: \(error.errorDescription)")
             return
         default:
-            await StateSyncer.fetchPatchTime(pumpManager: pumpManager)
+            StateSyncer.fetchPatchTime(pumpManager: pumpManager)
         }
     }
 

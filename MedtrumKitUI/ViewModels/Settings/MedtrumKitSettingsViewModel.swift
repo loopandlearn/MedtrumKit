@@ -318,14 +318,14 @@ class MedtrumKitSettingsViewModel: PatchLifetimeFormatting, ObservableObject, Pu
         isUpdatingPumpState = true
         pumpManager.bluetooth.ensureConnected { error in
             if error != nil {
-                await MainActor.run {
+                DispatchQueue.main.async {
                     self.isUpdatingPumpState = false
                 }
                 return
             }
 
-            await StateSyncer.syncTime(pumpManager: pumpManager)
-            await MainActor.run {
+            StateSyncer.syncTime(pumpManager: pumpManager)
+            DispatchQueue.main.async {
                 self.isUpdatingPumpState = false
             }
         }
@@ -366,7 +366,7 @@ extension MedtrumKitSettingsViewModel {
         pumpTimeSyncedAt = state.pumpTimeSyncedAt
         reservoirLevel = patchState != .reservoirEmpty ? state.reservoir : 0
         basalType = state.basalDose.type
-        basalRate = state.basalDose.value
+        basalRate = basalType == .tempBasal ? state.basalDose.value : state.currentBaseBasalRate
         lastSync = state.lastSync
         patchActivatedAt = state.patchActivatedAt
         patchGracePeriodFrom = state.patchGracePeriodFrom
