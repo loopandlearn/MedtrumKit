@@ -16,7 +16,7 @@ enum MedtrumAlert {
         case .patchHourlyMaxNotification:
             return String(localized: "Alert: Hourly Insulin Limit", comment: "alert hourly limit")
         case .occlusionNotification:
-            return String(localized: "Alert: Occlussion", comment: "alert occlussion")
+            return String(localized: "Alert: Occlusion", comment: "alert occlusion")
         case .patchFaultNotification:
             return String(localized: "Alert: Patch fault", comment: "alert patch fault")
         case .reservoirEmptyNotification:
@@ -136,7 +136,7 @@ enum MedtrumAlert {
         case .occlusionNotification:
             return Alert.Content(
                 title: String(localized: "Replace your patch now!", comment: "Title replace patch notification"),
-                body: String(localized: "Your patch has detected an occlussion!", comment: "Body occlussion notification"),
+                body: String(localized: "Your patch has detected an occlusion!", comment: "Body occlusion notification"),
                 acknowledgeActionButtonLabel: String(
                     localized: "OK",
                     comment: "Acknoledge alert"

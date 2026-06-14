@@ -4517,8 +4517,8 @@
         }
       }
     },
-    "Alert: Occlussion" : {
-      "comment" : "alert occlussion",
+    "Alert: Occlusion" : {
+      "comment" : "alert occlusion",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -4530,7 +4530,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Upozornění: Okluze"
+            "value" : "Upozornění: Uzávěr"
           }
         },
         "da" : {
@@ -4548,13 +4548,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alert: Occlussion"
+            "value" : "Alert: Occlusion"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aviso: oclusión"
+            "value" : "Aviso: Oclusión"
           }
         },
         "fi" : {
@@ -4572,7 +4572,7 @@
         "he" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "התראה: סתירה"
+            "value" : "התראה: חסימה"
           }
         },
         "hu" : {
@@ -4602,19 +4602,19 @@
         "nb" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Advarsel: Blokkering"
+            "value" : "Varsel: Blokkering"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Waarschuwing: Occlusie"
+            "value" : "Waarschuwing: verstopping"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ostrzeżenie: zablokowanie"
+            "value" : "Ostrzeżenie: niedrożność"
           }
         },
         "pt-BR" : {
@@ -4650,7 +4650,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Varning: Ocklusion"
+            "value" : "Varning: Blockering"
           }
         },
         "tr" : {
@@ -4668,7 +4668,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cảnh báo: Occlussion"
+            "value" : "Cảnh báo: Tắc nghẽn"
           }
         },
         "zh-Hans" : {
@@ -33837,8 +33837,8 @@
         }
       }
     },
-    "Your patch has detected an occlussion!" : {
-      "comment" : "Body occlussion notification",
+    "Your patch has detected an occlusion!" : {
+      "comment" : "Body occlusion notification",
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
@@ -33868,7 +33868,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your patch has detected an occlussion!"
+            "value" : "Your patch has detected an occlusion!"
           }
         },
         "es" : {
@@ -33898,7 +33898,7 @@
         "hu" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A javításod hibát észlelt!"
+            "value" : "A tapaszod elzáródást észlelt!"
           }
         },
         "it" : {
@@ -33916,7 +33916,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "패치가 폐색을 감지했습니다!"
+            "value" : "패치에서 가림 현상이 감지되었습니다!"
           }
         },
         "nb" : {
