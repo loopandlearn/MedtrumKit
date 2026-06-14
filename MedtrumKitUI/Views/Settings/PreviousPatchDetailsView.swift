@@ -28,7 +28,7 @@ struct PreviousPatchDetailsView: View {
                 )
                 sectionItem(
                     title: Text("Battery", comment: "Text for battery voltageB"),
-                    value: String(format: "%0.2f", viewModel.battery)
+                    value: viewModel.batteryText(for: viewModel.battery)
                 )
 
                 if let reservoirLevel = viewModel.reservoirLevel,
