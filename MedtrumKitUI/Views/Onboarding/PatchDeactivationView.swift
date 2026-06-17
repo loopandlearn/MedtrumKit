@@ -23,7 +23,7 @@ struct PatchDeactivationView: View {
                 Text(viewModel.deactivationError)
                     .foregroundStyle(.red)
             } else if viewModel.disableButtons {
-                Text("Cannot deactivate while a bolus is in progress...", comment: "Wait for bolus to complete")
+                Text("Cannot deactivate while a bolus is in progress", comment: "Wait for bolus to complete")
                     .foregroundStyle(.red)
             }
 
