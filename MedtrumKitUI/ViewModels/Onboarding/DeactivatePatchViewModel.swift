@@ -1,4 +1,5 @@
 import LoopKit
+
 class DeactivatePatchViewModel: ObservableObject {
     @Published var isDeactivating = false
     @Published var deactivationError = ""
@@ -101,8 +102,8 @@ class DeactivatePatchViewModel: ObservableObject {
     }
 }
 
-extension DeactivatePatchViewModel : PumpManagerStatusObserver {
-    func pumpManager(_: any LoopKit.PumpManager, didUpdate status: LoopKit.PumpManagerStatus, oldStatus: LoopKit.PumpManagerStatus) {
+extension DeactivatePatchViewModel: PumpManagerStatusObserver {
+    func pumpManager(_: any LoopKit.PumpManager, didUpdate _: LoopKit.PumpManagerStatus, oldStatus _: LoopKit.PumpManagerStatus) {
         guard let pumpManager else {
             return
         }
