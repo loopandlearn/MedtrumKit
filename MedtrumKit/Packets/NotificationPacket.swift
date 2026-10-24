@@ -15,12 +15,22 @@ struct SynchronizePacketResponse: Codable {
     var truncated: Bool = false
     var invalidPayload: Bool = false
 
-    func validated(expectedPatchId: UInt64 = 0) -> SynchronizePacketResponse {
+    /// `retiredPatchId` is the patch deactivated last: until a new patch is activated the base can still
+    /// report it, and its fields must not be taken for the patch being set up.
+    func validated(expectedPatchId: UInt64 = 0, retiredPatchId: UInt64 = 0) -> SynchronizePacketResponse {
+        let isWrongPatch: (Double) -> Bool = { patchId in
+            if expectedPatchId != 0 {
+                return patchId != Double(expectedPatchId)
+            }
+
+            return retiredPatchId != 0 && patchId == Double(retiredPatchId)
+        }
+
         let invalidBolus = bolus.map { !(0 ... 50).contains($0.delivered) } ?? false
         let invalidBasal = basal.map { !(0 ... 40).contains($0.rate) } ?? false
         let invalidReservoir = reservoir.map { !(0 ... 400).contains($0) } ?? false
-        let wrongBasalPatch = basal.map { expectedPatchId != 0 && $0.patchId != Double(expectedPatchId) } ?? false
-        let wrongStoragePatch = storage.map { expectedPatchId != 0 && $0.patchId != Double(expectedPatchId) } ?? false
+        let wrongBasalPatch = basal.map { isWrongPatch($0.patchId) } ?? false
+        let wrongStoragePatch = storage.map { isWrongPatch($0.patchId) } ?? false
 
         guard !invalidBolus, !invalidBasal, !invalidReservoir, !wrongBasalPatch, !wrongStoragePatch else {
             MedtrumLogger(category: "NotificationPacket").error("Rejecting mismatched notification payload")

@@ -11,7 +11,10 @@ enum StateSyncer {
         fullSync: Bool
     ) {
         let syncDate = Date.now
-        let syncResponse = syncResponse.validated(expectedPatchId: state.patchId.toUInt64())
+        let syncResponse = syncResponse.validated(
+            expectedPatchId: state.patchId.toUInt64(),
+            retiredPatchId: state.previousPatch?.patchId.toUInt64() ?? 0
+        )
 
         StateSyncer.updatePumpState(syncResponse: syncResponse, pumpManager: pumpManager)
 

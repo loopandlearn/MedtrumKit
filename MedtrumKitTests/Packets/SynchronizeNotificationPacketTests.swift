@@ -138,4 +138,26 @@ final class NotificationPacketTests: XCTestCase {
             XCTAssertFalse(response.validated().invalidPayload) // No known patch yet during setup.
         }
     }
+
+    func testRetiredPatchIsRejectedDuringSetup() {
+        let retired = SynchronizePacketResponse(
+            state: .stopped, reservoir: 70, storage: StorageData(sequence: 1047, patchId: 143), activeAlarms: []
+        ).validated(retiredPatchId: 143)
+        XCTAssertTrue(retired.invalidPayload)
+        XCTAssertEqual(retired.state, .stopped)
+        XCTAssertNil(retired.storage)
+        XCTAssertNil(retired.reservoir)
+
+        let next = SynchronizePacketResponse(
+            state: .priming, reservoir: 190.9, storage: StorageData(sequence: 0, patchId: 144), activeAlarms: []
+        ).validated(retiredPatchId: 143)
+        XCTAssertFalse(next.invalidPayload)
+        XCTAssertEqual(next.storage?.patchId, 144)
+        XCTAssertEqual(next.reservoir, 190.9)
+
+        let active = SynchronizePacketResponse(
+            state: .active, storage: StorageData(sequence: 1, patchId: 144), activeAlarms: []
+        ).validated(expectedPatchId: 144, retiredPatchId: 143)
+        XCTAssertFalse(active.invalidPayload)
+    }
 }
