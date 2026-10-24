@@ -814,6 +814,7 @@ public extension MedtrumPumpManager {
                 self.state.patchId = data.patchId
                 self.state.patchActivatedAt = Date.now
                 self.state.basalDose = resumeDose
+                self.state.basalState = data.basalType.isSuspendedByPump() ? .suspended : .active
                 self.state.lastSync = Date.now
                 self.notifyStateDidChange()
 
