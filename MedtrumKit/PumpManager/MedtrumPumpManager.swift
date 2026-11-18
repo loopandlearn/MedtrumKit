@@ -1,7 +1,9 @@
 import CoreBluetooth
 import HealthKit
 import LoopKit
-import UIKit
+#if os(iOS)
+    import UIKit
+#endif
 
 public class MedtrumPumpManager: DeviceManager {
     public let pluginIdentifier = "Medtrum"
@@ -45,21 +47,26 @@ public class MedtrumPumpManager: DeviceManager {
     init(state: MedtrumPumpState) {
         self.state = state
         oldState = MedtrumPumpState(rawValue: state.rawValue)
-        bluetooth = BluetoothManager(knownPeripheralIdentifier: state.peripheralIdentifier)
+        bluetooth = BluetoothManager(
+            knownPeripheralIdentifier: state.peripheralIdentifier,
+            controlReleased: state.controlReleased || state.otherControllerDetectedAt != nil
+        )
         refreshLogDeviceIdentifier()
 
-        NotificationCenter.default.addObserver(
+        #if os(iOS) // watchOS: no UIApplication lifecycle, and no silent tones - the watch host owns process lifetime
+            NotificationCenter.default.addObserver(
             self,
             selector: #selector(appMovedToBackground),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appMovedToForeground),
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(appMovedToForeground),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+        #endif
 
         bluetooth.pumpManager = self
         MedtrumLogger.pumpManager = self
@@ -85,6 +92,16 @@ public class MedtrumPumpManager: DeviceManager {
 
     public required convenience init?(rawState: RawStateValue) {
         self.init(state: MedtrumPumpState(rawValue: rawState))
+    }
+
+    /// DeviceConfigurationSharing: build from another controller's export (+DeviceHandoff)
+    public required convenience init?(adopting configuration: SharedDeviceConfiguration, localState: [String: Any]?) {
+        guard let state = Self.adoptedState(from: configuration, localState: localState) else {
+            return nil
+        }
+
+        self.init(state: state)
+        bluetooth.connectClock.beginAttempt(adoptedHandle: state.peripheralIdentifier?.uuidString)
     }
 
     public var isOnboarded: Bool {
@@ -198,6 +215,34 @@ public class MedtrumPumpManager: DeviceManager {
     private(set) var isDeactivatingPatch = false
 
     private var mustProvideBLEHeartbeat = false
+
+    /// False for a patch this controller was handed by another: the link is never held between commands, foreground or
+    /// keep-alive, so the controller that handed it over can take it back
+    var holdsConnectionBetweenCommands: Bool {
+        !state.configuredByAnotherController
+    }
+
+    /// OmnipodKit's background Pod Keep Alive: the link stays up in the background too. For the host's heartbeat
+    /// (Medtrum has no way to wake the app without the link) and for silent tones, which keep the app alive for it.
+    var keepsConnectedInBackground: Bool {
+        mustProvideBLEHeartbeat || state.useSilentTones
+    }
+
+    /// The link is held rather than idle-disconnected: while the app is in the foreground, so in-app commands are
+    /// instant, or in the background with a keep-alive. Otherwise connect on demand.
+    var shouldHoldConnection: Bool {
+        guard holdsConnectionBetweenCommands else {
+            return false
+        }
+
+        return bluetooth?.isAppForeground == true || keepsConnectedInBackground
+    }
+
+    /// Something needs the link beyond a single command: the heartbeat, a bolus whose progress only arrives as
+    /// notifications, patch setup, or stopping the patch
+    var needsLink: Bool {
+        shouldHoldConnection || state.bolusState != .noBolus || state.pumpState.isSetup || isDeactivatingPatch
+    }
     private var lastHeartbeat: Date = .distantPast
 
     private static let heartbeatInterval: TimeInterval = .minutes(1)
@@ -222,18 +267,25 @@ public class MedtrumPumpManager: DeviceManager {
         }
     }
 
-    private let backgroundTask = BackgroundTask()
-    @objc func appMovedToBackground() {
-        if state.useSilentTones {
-            log.info("Starting silent tones")
-            backgroundTask.startBackgroundTask()
+    #if os(iOS)
+        private let backgroundTask = BackgroundTask()
+        @objc func appMovedToBackground() {
+            if state.useSilentTones {
+                log.info("Starting silent tones")
+                backgroundTask.startBackgroundTask()
+            }
         }
-    }
 
-    @objc func appMovedToForeground() {
-        backgroundTask.stopBackgroundTask()
-    }
+        @objc func appMovedToForeground() {
+            backgroundTask.stopBackgroundTask()
+        }
+    #endif
 }
+
+#if os(watchOS)
+    /// The phone gets this through PumpManagerUI (MedtrumKitUI), which the watch target leaves out
+    extension MedtrumPumpManager: PumpManager {}
+#endif
 
 public extension MedtrumPumpManager {
     var pumpRecordsBasalProfileStartEvents: Bool {
@@ -293,13 +345,14 @@ public extension MedtrumPumpManager {
                 if self.state.initialReservoir == nil {
                     self.state.initialReservoir = self.state.reservoir
                 }
+                self.state.reservoirReadAt = Date.now
 
                 delegate?.pumpManager(self, didReadReservoirValue: self.state.reservoir, at: Date.now) { _ in }
 
                 self.state.lastSync = Date.now
                 self.notifyStateDidChange()
 
-                completion?(nil)
+                completion?(self.state.lastSync)
             }
             return
         #endif
@@ -347,7 +400,11 @@ public extension MedtrumPumpManager {
     }
 
     func setMustProvideBLEHeartbeat(_ mustProvideBLEHeartbeat: Bool) {
+        let changed = self.mustProvideBLEHeartbeat != mustProvideBLEHeartbeat
         self.mustProvideBLEHeartbeat = mustProvideBLEHeartbeat
+        if changed {
+            bluetooth.linkNeedChanged()
+        }
     }
 
     func createBolusProgressReporter(reportingOn: DispatchQueue) -> (any LoopKit.DoseProgressReporter)? {
@@ -362,9 +419,11 @@ public extension MedtrumPumpManager {
         return nil
     }
 
+    /// The patch gives a bolus at 1.5 U per minute
+    static let bolusUnitsPerSecond = 1.5 / 60
+
     func estimatedDuration(toBolus units: Double) -> TimeInterval {
-        // 1.5 unit per minute
-        units / 1.5 * TimeInterval(minutes: 1)
+        units / Self.bolusUnitsPerSecond
     }
 
     func enactBolus(
@@ -418,6 +477,9 @@ public extension MedtrumPumpManager {
             self.emitPumpEvents(events, replacePendingEvents: false)
 
             self.state.bolusDose = doseEntry
+            // As the patch accepted it, until its first status (OmnipodKit reads it off the bolus command's status)
+            self.state.reportedBolusEndsAt = Date.now.addingTimeInterval(duration)
+            self.state.untrackedDeliveryIsForeign = false
             self.notifyStateDidChange()
 
             completion(nil)
@@ -561,6 +623,7 @@ public extension MedtrumPumpManager {
 
             self.state.basalDose = tempBasalDose
             self.state.basalState = .tempBasal
+            self.state.untrackedDeliveryIsForeign = false
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
 
@@ -583,6 +646,7 @@ public extension MedtrumPumpManager {
         events.append(NewPumpEvent.basal(dose: basalDose.toDoseEntry()))
 
         state.basalDose = basalDose
+        state.untrackedDeliveryIsForeign = false
         state.lastSync = Date.now
         notifyStateDidChange()
 
@@ -618,6 +682,7 @@ public extension MedtrumPumpManager {
 
             self.state.basalDose = basalDose
             self.state.basalState = .suspended
+            self.state.untrackedDeliveryIsForeign = false
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
 
@@ -657,6 +722,7 @@ public extension MedtrumPumpManager {
 
             self.state.basalDose = resumeDose
             self.state.basalState = .active
+            self.state.untrackedDeliveryIsForeign = false
             self.state.lastSync = Date.now
             self.notifyStateDidChange()
 
@@ -976,7 +1042,8 @@ public extension MedtrumPumpManager {
     }
 
     /// The patch session is over: delivery stopped at `stoppedAt`, unless it is known to have stopped already
-    private func endPatchSession(at deliveryStoppedAt: Date, statusIsCurrent: Bool) {
+    /// Without `bookingDelivery`, another controller ended the patch and booked its last delivery (+DeviceHandoff)
+    func endPatchSession(at deliveryStoppedAt: Date, statusIsCurrent: Bool, bookingDelivery: Bool = true) {
         // Delivery cannot have stopped before the running dose began
         let stoppedAt = max(deliveryStoppedAt, state.basalDose.startDate)
 
@@ -1001,7 +1068,14 @@ public extension MedtrumPumpManager {
         // Otherwise the suspend is reported now.
         let hasStopped = state.basalDose.type == .suspend &&
             (state.pumpState.isTerminated || state.pumpState.isSetup || (statusIsCurrent && !state.pumpState.isDelivering))
-        let events = hasStopped ? finalizeInterruptedBolus() : stoppedDelivery(at: stoppedAt)
+        let events: [NewPumpEvent]
+        if !bookingDelivery {
+            events = []
+            state.bolusDose = nil
+            state.basalDose = UnfinalizedDose(suspendStartTime: stoppedAt)
+        } else {
+            events = hasStopped ? finalizeInterruptedBolus() : stoppedDelivery(at: stoppedAt)
+        }
 
         state.patchId = Data()
         state.pumpState = .none
@@ -1112,6 +1186,13 @@ public extension MedtrumPumpManager {
             }
 
             self.oldState = MedtrumPumpState(rawValue: self.state.rawValue)
+        }
+    }
+
+    /// ExclusiveDeviceControl readiness: the link is up and the patch has answered
+    func notifyControlReady() {
+        pumpDelegate.notify { delegate in
+            delegate?.deviceManagerControlDidBecomeReady(self)
         }
     }
 
@@ -1238,6 +1319,14 @@ public extension MedtrumPumpManager {
     }
 
     private func ensureConnectedAndActive(_ completion: @escaping (MedtrumConnectError?) -> Void) {
+        // A controller that has released the patch, or found another controller running it, commands nothing until it
+        // takes control again
+        guard !state.controlReleased, state.otherControllerDetectedAt == nil else {
+            log.warning("Control of the patch is released or another controller has used it, failing immediately")
+            completion(.controlReleased)
+            return
+        }
+
         guard !state.pumpState.isSetup else {
             log.warning("No active patch, failing immediately")
             completion(.failedToFindDevice)

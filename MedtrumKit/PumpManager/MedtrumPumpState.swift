@@ -53,6 +53,15 @@ public class MedtrumPumpState: RawRepresentable {
         lastSync = rawValue["lastSync"] as? Date ?? Date.distantPast
         pumpSN = rawValue["pumpSN"] as? Data ?? Data()
         useSilentTones = rawValue["useSilentTones"] as? Bool ?? false
+        controlReleased = rawValue["controlReleased"] as? Bool ?? false
+        configuredByAnotherController = rawValue["configuredByAnotherController"] as? Bool ?? false
+        inFlightDosesInheritedAway = rawValue["inFlightDosesInheritedAway"] as? Bool ?? false
+        untrackedDeliveryIsForeign = rawValue["untrackedDeliveryIsForeign"] as? Bool ?? false
+        sharedPatchId = rawValue["sharedPatchId"] as? Data
+        expectsForeignRecords = rawValue["expectsForeignRecords"] as? Bool ?? false
+        otherControllerDetectedAt = rawValue["otherControllerDetectedAt"] as? Date
+        lastContactAt = rawValue["lastContactAt"] as? Date
+        latestRecordSequence = rawValue["latestRecordSequence"] as? UInt64
         lowReservoirWarning = rawValue["lowReservoirWarning"] as? Double
         sessionToken = rawValue["sessionToken"] as? Data ?? Data()
         backupSessionToken = rawValue["backupSessionToken"] as? Data ?? Data()
@@ -67,6 +76,7 @@ public class MedtrumPumpState: RawRepresentable {
         maxDailyInsulin = rawValue["maxDailyInsulin"] as? Double ?? 100
         initialReservoir = rawValue["initialReservoir"] as? Double
         reservoir = rawValue["reservoir"] as? Double ?? 0
+        reservoirReadAt = rawValue["reservoirReadAt"] as? Date
         battery = rawValue["battery"] as? Double ?? 0
         notificationAfterActivation = rawValue["notificationAfterActivation"] as? TimeInterval ?? .hours(72)
 
@@ -196,12 +206,22 @@ public class MedtrumPumpState: RawRepresentable {
         value["bolusDose"] = bolusDose?.rawValue
         value["basalDose"] = basalDose.rawValue
         value["reservoir"] = reservoir
+        value["reservoirReadAt"] = reservoirReadAt
         value["battery"] = battery
         value["basalState"] = basalState.rawValue
         value["alarmSetting"] = alarmSetting.rawValue
         value["expiryMode"] = expiryMode.rawValue
         value["notificationAfterActivation"] = notificationAfterActivation
         value["useSilentTones"] = useSilentTones
+        value["controlReleased"] = controlReleased
+        value["configuredByAnotherController"] = configuredByAnotherController
+        value["inFlightDosesInheritedAway"] = inFlightDosesInheritedAway
+        value["untrackedDeliveryIsForeign"] = untrackedDeliveryIsForeign
+        value["sharedPatchId"] = sharedPatchId
+        value["expectsForeignRecords"] = expectsForeignRecords
+        value["otherControllerDetectedAt"] = otherControllerDetectedAt
+        value["lastContactAt"] = lastContactAt
+        value["latestRecordSequence"] = latestRecordSequence
 
         if let previousPatch = previousPatch {
             do {
@@ -228,6 +248,44 @@ public class MedtrumPumpState: RawRepresentable {
 
     public var lowReservoirWarning: Double?
     public var useSilentTones: Bool
+
+    // Handing the patch to another controller (MedtrumPumpManager+DeviceHandoff)
+
+    /// Control is released to another controller (ExclusiveDeviceControl). Persisted, so a relaunch does not take it
+    /// back.
+    public var controlReleased = false
+
+    /// Built from another controller's export (DeviceConfigurationSharing): never held connected between commands, so
+    /// that controller can take the patch back.
+    public var configuredByAnotherController = false
+
+    /// Control was released with a bolus or temp basal in flight. The other controller owns those records from then
+    /// on, so taking control drops this controller's copies.
+    public var inFlightDosesInheritedAway = false
+
+    /// A bolus, temp basal or suspend the patch reports that this controller has no record of may be another
+    /// controller's, so none is booked. Set on adopt and take-back; cleared once the patch shows neither, or this
+    /// controller commands delivery itself.
+    public var untrackedDeliveryIsForeign = false
+
+    /// The patch this state was exported for or adopted from: only a patch handed over can be run by another controller
+    /// (`isShared`)
+    public var sharedPatchId: Data?
+
+    /// The next connection's first status follows a take or an adopt: the other controller's delivery before it is
+    /// expected, not evidence (`otherControllerEvidence`)
+    public var expectsForeignRecords = false
+
+    /// Another controller was found to have run the patch since this one last did: nothing is sent until the host takes
+    /// control again. Unlike a release, the doses in flight stay this controller's.
+    public var otherControllerDetectedAt: Date?
+
+    /// When the patch last answered or notified this controller. Each command is answered, so the patch's records of
+    /// this controller's own delivery start before it.
+    public var lastContactAt: Date?
+
+    /// The patch's newest history record, from its status
+    var latestRecordSequence: UInt64?
 
     // Patch specific data
     public var sessionToken: Data
@@ -271,6 +329,8 @@ public class MedtrumPumpState: RawRepresentable {
     public var patchSessionEnded: Bool
     public var initialReservoir: Double?
     public var reservoir: Double
+    /// When the patch last reported `reservoir`: the delivered total's time (PumpDeliveryOdometer)
+    public var reservoirReadAt: Date?
     public var battery: Double
 
     // Patch settings
@@ -291,6 +351,19 @@ public class MedtrumPumpState: RawRepresentable {
     public var isConnected: Bool = false
     // if it was persisted, and we happen to restore a date - there will be nothing left to reset it to `nil`
     public var cancelingBolusSince: Date?
+    /// When the bolus the patch reported at its last status ends, whoever started it (PumpDeliveryOdometer)
+    public var reportedBolusEndsAt: Date?
+    /// The history record of a bolus running that this controller has no dose for, once looked up
+    var bolusRecord: BolusRecord?
+    /// The history record last looked up for it, so each record is read once
+    var bolusRecordLookedUp: UInt64?
+
+    /// The patch shows no bolus running
+    func bolusEnded() {
+        reportedBolusEndsAt = nil
+        bolusRecord = nil
+        bolusRecordLookedUp = nil
+    }
     // **** END ****
 
     public var bolusDose: UnfinalizedDose?
@@ -383,6 +456,25 @@ public class MedtrumPumpState: RawRepresentable {
         } else {
             return "Medtrum Nano 200U"
         }
+    }
+
+    /// How far the patch's clock is ahead of this device's, as the last GetTime measured it (`pumpTime` read at
+    /// `pumpTimeSyncedAt`). The time warning below shows past 15 s, but nothing sets the patch's clock until the user
+    /// does, so patch times are converted with this rather than trusted to that bound.
+    var patchClockOffset: TimeInterval {
+        pumpTime.timeIntervalSince(pumpTimeSyncedAt)
+    }
+
+    /// A patch time in this device's time
+    func deviceTime(_ patchTime: Date) -> Date {
+        patchTime.addingTimeInterval(-patchClockOffset)
+    }
+
+    /// What is left when a converted patch time is compared with this device's: the patch's whole seconds and the
+    /// answer's latency, and drift since the measurement. GetTime is read every 30 min while connected; an older
+    /// measurement, such as an adopter's copy of the exporter's, gets the wide slack.
+    var patchClockSlack: TimeInterval {
+        Date.now.timeIntervalSince(pumpTimeSyncedAt) < .hours(1) ? 5 : 60
     }
 
     func shouldShowTimeWarning() -> Bool {

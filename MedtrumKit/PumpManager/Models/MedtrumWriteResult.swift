@@ -11,6 +11,7 @@ enum MedtrumWriteError: LocalizedError {
     case invalidResponse(code: UInt16)
     case noManager
     case noWriteCharacteristic
+    case controlReleased
 
     public var errorDescription: String {
         switch self {
@@ -28,6 +29,8 @@ enum MedtrumWriteError: LocalizedError {
             return "No peripheral manager"
         case .noWriteCharacteristic:
             return "No write characteristic. Device might be disconnected"
+        case .controlReleased:
+            return "Control of the patch is released to another controller"
         }
     }
 }

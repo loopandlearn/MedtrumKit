@@ -15,6 +15,9 @@ final class ConnectAttempt {
     var timeoutGeneration = 0
     private var reported = false
 
+    /// The link came up during this attempt, rather than being up already
+    var connected = false
+
     /// When the deadline currently in flight was armed. `Task.sleep` does not advance while iOS has
     /// the app suspended, so a timeout that wakes far past its budget never actually spent it
     /// waiting - see `BluetoothManager.startTimeout`.
