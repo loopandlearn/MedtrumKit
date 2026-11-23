@@ -38,7 +38,15 @@ enum StateSyncer {
         // No session: the id kept can be stale - the previous patch's, or one never started - and would reject the new
         // patch's payloads. The storage gate below decides which id to keep then.
         let expectedPatchId = state.patchSessionEnded ? 0 : state.patchId.toUInt64()
-        let syncResponse = syncResponse.validated(expectedPatchId: expectedPatchId)
+        var syncResponse = syncResponse.validated(expectedPatchId: expectedPatchId)
+        let answeredEarlier = answeredBeforeKnownRecord(syncResponse: syncResponse, state: state)
+        if answeredEarlier {
+            // a command since, such as a temp basal, added records: the basal reported is no longer running
+            logger.warning(
+                "Sync answered at record \(syncResponse.storage?.sequence ?? 0), before \(state.latestRecordSequence ?? 0); its basal ignored"
+            )
+            syncResponse.basal = nil
+        }
 
         StateSyncer.updatePumpState(syncResponse: syncResponse, pumpManager: pumpManager)
 
@@ -53,6 +61,8 @@ enum StateSyncer {
                 // Send low reservoir warning notification to user
                 pumpManager.emitAlert(alertType: .lowReservoir(level: reservoir))
             }
+
+            state.reservoirReadAt = syncDate
 
             if state.reservoir != reservoir {
                 state.reservoir = reservoir
@@ -155,6 +165,9 @@ enum StateSyncer {
             if !state.patchSessionEnded || (syncResponse.state.isRunning && patchId != state.previousPatch?.patchId) {
                 state.patchId = patchId
             }
+            if patchId == state.patchId, !answeredEarlier {
+                state.latestRecordSequence = UInt64(storage.sequence)
+            }
         }
 
         if let bolusProgress = syncResponse.bolus {
@@ -173,6 +186,10 @@ enum StateSyncer {
         }
 
         pumpManager.notifyStateDidChange()
+
+        if fullSync, !syncResponse.invalidPayload {
+            pumpManager.keepControlMarked()
+        }
     }
 
     private static func recordSuspendIfDelivering(
@@ -212,6 +229,15 @@ enum StateSyncer {
         case noReset
         case reset
         case unconfirmed
+    }
+
+    /// True if the patch answered before a record this controller already saw: a sync written before another command
+    /// that is applied after it
+    static func answeredBeforeKnownRecord(syncResponse: SynchronizePacketResponse, state: MedtrumPumpState) -> Bool {
+        guard let storage = syncResponse.storage, let latest = state.latestRecordSequence,
+              UInt64(storage.patchId).toData(length: 4) == state.patchId
+        else { return false }
+        return UInt64(storage.sequence) < latest
     }
 
     /// An activated patch never goes back to a setup state on its own: when it does, the base has

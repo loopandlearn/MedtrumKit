@@ -19,6 +19,40 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     private var reconnectAttempts = 0
     private var reconnectTask: Task<Void, Never>?
 
+    /// Connect for each command or status read, and drop the link once idle, instead of keeping it open. On
+    /// Apple Watch the open link's status updates (one every ~8 s) wake the app in the background until watchOS
+    /// starts cutting all of its Bluetooth links. Read and written on `managerQueue`.
+    private var connectsOnDemand = false
+    private var idleDisconnect: DispatchWorkItem?
+    static let idleLinkTimeout: TimeInterval = 5
+
+    func setConnectsOnDemand(_ onDemand: Bool) {
+        managerQueue.async {
+            self.connectsOnDemand = onDemand
+            if onDemand { self.scheduleIdleDisconnect() }
+        }
+    }
+
+    /// On demand: drops the link `idleLinkTimeout` after the last connect or write, unless a bolus is running.
+    /// Must be called on `managerQueue`.
+    private func scheduleIdleDisconnect() {
+        idleDisconnect?.cancel()
+        guard connectsOnDemand else { return }
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, self.connectsOnDemand, self.attempt == nil,
+                  let peripheral = self.peripheral, peripheral.state != .disconnected
+            else { return }
+            if self.pumpManager?.state.bolusState != .noBolus {
+                self.scheduleIdleDisconnect()
+                return
+            }
+            self.logger.info("On demand: dropping the idle link")
+            self.manager.cancelPeripheralConnection(peripheral)
+        }
+        idleDisconnect = work
+        managerQueue.asyncAfter(deadline: .now() + Self.idleLinkTimeout, execute: work)
+    }
+
     // MUST NOT be called from within managerQueue - deadlock
     public var isConnected: Bool {
         managerQueue.sync { isConnectedOnQueue }
@@ -44,9 +78,19 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     /// validating restoration, which happens once at creation and therefore before anything can
     /// change it; `pumpManager` is the authority everywhere else.
     private let identifierAtLaunch: UUID?
+    private let releasedAtLaunch: Bool
 
-    init(knownPeripheralIdentifier: UUID?) {
+    /// Released to another controller, or refusing after one used the patch: connect to nothing.
+    private var mayConnect: Bool {
+        guard let state = pumpManager?.state else {
+            return !releasedAtLaunch
+        }
+        return !state.controlReleased && !state.refusesAfterForeignDelivery
+    }
+
+    init(knownPeripheralIdentifier: UUID?, released: Bool = false) {
         identifierAtLaunch = knownPeripheralIdentifier
+        releasedAtLaunch = released
 
         super.init()
 
@@ -143,6 +187,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
             reconnectTask?.cancel()
             reconnectTask = nil
             rememberPeripheral()
+            scheduleIdleDisconnect()
         } else {
             scheduleReconnect()
         }
@@ -163,6 +208,10 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
 
     /// Must be called on `managerQueue`.
     private func scheduleReconnect() {
+        guard mayConnect, !connectsOnDemand else {
+            return
+        }
+
         // `ensureConnectedOnQueue` can retrieve the peripheral from stored identifier
         guard peripheral != nil || pumpManager?.state.peripheralIdentifier != nil else {
             // otherwise we would be retrying a scan, which doesn't work in the background
@@ -213,6 +262,12 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
     }
 
     private func ensureConnectedOnQueue(_ completion: @escaping (MedtrumConnectError?) -> Void) {
+        guard mayConnect else {
+            logger.info("Not connecting: another controller has the patch")
+            report(.controlReleased, to: completion)
+            return
+        }
+
         // Wait on the connect already in flight instead of failing. A connect owns the link for as
         // long as auth, synchronize and subscribe take, and anything the loop or the user asks for
         // in that window used to be turned away outright - a bolus issued in the same second as a
@@ -368,7 +423,9 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
             return .failure(error: .noManager)
         }
 
-        return peripheralManager.writePacket(packet)
+        let result = peripheralManager.writePacket(packet)
+        managerQueue.async { self.scheduleIdleDisconnect() }
+        return result
     }
 
     func disconnect(force: Bool = false) {
@@ -390,6 +447,17 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate {
 
         if force {
             clearPeripheralOnQueue()
+        }
+    }
+
+    /// Drops the link for another controller, keeping the identifier for when we take the patch back.
+    func disconnectForRelease() {
+        managerQueue.sync {
+            forcedDisconnect = true
+            if let peripheral, peripheral.state != .disconnected {
+                manager.cancelPeripheralConnection(peripheral)
+            }
+            clearPeripheralOnQueue(forgetIdentifier: false)
         }
     }
 
@@ -471,7 +539,7 @@ extension BluetoothManager {
             return
         }
 
-        if !isConnectedOnQueue, pumpManager?.state.pumpState.isRunning == true {
+        if !isConnectedOnQueue, !connectsOnDemand, pumpManager?.state.pumpState.isRunning == true {
             ensureConnectedOnQueue { error in
                 if let error = error {
                     self.logger.error("Failed to auto reconnect on boot: \(error)")
@@ -531,8 +599,8 @@ extension BluetoothManager {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         logger.info("Connected to pump: \(peripheral.name ?? "<NO_NAME>")!")
 
-        if forcedDisconnect {
-            logger.info("Dropping a connection that landed after a forced disconnect")
+        if forcedDisconnect || !mayConnect {
+            logger.info("Dropping a connection that landed after a forced disconnect or a release")
             central.cancelPeripheralConnection(peripheral)
             return
         }
@@ -616,6 +684,12 @@ extension BluetoothManager {
 
         // `pumpManager` is usually still nil here - see `identifierAtLaunch`.
         let knownIdentifier = pumpManager?.state.peripheralIdentifier ?? identifierAtLaunch
+
+        guard mayConnect else {
+            logger.info("Dropping restored peripherals: another controller has the patch")
+            peripherals.forEach { centralManager.cancelPeripheralConnection($0) }
+            return
+        }
 
         for peripheral in peripherals {
             if peripheral.services?.first(where: { $0.uuid == CBUUID.SERVICE_UUID }) == nil {

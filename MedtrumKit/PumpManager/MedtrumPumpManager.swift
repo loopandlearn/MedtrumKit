@@ -1,7 +1,9 @@
 import CoreBluetooth
 import HealthKit
 import LoopKit
-import UIKit
+#if os(iOS)
+    import UIKit
+#endif
 
 public class MedtrumPumpManager: DeviceManager {
     public let pluginIdentifier = "Medtrum"
@@ -17,7 +19,7 @@ public class MedtrumPumpManager: DeviceManager {
 
     public let managerIdentifier: String = "Medtrum"
 
-    private let log = MedtrumLogger(category: "MedtrumPumpManager")
+    let log = MedtrumLogger(category: "MedtrumPumpManager")
 
     public let pumpDelegate = WeakSynchronizedDelegate<PumpManagerDelegate>()
     private let statusObservers = WeakSynchronizedSet<PumpManagerStatusObserver>()
@@ -26,6 +28,41 @@ public class MedtrumPumpManager: DeviceManager {
     var oldState: MedtrumPumpState
     public var rawState: PumpManager.RawStateValue {
         state.rawValue
+    }
+
+    /// Held from a temp basal command's check of what the patch runs to its write, so a mark of control
+    /// (`keepControlMarked`) never replaces the host's temp basal
+    let deliveryCommandLock = NSLock()
+    /// When a mark of control was last tried; at most one runs at a time
+    private let markLock = NSLock()
+    private var markAttemptedAt: Date?
+    private var markRunning = false
+    private var markHeldUntil: Date?
+    static let markRetryInterval: TimeInterval = 60
+    /// After the host cancels a temp basal: it wants none for now, and a hand-off releases right after its cancel
+    static let markHoldAfterCancel: TimeInterval = .minutes(2)
+
+    func holdMark() {
+        markLock.withLock { markHeldUntil = Date.now.addingTimeInterval(Self.markHoldAfterCancel) }
+    }
+
+    /// True if a mark is running or was just tried; otherwise claims the next one
+    func markIsBusy() -> Bool {
+        markLock.withLock {
+            let now = Date.now
+            if markRunning || markAttemptedAt.map({ now.timeIntervalSince($0) < Self.markRetryInterval }) == true ||
+                markHeldUntil.map({ now < $0 }) == true
+            {
+                return true
+            }
+            markRunning = true
+            markAttemptedAt = .now
+            return false
+        }
+    }
+
+    func markDone() {
+        markLock.withLock { markRunning = false }
     }
 
     private let logDeviceIdentifierLock = NSLock()
@@ -42,26 +79,31 @@ public class MedtrumPumpManager: DeviceManager {
     }
 
     var bluetooth: BluetoothManager!
-    init(state: MedtrumPumpState) {
+    /// `withBluetooth` false is for tests, which can't create a restoring central manager.
+    init(state: MedtrumPumpState, withBluetooth: Bool = true) {
         self.state = state
         oldState = MedtrumPumpState(rawValue: state.rawValue)
-        bluetooth = BluetoothManager(knownPeripheralIdentifier: state.peripheralIdentifier)
+        if withBluetooth {
+            bluetooth = BluetoothManager(knownPeripheralIdentifier: state.peripheralIdentifier, released: state.controlReleased || state.refusesAfterForeignDelivery)
+        }
         refreshLogDeviceIdentifier()
 
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appMovedToBackground),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appMovedToForeground),
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
+        #if os(iOS)
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(appMovedToBackground),
+                name: UIApplication.didEnterBackgroundNotification,
+                object: nil
+            )
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(appMovedToForeground),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+        #endif
 
-        bluetooth.pumpManager = self
+        bluetooth?.pumpManager = self
         MedtrumLogger.pumpManager = self
     }
 
@@ -85,6 +127,13 @@ public class MedtrumPumpManager: DeviceManager {
 
     public required convenience init?(rawState: RawStateValue) {
         self.init(state: MedtrumPumpState(rawValue: rawState))
+    }
+
+    public required convenience init?(adopting configuration: SharedDeviceConfiguration, localState: [String: Any]?) {
+        guard let state = MedtrumPumpManager.adoptedState(from: configuration, localState: localState) else {
+            return nil
+        }
+        self.init(state: state)
     }
 
     public var isOnboarded: Bool {
@@ -222,17 +271,19 @@ public class MedtrumPumpManager: DeviceManager {
         }
     }
 
-    private let backgroundTask = BackgroundTask()
-    @objc func appMovedToBackground() {
-        if state.useSilentTones {
-            log.info("Starting silent tones")
-            backgroundTask.startBackgroundTask()
+    #if os(iOS)
+        private let backgroundTask = BackgroundTask()
+        @objc func appMovedToBackground() {
+            if state.useSilentTones {
+                log.info("Starting silent tones")
+                backgroundTask.startBackgroundTask()
+            }
         }
-    }
 
-    @objc func appMovedToForeground() {
-        backgroundTask.stopBackgroundTask()
-    }
+        @objc func appMovedToForeground() {
+            backgroundTask.stopBackgroundTask()
+        }
+    #endif
 }
 
 public extension MedtrumPumpManager {
@@ -266,12 +317,16 @@ public extension MedtrumPumpManager {
     func ensureCurrentPumpData(completion: ((Date?) -> Void)?) {
         let age = Date.now.timeIntervalSince(state.lastSync)
 
-        guard let activatedAt = state.patchActivatedAt,
-              age > Self.loopSyncFreshnessInterval ||
-              Date.now.timeIntervalSince(activatedAt) < .minutes(4)
-        else {
-            log.info("Skipping status update -> data is fresh or not active: \(Int(age)) sec")
+        guard let activatedAt = state.patchActivatedAt else {
+            log.info("Skipping status update -> patch not active")
             completion?(nil)
+            return
+        }
+
+        guard age > Self.loopSyncFreshnessInterval || Date.now.timeIntervalSince(activatedAt) < .minutes(4) else {
+            // LoopKit asks for the last sync here, not nil: a caller that checks it took nil as no contact
+            log.info("Skipping status update -> data is fresh: \(Int(age)) sec")
+            completion?(state.lastSync)
             return
         }
 
@@ -397,9 +452,11 @@ public extension MedtrumPumpManager {
                 return
             }
 
+            let sentAt = Date.now
             let writeResult = self.bluetooth.write(SetBolusPacket(bolusAmount: units))
             if case let .failure(error) = writeResult {
                 self.log.error("Failed to write: \(error.localizedDescription)")
+                self.noteUnansweredDeliveryCommand(sentAt: sentAt)
                 self.resetBolusState()
 
                 completion(.communication(error))
@@ -445,6 +502,7 @@ public extension MedtrumPumpManager {
                 completion(.failure(.communication(error)))
                 return
             }
+
 
             let result = self.bluetooth.write(CancelBolusPacket())
             if case let .failure(error) = result {
@@ -512,62 +570,86 @@ public extension MedtrumPumpManager {
                 return
             }
 
-            if self.state.basalState == .tempBasal {
-                // Need to cancel temp basal first before setting temp basal
-                let cancelResult = self.bluetooth.write(CancelTempBasalPacket())
-                if case let .failure(error) = cancelResult {
-                    self.log.error("Failed to cancel temp basal: \(error.localizedDescription)")
-                    completion(.communication(error))
-                    return
-                }
-
-                self.state.basalState = .active
-                self.log.info("Cancelled temp basal!")
-            }
-
-            if duration < .ulpOfOne {
-                // Need to cancel temp basal, but is already cancelled
-                // Only need to report back to algorithm
-                self.reportScheduledBasal()
-
-                completion(nil)
-                return
-            }
-
-            let packet = SetTempBasalPacket(rate: unitsPerHour, duration: duration)
-            let tempBasalResult = self.bluetooth.write(packet)
-
-            if case let .failure(error) = tempBasalResult {
-                self.log.error("Failed to set temp basal: \(error.localizedDescription)")
-
-                // the cancel already succeeded, but new TBR failed - the patch is running the scheduled basal now
-                self.reportScheduledBasal()
-
-                completion(.communication(error))
-                return
-            }
-
-            self.log.info("Set temp basal!")
-
-            let tempBasalDose = UnfinalizedDose(
-                decisionId: decisionId,
-                tempRate: unitsPerHour,
-                duration: duration,
-                insulinType: self.state.insulinType,
-                automatic: automatic
-            )
-            var events = self.finalizedTempBasal(endedAt: Date.now)
-            events.append(NewPumpEvent.tempBasal(dose: tempBasalDose.toDoseEntry(isMutable: true)))
-
-            self.state.basalDose = tempBasalDose
-            self.state.basalState = .tempBasal
-            self.state.lastSync = Date.now
-            self.notifyStateDidChange()
-
-            self.emitPumpEvents(events)
-
-            completion(nil)
+            self.deliveryCommandLock.lock()
+            let result = self.writeTempBasal(decisionId: decisionId, unitsPerHour: unitsPerHour, duration: duration, automatic: automatic)
+            self.deliveryCommandLock.unlock()
+            completion(result)
         }
+    }
+
+    /// The writes of a temp basal command, on a connected patch; `deliveryCommandLock` is held
+    private func writeTempBasal(
+        decisionId: UUID?,
+        unitsPerHour: Double,
+        duration: TimeInterval,
+        automatic: Bool
+    ) -> LoopKit.PumpManagerError? {
+        let cancelFirst = state.basalState == .tempBasal
+        if cancelFirst {
+            // Need to cancel temp basal first before setting temp basal
+            let cancelResult = bluetooth.write(CancelTempBasalPacket())
+            if case let .failure(error) = cancelResult {
+                log.error("Failed to cancel temp basal: \(error.localizedDescription)")
+                return .communication(error)
+            }
+
+            state.basalState = .active
+            log.info("Cancelled temp basal!")
+        }
+
+        if duration < .ulpOfOne {
+            // Need to cancel temp basal, but is already cancelled
+            // Only need to report back to algorithm
+            holdMark()
+            reportScheduledBasal()
+            return nil
+        }
+
+        let packet = SetTempBasalPacket(rate: unitsPerHour, duration: duration)
+        let sentAt = Date.now
+        var tempBasalResult = bluetooth.write(packet)
+
+        if !cancelFirst, case .failure(error: .invalidResponse(code: 8)) = tempBasalResult {
+            // the patch runs a temp basal this state missed
+            log.warning("Temp basal refused in the patch's state; cancelling the one running and trying again")
+            if case .success = bluetooth.write(CancelTempBasalPacket()) {
+                state.basalState = .active
+                tempBasalResult = bluetooth.write(packet)
+            }
+        }
+
+        if case let .failure(error) = tempBasalResult {
+            log.error("Failed to set temp basal: \(error.localizedDescription)")
+            noteUnansweredDeliveryCommand(sentAt: sentAt)
+
+            // the cancel already succeeded, but new TBR failed - the patch is running the scheduled basal now
+            reportScheduledBasal()
+            return .communication(error)
+        }
+
+        log.info("Set temp basal!")
+        bookTempBasal(decisionId: decisionId, unitsPerHour: unitsPerHour, duration: duration, automatic: automatic)
+        return nil
+    }
+
+    /// Books a temp basal the patch confirmed, ending the one before
+    func bookTempBasal(decisionId: UUID?, unitsPerHour: Double, duration: TimeInterval, automatic: Bool) {
+        let tempBasalDose = UnfinalizedDose(
+            decisionId: decisionId,
+            tempRate: unitsPerHour,
+            duration: duration,
+            insulinType: state.insulinType,
+            automatic: automatic
+        )
+        var events = finalizedTempBasal(endedAt: Date.now)
+        events.append(NewPumpEvent.tempBasal(dose: tempBasalDose.toDoseEntry(isMutable: true)))
+
+        state.basalDose = tempBasalDose
+        state.basalState = .tempBasal
+        state.lastSync = Date.now
+        notifyStateDidChange()
+
+        emitPumpEvents(events)
     }
 
     private func reportScheduledBasal() {
@@ -603,6 +685,7 @@ public extension MedtrumPumpManager {
                 return
             }
 
+
             let result = self.bluetooth.write(SuspendPumpPacket(duration: duration))
             if case let .failure(error) = result {
                 self.log.error("Failed to suspend delivery: \(error.localizedDescription)")
@@ -637,6 +720,7 @@ public extension MedtrumPumpManager {
                 completion(error)
                 return
             }
+
 
             let response = self.bluetooth.write(ResumePumpPacket())
             if case let .failure(error) = response {
@@ -967,6 +1051,12 @@ public extension MedtrumPumpManager {
 
         state.patchSessionEnded = false
         state.initialReservoir = nil
+        // a new patch was never handed to another controller
+        state.sharedWithAnotherController = false
+        state.refusesAfterForeignDelivery = false
+        state.foreignDeliveryDetectedAt = nil
+        state.expectsForeignDelivery = false
+        state.unansweredDeliveryCommandAt = nil
         state.patchId = patchId
         state.patchActivatedAt = activatedAt
         state.lastSync = Date.now
@@ -1045,6 +1135,7 @@ public extension MedtrumPumpManager {
                 return
             }
 
+
             let resumeResult = self.bluetooth.write(ResumePumpPacket())
             if case let .failure(error) = resumeResult {
                 self.log.error("Failed to resume patch: \(error)")
@@ -1120,11 +1211,15 @@ public extension MedtrumPumpManager {
             // PumpManagerDelegate.issueAlert is async. Both calls stay inside one
             // Task so the alert is still issued before the pump event, as it was
             // when the delegate API was synchronous -- wrapping only the alert
-            // would let the two race.
+            // would let the two race. The pump event hops back onto the delegate queue.
             Task {
                 await delegate?.issueAlert(alertType.alert)
 
-                if let pumpEvent = NewPumpEvent.alert(type: alertType) {
+                guard let pumpEvent = NewPumpEvent.alert(type: alertType) else {
+                    return
+                }
+
+                self.pumpDelegate.notify { delegate in
                     delegate?.pumpManager(
                         self,
                         hasNewPumpEvents: [pumpEvent],
@@ -1237,7 +1332,7 @@ public extension MedtrumPumpManager {
         return [NewPumpEvent.bolus(dose: dose)]
     }
 
-    private func ensureConnectedAndActive(_ completion: @escaping (MedtrumConnectError?) -> Void) {
+    func ensureConnectedAndActive(_ completion: @escaping (MedtrumConnectError?) -> Void) {
         guard !state.pumpState.isSetup else {
             log.warning("No active patch, failing immediately")
             completion(.failedToFindDevice)
@@ -1245,12 +1340,12 @@ public extension MedtrumPumpManager {
         }
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self else {
+            guard let self, let bluetooth = self.bluetooth else {
                 completion(.failedToFindDevice)
                 return
             }
 
-            self.bluetooth.ensureConnected(completion)
+            bluetooth.ensureConnected(completion)
         }
     }
 
@@ -1281,7 +1376,7 @@ public extension MedtrumPumpManager {
     }
 
     /// The current temp basal (if any), finalized as having stopped at `endedAt`
-    private func finalizedTempBasal(endedAt: Date) -> [NewPumpEvent] {
+    func finalizedTempBasal(endedAt: Date) -> [NewPumpEvent] {
         guard state.basalDose.type == .tempBasal else {
             return []
         }

@@ -33,6 +33,12 @@ class PeripheralManager: NSObject {
     /* access must be serialized with stateLock, prevents concurrent `considerFullSync` runs */
     private var isFullSyncInFlight = false
 
+    /// What this controller knew before this connection, and what its first status shows: whether another controller
+    /// ran the patch in between (`MedtrumPumpState.foreignDeliveryEvidence`). Connect flow only.
+    private let contactBeforeConnect: Date?
+    private let sequenceBeforeConnect: UInt64?
+    private var basalAtConnect: BasalData?
+
     public init(
         _ peripheral: CBPeripheral,
         _ bluetoothManager: BluetoothManager,
@@ -43,6 +49,8 @@ class PeripheralManager: NSObject {
         self.bluetoothManager = bluetoothManager
         self.pumpManager = pumpManager
         self.completion = completion
+        contactBeforeConnect = pumpManager.state.lastContactAt
+        sequenceBeforeConnect = pumpManager.state.latestRecordSequence
 
         super.init()
 
@@ -195,6 +203,11 @@ extension PeripheralManager {
             }
 
             parseStateUpdate(syncResponse, duringReconnect: true, fullSync: true)
+            if let pumpManager {
+                let state = pumpManager.state
+                let validated = syncResponse.validated(expectedPatchId: state.patchSessionEnded ? 0 : state.patchId.toUInt64())
+                basalAtConnect = validated.invalidPayload ? nil : validated.basal
+            }
             subscribe()
         }
     }
@@ -214,6 +227,14 @@ extension PeripheralManager {
                 return
             }
 
+            // Before any command of ours goes out
+            if let pumpManager, let evidence = foreignDeliveryEvidence(pumpManager),
+               pumpManager.foreignDeliveryFound(evidence)
+            {
+                completion?(.controlReleased)
+                return
+            }
+
             log.info("Connected to pump!")
 
             stateLock.lock()
@@ -224,6 +245,43 @@ extension PeripheralManager {
             pumpManager?.notifyStateDidChange()
             completion?(nil)
         }
+    }
+
+    /// See MedtrumPumpState.foreignDeliveryEvidence. How the history moved is logged at every connection of a shared
+    /// patch, and each record read with its type: which records the patch writes by itself shows there.
+    private func foreignDeliveryEvidence(_ pumpManager: MedtrumPumpManager) -> String? {
+        let state = pumpManager.state
+        if state.sharedWithAnotherController, let latest = state.latestRecordSequence, latest != sequenceBeforeConnect {
+            pumpManager.logDeviceCommunication(
+                "history #\(sequenceBeforeConnect.map(String.init) ?? "-") -> #\(latest) since this controller's last contact " +
+                    "\(contactBeforeConnect.map { "\($0)" } ?? "-")",
+                type: .receive
+            )
+        }
+
+        let patchId = state.patchId.toUInt64()
+        let evidence = state.foreignDeliveryEvidence(
+            since: contactBeforeConnect,
+            previousSequence: sequenceBeforeConnect,
+            basal: basalAtConnect
+        ) { index in
+            guard case let .success(data) = writePacket(GetRecordPacket(recordIndex: index, patchId: patchId)),
+                  let record = data as? GetRecordPacketResponse
+            else {
+                pumpManager.logDeviceCommunication("history #\(index) could not be read", type: .receive)
+                return nil
+            }
+
+            pumpManager.logDeviceCommunication(
+                "history #\(index): type \(record.recordType), valid \(record.isValid)" +
+                    (record.bolus.map { ", bolus \($0.amount) U from \($0.startedAt)" } ?? ""),
+                type: .receive
+            )
+            return record
+        }
+        // the expectations it used up
+        pumpManager.notifyStateDidChange()
+        return evidence
     }
 
     private func parseStateUpdate(_ syncResponse: SynchronizePacketResponse, duringReconnect: Bool, fullSync: Bool) {
@@ -333,6 +391,9 @@ extension PeripheralManager: CBPeripheralDelegate {
             )
             return
         }
+
+        // Any answer or notification: while linked, no other controller can command the patch
+        pumpManager?.state.lastContactAt = .now
 
         if characteristic.uuid == CBUUID.READ_UUID {
             handleHeartbeat(data: data)

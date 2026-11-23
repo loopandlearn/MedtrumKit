@@ -69,6 +69,20 @@ public class MedtrumPumpState: RawRepresentable {
         reservoir = rawValue["reservoir"] as? Double ?? 0
         battery = rawValue["battery"] as? Double ?? 0
         notificationAfterActivation = rawValue["notificationAfterActivation"] as? TimeInterval ?? .hours(72)
+        reservoirReadAt = rawValue["reservoirReadAt"] as? Date
+        controlReleased = rawValue["controlReleased"] as? Bool ?? false
+        if rawValue["refusesSessions"] as? Bool == true {
+            // an earlier build released the patch when it wrongly refused it; that was no hand-off
+            controlReleased = false
+        }
+        sharedWithAnotherController = rawValue["sharedWithAnotherController"] as? Bool ?? false
+        supersedingUntil = rawValue["supersedingUntil"] as? Date
+        refusesAfterForeignDelivery = rawValue["refusesAfterForeignDelivery"] as? Bool ?? false
+        foreignDeliveryDetectedAt = rawValue["foreignDeliveryDetectedAt"] as? Date
+        expectsForeignDelivery = rawValue["expectsForeignDelivery"] as? Bool ?? false
+        lastContactAt = rawValue["lastContactAt"] as? Date
+        latestRecordSequence = rawValue["latestRecordSequence"] as? UInt64
+        unansweredDeliveryCommandAt = rawValue["unansweredDeliveryCommandAt"] as? Date
 
         if let expiryModeRaw = rawValue["expiryMode"] as? ExpiryMode.RawValue {
             expiryMode = ExpiryMode(rawValue: expiryModeRaw) ?? .default
@@ -202,6 +216,16 @@ public class MedtrumPumpState: RawRepresentable {
         value["expiryMode"] = expiryMode.rawValue
         value["notificationAfterActivation"] = notificationAfterActivation
         value["useSilentTones"] = useSilentTones
+        value["reservoirReadAt"] = reservoirReadAt
+        value["controlReleased"] = controlReleased
+        value["sharedWithAnotherController"] = sharedWithAnotherController
+        value["supersedingUntil"] = supersedingUntil
+        value["refusesAfterForeignDelivery"] = refusesAfterForeignDelivery
+        value["foreignDeliveryDetectedAt"] = foreignDeliveryDetectedAt
+        value["expectsForeignDelivery"] = expectsForeignDelivery
+        value["lastContactAt"] = lastContactAt
+        value["latestRecordSequence"] = latestRecordSequence
+        value["unansweredDeliveryCommandAt"] = unansweredDeliveryCommandAt
 
         if let previousPatch = previousPatch {
             do {
@@ -213,6 +237,29 @@ public class MedtrumPumpState: RawRepresentable {
     }
 
     public var isOnboarded: Bool
+
+    // Handing the patch to another controller (MedtrumPumpManager+DeviceHandoff)
+    public var reservoirReadAt: Date?
+    public var controlReleased = false
+    public var sharedWithAnotherController = false
+    public var supersedingUntil: Date?
+
+    // Detecting another controller (MedtrumPumpManager+DeviceHandoff, `foreignDeliveryEvidence`)
+    /// Another controller ran the patch outside a superseding take: this one connects to nothing until a lifting take.
+    /// Not "refusesSessions": an earlier build saved that key wrongly, and loading it still undoes that build's release.
+    public var refusesAfterForeignDelivery = false
+    /// When another controller was last found to have run the patch
+    public var foreignDeliveryDetectedAt: Date?
+    /// The next connection meets the other controller's delivery from before an adopt or a take: it is not checked
+    public var expectsForeignDelivery = false
+    /// When this controller last heard the patch. Only one controller can be linked to the patch, so delivery that
+    /// started after this was started by another one.
+    public var lastContactAt: Date?
+    /// The newest history record the patch reported
+    public var latestRecordSequence: UInt64?
+    /// A temp basal or bolus command whose answer never came: the patch may have started it, after `lastContactAt`
+    public var unansweredDeliveryCommandAt: Date?
+
     public var insulinType: InsulinType?
     public var lastSync: Date
     public var pumpSN: Data {
@@ -383,6 +430,22 @@ public class MedtrumPumpState: RawRepresentable {
         } else {
             return "Medtrum Nano 200U"
         }
+    }
+
+    /// How far the patch's clock is ahead of this device's, as the last GetTime measured it
+    var patchClockOffset: TimeInterval {
+        pumpTime.timeIntervalSince(pumpTimeSyncedAt)
+    }
+
+    /// A patch time in this device's time
+    func deviceTime(_ patchTime: Date) -> Date {
+        patchTime.addingTimeInterval(-patchClockOffset)
+    }
+
+    /// Left over when a converted patch time is compared with this device's: whole seconds, latency and drift.
+    /// An older measurement, such as an adopter's copy of the exporter's, gets the wide slack.
+    var patchClockSlack: TimeInterval {
+        Date.now.timeIntervalSince(pumpTimeSyncedAt) < .hours(1) ? 5 : 60
     }
 
     func shouldShowTimeWarning() -> Bool {
